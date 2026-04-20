@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBooks Payroll Migration — UX Strategy Document</title>
+<style>
+/* ============================================================
+   INTUIT DESIGN SYSTEM — ENTERPRISE SUITE THEME
+   Token Reference: IDS v3 / Intuit Enterprise Suite
+   ============================================================ */
+
+/* --- Typefaces --- */
+@import url('https://fonts.googleapis.com/css2?family=Avenir+Next:wght@400;500;600;700&display=swap');
+/* Fallback stack mirrors Intuit's actual font loading */
+
+/* --- CSS Custom Properties (IDS Tokens) --- */
+:root {
+  /* Brand / Primary */
+  --ids-color-brand-primary:        #0077C5;  /* Intuit Blue */
+  --ids-color-brand-primary-dark:   #005A9E;
+  --ids-color-brand-primary-light:  #D6EAF8;
+  --ids-color-brand-accent:         #00A3E0;  /* IES Accent Blue */
+
+  /* Neutral Scale */
+  --ids-color-neutral-0:    #FFFFFF;
+  --ids-color-neutral-50:   #F4F5F8;
+  --ids-color-neutral-100:  #E8ECF0;
+  --ids-color-neutral-200:  #D0D7E0;
+  --ids-color-neutral-300:  #B0BBC8;
+  --ids-color-neutral-400:  #8D9BB0;
+  --ids-color-neutral-500:  #6B7A94;
+  --ids-color-neutral-600:  #4A5568;
+  --ids-color-neutral-700:  #2D3748;
+  --ids-color-neutral-800:  #1A202C;
+  --ids-color-neutral-900:  #0F1420;
+
+  /* Semantic — Status */
+  --ids-color-success-base:   #2CA01C;
+  --ids-color-success-light:  #E6F4E4;
+  --ids-color-success-dark:   #1A6612;
+  --ids-color-warning-base:   #E8700A;
+  --ids-color-warning-light:  #FDF0E5;
+  --ids-color-warning-dark:   #B35208;
+  --ids-color-error-base:     #D52B1E;
+  --ids-color-error-light:    #FDECEB;
+  --ids-color-error-dark:     #A01F16;
+  --ids-color-info-base:      #0077C5;
+  --ids-color-info-light:     #E5F1FA;
+  --ids-color-info-dark:      #005A9E;
+
+  /* IES Tier Colors */
+  --ids-tier1:        #2CA01C;
+  --ids-tier1-light:  #E6F4E4;
+  --ids-tier2:        #E8700A;
+  --ids-tier2-light:  #FDF0E5;
+  --ids-tier3:        #D52B1E;
+  --ids-tier3-light:  #FDECEB;
+
+  /* AI / Automation accent */
+  --ids-ai:           #7B5EA7;
+  --ids-ai-light:     #F0EBF8;
+
+  /* Surface / Background */
+  --ids-bg-page:        #F4F5F8;
+  --ids-bg-surface:     #FFFFFF;
+  --ids-bg-surface-alt: #F9FAFB;
+  --ids-bg-canvas:      #EAECF0;
+
+  /* Typography */
+  --ids-font-family:        'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --ids-font-size-xs:       11px;
+  --ids-font-size-sm:       12px;
+  --ids-font-size-base:     14px;
+  --ids-font-size-md:       16px;
+  --ids-font-size-lg:       18px;
+  --ids-font-size-xl:       22px;
+  --ids-font-size-2xl:      28px;
+  --ids-font-size-3xl:      36px;
+  --ids-font-weight-regular: 400;
+  --ids-font-weight-medium:  500;
+  --ids-font-weight-semibold:600;
+  --ids-font-weight-bold:    700;
+  --ids-line-height-tight:   1.2;
+  --ids-line-height-base:    1.5;
+  --ids-line-height-loose:   1.7;
+
+  /* Spacing Scale (4px base) */
+  --ids-space-1:  4px;
+  --ids-space-2:  8px;
+  --ids-space-3:  12px;
+  --ids-space-4:  16px;
+  --ids-space-5:  20px;
+  --ids-space-6:  24px;
+  --ids-space-8:  32px;
+  --ids-space-10: 40px;
+  --ids-space-12: 48px;
+  --ids-space-16: 64px;
+
+  /* Border */
+  --ids-border-radius-sm:  4px;
+  --ids-border-radius-md:  6px;
+  --ids-border-radius-lg:  8px;
+  --ids-border-radius-xl:  12px;
+  --ids-border-radius-pill: 9999px;
+  --ids-border-color:       #D0D7E0;
+  --ids-border-color-strong:#B0BBC8;
+
+  /* Shadow */
+  --ids-shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --ids-shadow-md:  0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+  --ids-shadow-lg:  0 8px 24px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.07);
+
+  /* Transition */
+  --ids-transition-fast: 120ms ease;
+  --ids-transition-base: 200ms ease;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--ids-font-family);
+  font-size: var(--ids-font-size-base);
+  font-weight: var(--ids-font-weight-regular);
+  color: var(--ids-color-neutral-800);
+  background: var(--ids-bg-page);
+  line-height: var(--ids-line-height-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   LAYOUT SCAFFOLDING
+   ============================================================ */
+.page-wrapper { max-width: 1100px; margin: 0 auto; padding: var(--ids-space-6); }
+
+/* ============================================================
+   DOCUMENT HEADER
+   ============================================================ */
+.doc-header {
+  background: var(--ids-bg-surface);
+  border-bottom: 3px solid var(--ids-color-brand-primary);
+  padding: var(--ids-space-8) var(--ids-space-10);
+  margin-bottom: var(--ids-space-8);
+  border-radius: var(--ids-border-radius-xl);
+  box-shadow: var(--ids-shadow-sm);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ids-space-6);
+}
+.doc-header-content { flex: 1; }
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ids-space-2);
+  background: var(--ids-color-info-light);
+  color: var(--ids-color-info-dark);
+  font-size: var(--ids-font-size-xs);
+  font-weight: var(--ids-font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: var(--ids-space-1) var(--ids-space-3);
+  border-radius: var(--ids-border-radius-pill);
+  margin-bottom: var(--ids-space-3);
+}
+.doc-title {
+  font-size: var(--ids-font-size-3xl);
+  font-weight: var(--ids-font-weight-bold);
+  color: var(--ids-color-neutral-900);
+  line-height: var(--ids-line-height-tight);
+  margin-bottom: var(--ids-space-2);
+}
+.doc-subtitle {
+  font-size: var(--ids-font-size-lg);
+  color: var(--ids-color-neutral-500);
+  font-weight: var(--ids-font-weight-regular);
+  margin-bottom: var(--ids-space-4);
+}
+.doc-meta {
+  display: flex;
+  gap: var(--ids-space-6);
+  flex-wrap: wrap;
+}
+.doc-meta-item {
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-500);
+}
+.doc-meta-item strong {
+  color: var(--ids-color-neutral-700);
+  font-weight: var(--ids-font-weight-semibold);
+}
+.intuit-logo-mark {
+  width: 56px;
+  height: 56px;
+  background: var(--ids-color-brand-primary);
+  border-radius: var(--ids-border-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.intuit-logo-mark svg { width: 32px; height: 32px; }
+
+/* ============================================================
+   SUMMARY STATS STRIP
+   ============================================================ */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--ids-space-4);
+  margin-bottom: var(--ids-space-8);
+}
+.stat-card {
+  background: var(--ids-bg-surface);
+  border: 1px solid var(--ids-border-color);
+  border-radius: var(--ids-border-radius-xl);
+  padding: var(--ids-space-5) var(--ids-space-6);
+  text-align: center;
+  box-shadow: var(--ids-shadow-sm);
+}
+.stat-number {
+  font-size: var(--ids-font-size-2xl);
+  font-weight: var(--ids-font-weight-bold);
+  color: var(--ids-color-brand-primary);
+  line-height: 1;
+  margin-bottom: var(--ids-space-1);
+}
+.stat-label {
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-500);
+  font-weight: var(--ids-font-weight-medium);
+}
+
+/* ============================================================
+   PHASE NAV TABS (IDS Tab pattern)
+   ============================================================ */
+.phase-nav {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--ids-border-color);
+}
+.phase-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--ids-space-2);
+  padding: var(--ids-space-4) var(--ids-space-6);
+  font-family: var(--ids-font-family);
+  font-size: var(--ids-font-size-base);
+  font-weight: var(--ids-font-weight-medium);
+  color: var(--ids-color-neutral-500);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color var(--ids-transition-base), border-color var(--ids-transition-base);
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+.phase-tab-btn:hover { color: var(--ids-color-brand-primary); }
+.phase-tab-btn.active {
+  color: var(--ids-color-brand-primary);
+  border-bottom-color: var(--ids-color-brand-primary);
+  font-weight: var(--ids-font-weight-semibold);
+}
+.phase-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.phase-tab-btn[data-phase="pre"] .phase-dot   { background: #7B5EA7; }
+.phase-tab-btn[data-phase="during"] .phase-dot { background: var(--ids-color-warning-base); }
+.phase-tab-btn[data-phase="post"] .phase-dot   { background: var(--ids-color-success-base); }
+.phase-tab-btn[data-phase="overview"] .phase-dot { background: var(--ids-color-brand-primary); }
+
+/* ============================================================
+   PHASE CONTENT PANELS
+   ============================================================ */
+.phase-container {
+  background: var(--ids-bg-surface);
+  border: 1px solid var(--ids-border-color);
+  border-top: none;
+  border-radius: 0 0 var(--ids-border-radius-xl) var(--ids-border-radius-xl);
+  box-shadow: var(--ids-shadow-sm);
+  margin-bottom: var(--ids-space-8);
+}
+.phase-panel { display: none; padding: var(--ids-space-8); }
+.phase-panel.active { display: block; }
+
+/* ============================================================
+   PHASE HEADER BANNER
+   ============================================================ */
+.phase-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ids-space-6);
+  padding: var(--ids-space-6) var(--ids-space-8);
+  border-radius: var(--ids-border-radius-lg);
+  margin-bottom: var(--ids-space-8);
+}
+.phase-banner--pre    { background: #F0EBF8; border-left: 4px solid #7B5EA7; }
+.phase-banner--during { background: var(--ids-color-warning-light); border-left: 4px solid var(--ids-color-warning-base); }
+.phase-banner--post   { background: var(--ids-color-success-light); border-left: 4px solid var(--ids-color-success-base); }
+.phase-banner-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--ids-border-radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 22px;
+}
+.phase-banner--pre    .phase-banner-icon { background: #7B5EA7; }
+.phase-banner--during .phase-banner-icon { background: var(--ids-color-warning-base); }
+.phase-banner--post   .phase-banner-icon { background: var(--ids-color-success-base); }
+.phase-banner-title {
+  font-size: var(--ids-font-size-xl);
+  font-weight: var(--ids-font-weight-bold);
+  color: var(--ids-color-neutral-800);
+  margin-bottom: var(--ids-space-1);
+}
+.phase-banner-desc {
+  font-size: var(--ids-font-size-base);
+  color: var(--ids-color-neutral-600);
+  line-height: var(--ids-line-height-loose);
+}
+.phase-banner-stats {
+  margin-left: auto;
+  display: flex;
+  gap: var(--ids-space-4);
+  flex-shrink: 0;
+  align-items: center;
+}
+.phase-stat-pill {
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: var(--ids-border-radius-pill);
+  padding: var(--ids-space-2) var(--ids-space-4);
+  font-size: var(--ids-font-size-sm);
+  font-weight: var(--ids-font-weight-semibold);
+  color: var(--ids-color-neutral-700);
+  text-align: center;
+}
+.phase-stat-pill span {
+  display: block;
+  font-size: var(--ids-font-size-lg);
+  font-weight: var(--ids-font-weight-bold);
+  color: var(--ids-color-neutral-800);
+}
+
+/* ============================================================
+   TOUCHPOINT GRID
+   ============================================================ */
+.tp-section-title {
+  font-size: var(--ids-font-size-base);
+  font-weight: var(--ids-font-weight-semibold);
+  color: var(--ids-color-neutral-500);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: var(--ids-space-4);
+}
+.tp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--ids-space-4);
+  margin-bottom: var(--ids-space-6);
+}
+
+/* ============================================================
+   TOUCHPOINT CARD (IDS Card pattern)
+   ============================================================ */
+.tp-card {
+  background: var(--ids-bg-surface);
+  border: 1px solid var(--ids-border-color);
+  border-radius: var(--ids-border-radius-xl);
+  cursor: pointer;
+  transition: border-color var(--ids-transition-base), box-shadow var(--ids-transition-base);
+  overflow: hidden;
+}
+.tp-card:hover {
+  border-color: var(--ids-color-brand-primary);
+  box-shadow: var(--ids-shadow-md);
+}
+.tp-card.expanded {
+  border-color: var(--ids-color-brand-primary);
+  box-shadow: var(--ids-shadow-md);
+}
+.tp-card-header {
+  padding: var(--ids-space-5) var(--ids-space-6);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ids-space-4);
+}
+.tp-card-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--ids-border-radius-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.tp-card-meta { flex: 1; min-width: 0; }
+.tp-card-tags {
+  display: flex;
+  gap: var(--ids-space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--ids-space-2);
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--ids-font-size-xs);
+  font-weight: var(--ids-font-weight-semibold);
+  padding: 2px var(--ids-space-2);
+  border-radius: var(--ids-border-radius-pill);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tag--ai      { background: var(--ids-ai-light); color: #5B3E8C; }
+.tag--ux      { background: var(--ids-color-info-light); color: var(--ids-color-info-dark); }
+.tag--data    { background: var(--ids-color-success-light); color: var(--ids-color-success-dark); }
+.tag--human   { background: var(--ids-color-warning-light); color: var(--ids-color-warning-dark); }
+.tag--auto    { background: #EBF8F3; color: #0F6E56; }
+.tag--gate    { background: #E8ECF0; color: #4A5568; }
+.tp-card-title {
+  font-size: var(--ids-font-size-md);
+  font-weight: var(--ids-font-weight-semibold);
+  color: var(--ids-color-neutral-800);
+  margin-bottom: var(--ids-space-1);
+  line-height: var(--ids-line-height-tight);
+}
+.tp-card-summary {
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-500);
+  line-height: var(--ids-line-height-base);
+}
+.tp-card-chevron {
+  width: 20px; height: 20px;
+  color: var(--ids-color-neutral-400);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: transform var(--ids-transition-base);
+}
+.tp-card.expanded .tp-card-chevron { transform: rotate(180deg); }
+
+/* ============================================================
+   EXPANDABLE DETAIL SECTION
+   ============================================================ */
+.tp-detail {
+  display: none;
+  border-top: 1px solid var(--ids-border-color);
+  background: var(--ids-bg-surface-alt);
+}
+.tp-card.expanded .tp-detail { display: block; }
+.tp-detail-inner { padding: var(--ids-space-6); }
+.tp-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--ids-space-4);
+  margin-bottom: var(--ids-space-5);
+}
+.tp-detail-col-title {
+  font-size: var(--ids-font-size-xs);
+  font-weight: var(--ids-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: var(--ids-space-3);
+  padding-bottom: var(--ids-space-2);
+  border-bottom: 1px solid var(--ids-border-color);
+}
+.tp-detail-col-title--ai     { color: #7B5EA7; }
+.tp-detail-col-title--ux     { color: var(--ids-color-brand-primary); }
+.tp-detail-col-title--data   { color: var(--ids-color-success-base); }
+.tp-detail-col-title--human  { color: var(--ids-color-warning-base); }
+.detail-point {
+  display: flex;
+  gap: var(--ids-space-2);
+  margin-bottom: var(--ids-space-3);
+  align-items: flex-start;
+}
+.detail-bullet {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.detail-bullet--ai    { background: #7B5EA7; }
+.detail-bullet--ux    { background: var(--ids-color-brand-primary); }
+.detail-bullet--data  { background: var(--ids-color-success-base); }
+.detail-bullet--human { background: var(--ids-color-warning-base); }
+.detail-text {
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-600);
+  line-height: var(--ids-line-height-loose);
+}
+
+/* ============================================================
+   TIER LEGEND
+   ============================================================ */
+.tier-legend {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ids-space-4);
+  margin-bottom: var(--ids-space-8);
+}
+.tier-card {
+  border-radius: var(--ids-border-radius-xl);
+  padding: var(--ids-space-5) var(--ids-space-6);
+  border: 1px solid;
+}
+.tier-card--1 { background: var(--ids-tier1-light); border-color: #A3D9A0; }
+.tier-card--2 { background: var(--ids-tier2-light); border-color: #F5C18A; }
+.tier-card--3 { background: var(--ids-tier3-light); border-color: #F5A49F; }
+.tier-label {
+  font-size: var(--ids-font-size-xs);
+  font-weight: var(--ids-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--ids-space-1);
+}
+.tier-card--1 .tier-label { color: var(--ids-tier1); }
+.tier-card--2 .tier-label { color: var(--ids-tier2); }
+.tier-card--3 .tier-label { color: var(--ids-tier3); }
+.tier-title {
+  font-size: var(--ids-font-size-md);
+  font-weight: var(--ids-font-weight-semibold);
+  color: var(--ids-color-neutral-800);
+  margin-bottom: var(--ids-space-2);
+}
+.tier-desc {
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-600);
+  line-height: var(--ids-line-height-loose);
+  margin-bottom: var(--ids-space-3);
+}
+.tier-outcome {
+  font-size: var(--ids-font-size-xs);
+  font-weight: var(--ids-font-weight-semibold);
+  padding: var(--ids-space-1) var(--ids-space-3);
+  border-radius: var(--ids-border-radius-pill);
+  display: inline-block;
+}
+.tier-card--1 .tier-outcome { background: #C8EAC6; color: var(--ids-color-success-dark); }
+.tier-card--2 .tier-outcome { background: #FAD7B0; color: var(--ids-color-warning-dark); }
+.tier-card--3 .tier-outcome { background: #F9C7C4; color: var(--ids-color-error-dark); }
+
+/* ============================================================
+   AI AUTOMATION CALLOUT
+   ============================================================ */
+.ai-callout {
+  background: var(--ids-ai-light);
+  border: 1px solid #C9B8E8;
+  border-radius: var(--ids-border-radius-xl);
+  padding: var(--ids-space-5) var(--ids-space-6);
+  margin-bottom: var(--ids-space-6);
+  display: flex;
+  gap: var(--ids-space-4);
+  align-items: flex-start;
+}
+.ai-callout-icon {
+  width: 36px; height: 36px;
+  background: var(--ids-ai);
+  border-radius: var(--ids-border-radius-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.ai-callout-title {
+  font-size: var(--ids-font-size-base);
+  font-weight: var(--ids-font-weight-semibold);
+  color: #3D1D78;
+  margin-bottom: var(--ids-space-1);
+}
+.ai-callout-text {
+  font-size: var(--ids-font-size-sm);
+  color: #5B3E8C;
+  line-height: var(--ids-line-height-loose);
+}
+
+/* ============================================================
+   COGNITIVE LOAD PRINCIPLE BOX
+   ============================================================ */
+.principle-box {
+  border: 1px solid var(--ids-border-color);
+  border-radius: var(--ids-border-radius-xl);
+  padding: var(--ids-space-6) var(--ids-space-8);
+  margin-bottom: var(--ids-space-6);
+  background: var(--ids-bg-surface);
+}
+.principle-box-title {
+  font-size: var(--ids-font-size-base);
+  font-weight: var(--ids-font-weight-semibold);
+  color: var(--ids-color-neutral-700);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--ids-space-4);
+}
+.principle-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--ids-space-4);
+}
+.principle-item {
+  display: flex;
+  gap: var(--ids-space-3);
+  align-items: flex-start;
+}
+.principle-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--ids-color-brand-primary);
+  color: #fff;
+  font-size: var(--ids-font-size-xs);
+  font-weight: var(--ids-font-weight-bold);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.principle-text {
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-600);
+  line-height: var(--ids-line-height-loose);
+}
+
+/* ============================================================
+   JOURNEY TIMELINE (overview)
+   ============================================================ */
+.journey-timeline {
+  position: relative;
+  padding-left: var(--ids-space-8);
+  margin-bottom: var(--ids-space-8);
+}
+.journey-timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--ids-border-color);
+}
+.journey-phase-group { margin-bottom: var(--ids-space-6); }
+.journey-phase-marker {
+  display: flex;
+  align-items: center;
+  gap: var(--ids-space-3);
+  margin-bottom: var(--ids-space-4);
+  position: relative;
+}
+.journey-phase-marker::before {
+  content: '';
+  position: absolute;
+  left: -29px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--ids-bg-surface);
+  box-shadow: 0 0 0 2px var(--ids-border-color);
+}
+.journey-phase-marker--pre::before    { background: #7B5EA7; box-shadow: 0 0 0 2px #7B5EA7; }
+.journey-phase-marker--during::before { background: var(--ids-color-warning-base); box-shadow: 0 0 0 2px var(--ids-color-warning-base); }
+.journey-phase-marker--post::before   { background: var(--ids-color-success-base); box-shadow: 0 0 0 2px var(--ids-color-success-base); }
+.journey-phase-label {
+  font-size: var(--ids-font-size-base);
+  font-weight: var(--ids-font-weight-bold);
+  color: var(--ids-color-neutral-800);
+}
+.journey-phase-sublabel {
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-500);
+}
+.journey-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ids-space-2);
+  padding-left: var(--ids-space-2);
+}
+.journey-step-chip {
+  background: var(--ids-bg-surface);
+  border: 1px solid var(--ids-border-color);
+  border-radius: var(--ids-border-radius-pill);
+  padding: var(--ids-space-1) var(--ids-space-4);
+  font-size: var(--ids-font-size-sm);
+  color: var(--ids-color-neutral-600);
+  cursor: pointer;
+  transition: border-color var(--ids-transition-fast), color var(--ids-transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--ids-space-2);
+}
+.journey-step-chip:hover {
+  border-color: var(--ids-color-brand-primary);
+  color: var(--ids-color-brand-primary);
+}
+.journey-step-chip .chip-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   COGNITIVE LOAD SUMMARY TABLE
+   ============================================================ */
+.cog-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ids-font-size-sm);
+  margin-bottom: var(--ids-space-6);
+}
+.cog-table th {
+  background: var(--ids-bg-canvas);
+  padding: var(--ids-space-3) var(--ids-space-4);
+  text-align: left;
+  font-weight: var(--ids-font-weight-semibold);
+  color: var(--ids-color-neutral-600);
+  font-size: var(--ids-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--ids-border-color);
+}
+.cog-table td {
+  padding: var(--ids-space-3) var(--ids-space-4);
+  border-bottom: 1px solid var(--ids-border-color);
+  color: var(--ids-color-neutral-700);
+  vertical-align: top;
+  line-height: var(--ids-line-height-base);
+}
+.cog-table tr:last-child td { border-bottom: none; }
+.cog-table tr:hover td { background: var(--ids-bg-surface-alt); }
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--ids-space-3);
+  border-radius: var(--ids-border-radius-pill);
+  font-size: var(--ids-font-size-xs);
+  font-weight: var(--ids-font-weight-semibold);
+}
+.status-chip--auto   { background: #EBF8F3; color: #0F6E56; }
+.status-chip--confirm{ background: var(--ids-color-info-light); color: var(--ids-color-info-dark); }
+.status-chip--human  { background: var(--ids-color-warning-light); color: var(--ids-color-warning-dark); }
+
+/* ============================================================
+   SECTION DIVIDER
+   ============================================================ */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--ids-border-color);
+  margin: var(--ids-space-8) 0;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.doc-footer {
+  text-align: center;
+  padding: var(--ids-space-8);
+  color: var(--ids-color-neutral-400);
+  font-size: var(--ids-font-size-sm);
+  border-top: 1px solid var(--ids-border-color);
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.text-muted   { color: var(--ids-color-neutral-500); }
+.text-sm      { font-size: var(--ids-font-size-sm); }
+.mb-4         { margin-bottom: var(--ids-space-4); }
+.mb-6         { margin-bottom: var(--ids-space-6); }
+.mb-8         { margin-bottom: var(--ids-space-8); }
+
+@media (max-width: 768px) {
+  .page-wrapper { padding: var(--ids-space-4); }
+  .doc-header   { flex-direction: column; padding: var(--ids-space-6); }
+  .stats-strip  { grid-template-columns: repeat(2, 1fr); }
+  .tier-legend  { grid-template-columns: 1fr; }
+  .phase-banner { flex-direction: column; }
+  .phase-banner-stats { margin-left: 0; }
+  .doc-title    { font-size: var(--ids-font-size-2xl); }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ======================================================
+       DOCUMENT HEADER
+       ====================================================== -->
+  <header class="doc-header">
+    <div class="doc-header-content">
+      <div class="doc-badge">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5 3v2.5L6.5 7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        UX Strategy Document · Intuit Enterprise Suite
+      </div>
+      <h1 class="doc-title">QuickBooks Payroll Migration</h1>
+      <p class="doc-subtitle">3-Phase UX Strategy with AI Automation Touchpoints</p>
+      <div class="doc-meta">
+        <div class="doc-meta-item"><strong>Product:</strong> QuickBooks Desktop → QuickBooks Online Payroll</div>
+        <div class="doc-meta-item"><strong>Scope:</strong> Paycheck Migration · Tiered Employee Classification</div>
+        <div class="doc-meta-item"><strong>Design System:</strong> Intuit Design System v3 / IES Theme</div>
+        <div class="doc-meta-item"><strong>Status:</strong> Strategy · For Review</div>
+      </div>
+    </div>
+    <div class="intuit-logo-mark">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4z" fill="white" fill-opacity="0.2"/>
+        <path d="M13 10h6v12h-6z" fill="white"/>
+        <path d="M10 13h3v6h-3zM19 13h3v6h-3z" fill="white" fill-opacity="0.7"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ======================================================
+       SUMMARY STATS
+       ====================================================== -->
+  <div class="stats-strip">
+    <div class="stat-card">
+      <div class="stat-number">18</div>
+      <div class="stat-label">Total touchpoints across 3 phases</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">4</div>
+      <div class="stat-label">Mandatory human decision points</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">11</div>
+      <div class="stat-label">AI-automated or AI-assisted touchpoints</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Employee tiers — completeness-based routing</div>
+    </div>
+  </div>
+
+  <!-- ======================================================
+       PHASE TABS
+       ====================================================== -->
+  <nav class="phase-nav" role="tablist" aria-label="Migration phases">
+    <button class="phase-tab-btn active" data-phase="overview" onclick="switchTab('overview', this)" role="tab" aria-selected="true">
+      <span class="phase-dot"></span>Overview &amp; Tiers
+    </button>
+    <button class="phase-tab-btn" data-phase="pre" onclick="switchTab('pre', this)" role="tab" aria-selected="false">
+      <span class="phase-dot"></span>Pre-Migration
+    </button>
+    <button class="phase-tab-btn" data-phase="during" onclick="switchTab('during', this)" role="tab" aria-selected="false">
+      <span class="phase-dot"></span>During Migration
+    </button>
+    <button class="phase-tab-btn" data-phase="post" onclick="switchTab('post', this)" role="tab" aria-selected="false">
+      <span class="phase-dot"></span>Post-Migration
+    </button>
+    <button class="phase-tab-btn" data-phase="cogload" onclick="switchTab('cogload', this)" role="tab" aria-selected="false">
+      <span class="phase-dot" style="background:var(--ids-color-neutral-400)"></span>Cognitive Load Map
+    </button>
+  </nav>
+
+  <div class="phase-container">
+
+    <!-- ==================================================
+         OVERVIEW PANEL
+         ================================================== -->
+    <div class="phase-panel active" id="panel-overview" role="tabpanel">
+
+      <div class="ai-callout">
+        <div class="ai-callout-icon">✦</div>
+        <div>
+          <div class="ai-callout-title">Core design philosophy</div>
+          <div class="ai-callout-text">The system does the knowing — the customer makes decisions. Every touchpoint is designed to surface a pre-computed answer for confirmation, not a blank form for data entry. AI automation handles classification, field inference, discrepancy detection, and anomaly monitoring. Humans are engaged only for judgment calls: tier overrides, low-confidence AI suggestions, batch YTD sign-offs, and the decommission gate.</div>
+        </div>
+      </div>
+
+      <p class="tp-section-title">Employee tier routing — completeness-based classification</p>
+      <div class="tier-legend">
+        <div class="tier-card tier-card--1">
+          <div class="tier-label">Tier 1</div>
+          <div class="tier-title">Active, full data available</div>
+          <div class="tier-desc">All 9 required fields present: SSN, address, W-4 filing status, YTD wages, YTD taxes, deduction items, pay schedule, last pay date, employment status.</div>
+          <span class="tier-outcome">Migrate as paycheck object — fully linked to QBO employee record</span>
+        </div>
+        <div class="tier-card tier-card--2">
+          <div class="tier-label">Tier 2</div>
+          <div class="tier-title">Active, partial data</div>
+          <div class="tier-desc">Employee is active but one or more required fields are missing or unconfirmed — stale W-4, missing local tax ID, unmapped deduction items, or non-standard pay types.</div>
+          <span class="tier-outcome">Guided remediation → migrate as paycheck after gap-fill confirmed</span>
+        </div>
+        <div class="tier-card tier-card--3">
+          <div class="tier-label">Tier 3</div>
+          <div class="tier-title">Inactive or prior-period only</div>
+          <div class="tier-desc">Employee no longer active, or only prior-year paychecks exist with insufficient data to meet QBO Payroll's minimum requirements for a live paycheck record.</div>
+          <span class="tier-outcome">Preserved paycheck archive — structured, queryable, re-linkable</span>
+        </div>
+      </div>
+
+      <p class="tp-section-title">End-to-end migration journey</p>
+      <div class="journey-timeline">
+        <div class="journey-phase-group">
+          <div class="journey-phase-marker journey-phase-marker--pre">
+            <span class="journey-phase-label">Pre-Migration</span>
+            <span class="journey-phase-sublabel">— readiness, classification, mapping</span>
+          </div>
+          <div class="journey-steps">
+            <div class="journey-step-chip" onclick="goToTouchpoint('pre','tp-pre-1')"><span class="chip-dot" style="background:#7B5EA7"></span>QBDT health scan</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('pre','tp-pre-2')"><span class="chip-dot" style="background:#7B5EA7"></span>Completeness scoring</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('pre','tp-pre-3')"><span class="chip-dot" style="background:#7B5EA7"></span>Readiness report</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('pre','tp-pre-4')"><span class="chip-dot" style="background:#7B5EA7"></span>AI gap-fill suggestions</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('pre','tp-pre-5')"><span class="chip-dot" style="background:#7B5EA7"></span>Payroll item mapping</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('pre','tp-pre-6')"><span class="chip-dot" style="background:#7B5EA7"></span>Baseline export</div>
+          </div>
+        </div>
+        <div class="journey-phase-group">
+          <div class="journey-phase-marker journey-phase-marker--during">
+            <span class="journey-phase-label">During Migration</span>
+            <span class="journey-phase-sublabel">— tiered processing, intercept, validation</span>
+          </div>
+          <div class="journey-steps">
+            <div class="journey-step-chip" onclick="goToTouchpoint('during','tp-d-1')"><span class="chip-dot" style="background:var(--ids-color-warning-base)"></span>Tier 1 migration</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('during','tp-d-2')"><span class="chip-dot" style="background:var(--ids-color-warning-base)"></span>Tier 2 remediation</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('during','tp-d-3')"><span class="chip-dot" style="background:var(--ids-color-warning-base)"></span>Tier 3 archiving</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('during','tp-d-4')"><span class="chip-dot" style="background:var(--ids-color-warning-base)"></span>Check intercept</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('during','tp-d-5')"><span class="chip-dot" style="background:var(--ids-color-warning-base)"></span>Progress dashboard</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('during','tp-d-6')"><span class="chip-dot" style="background:var(--ids-color-warning-base)"></span>Exception surfacing</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('during','tp-d-7')"><span class="chip-dot" style="background:var(--ids-color-warning-base)"></span>YTD checkpoint</div>
+          </div>
+        </div>
+        <div class="journey-phase-group">
+          <div class="journey-phase-marker journey-phase-marker--post">
+            <span class="journey-phase-label">Post-Migration</span>
+            <span class="journey-phase-sublabel">— validation, monitoring, sign-off</span>
+          </div>
+          <div class="journey-steps">
+            <div class="journey-step-chip" onclick="goToTouchpoint('post','tp-p-1')"><span class="chip-dot" style="background:var(--ids-color-success-base)"></span>Automated diff</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('post','tp-p-2')"><span class="chip-dot" style="background:var(--ids-color-success-base)"></span>Parallel-run monitor</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('post','tp-p-3')"><span class="chip-dot" style="background:var(--ids-color-success-base)"></span>Preserved paycheck portal</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('post','tp-p-4')"><span class="chip-dot" style="background:var(--ids-color-success-base)"></span>Anomaly detection</div>
+            <div class="journey-step-chip" onclick="goToTouchpoint('post','tp-p-5')"><span class="chip-dot" style="background:var(--ids-color-success-base)"></span>Sign-off report</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================
+         PRE-MIGRATION PANEL
+         ================================================== -->
+    <div class="phase-panel" id="panel-pre" role="tabpanel">
+      <div class="phase-banner phase-banner--pre">
+        <div class="phase-banner-icon">◈</div>
+        <div>
+          <div class="phase-banner-title">Pre-Migration Phase</div>
+          <div class="phase-banner-desc">Establish a complete picture of the data landscape before a single record moves. The goal is to eliminate every surprise — file health, employee completeness, payroll item compatibility, and reconciliation anchors are all resolved here. The customer leaves this phase with a signed-off readiness report, not an open question.</div>
+        </div>
+        <div class="phase-banner-stats">
+          <div class="phase-stat-pill"><span>6</span>Touchpoints</div>
+          <div class="phase-stat-pill"><span>4</span>AI-assisted</div>
+          <div class="phase-stat-pill"><span>1</span>Human gate</div>
+        </div>
+      </div>
+
+      <div class="ai-callout">
+        <div class="ai-callout-icon">✦</div>
+        <div>
+          <div class="ai-callout-title">AI automation scope in pre-migration</div>
+          <div class="ai-callout-text">AI reads and scores QBDT files autonomously. It infers missing W-4 details from 6-month withholding patterns, semantically maps payroll item names to QBO equivalents, and auto-exports baseline reports with zero customer input. The customer's cognitive task is reduced to reviewing and confirming a pre-computed state — not assembling it.</div>
+        </div>
+      </div>
+
+      <p class="tp-section-title">Touchpoints — click to expand details</p>
+      <div class="tp-grid" id="grid-pre">
+
+        <div class="tp-card" id="tp-pre-1" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#F0EBF8">🔍</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI-automated</span>
+                <span class="tag tag--data">Data integrity</span>
+              </div>
+              <div class="tp-card-title">QBDT health scan</div>
+              <div class="tp-card-summary">AI reads the company file and surfaces file health, payroll version, and migration viability before the customer makes any commitment.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Reads QBDT company file: payroll version, target count, last payroll run date, active vs inactive employee ratio, file corruption indicators</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">If targets exceed 750k, immediately surfaces Condense Data option with estimated time savings — before customer invests time in setup</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Single progress screen — "Scanning your company file…" — no forms, no decisions yet. 30–90 second operation with visual progress indicator</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Output: Go / Caution / Stop signal with plain-English explanation. No technical error codes surfaced to the customer</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--data">Data integrity</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">File integrity check runs before scan completes — equivalent to QBDT's Verify Data utility, ensuring corrupted files are caught here, not mid-migration</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-2" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#F0EBF8">📊</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI-automated</span>
+                <span class="tag tag--human">Human override</span>
+              </div>
+              <div class="tp-card-title">Employee completeness scoring</div>
+              <div class="tp-card-summary">Every employee record is automatically scored across 9 required fields and assigned to Tier 1, 2, or 3 — with manual override available for edge cases.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Completeness algorithm checks 9 fields per employee: SSN, address, W-4 filing status, YTD wages, YTD taxes, deduction items, pay schedule, last pay date, employment status</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Tier assignment is automatic — Tier 1 (all fields present), Tier 2 (active, gaps found), Tier 3 (inactive or insufficient for QBO Payroll requirements)</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Table view sorted by tier — Tier 1 (green), Tier 2 (amber), Tier 3 (coral). Missing fields shown as inline badges per row, not buried in detail screens</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Filter/sort by tier, department, last pay date. Bulk-select for shared issue resolution across multiple employees</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--human">Human touchpoint</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--human"></div><div class="detail-text">Customer can manually override tier assignment — e.g. a rehired employee with a partial record who is active and must be migrated as Tier 1</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--human"></div><div class="detail-text">Override requires confirmation with a reason — creates an audit log entry for post-migration review</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-3" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E5F1FA">📋</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI narrative</span>
+                <span class="tag tag--ux">UX artifact</span>
+              </div>
+              <div class="tp-card-title">Migration readiness report</div>
+              <div class="tp-card-summary">A single-screen summary of what's ready, what needs fixing, what will be archived — with an AI narrative explaining the biggest risks in plain English.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">AI generates a plain-English risk narrative: "3 employees have no W-4 on file — this will affect Q3 tax filings if not resolved before migration"</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Estimated time to complete Tier 2 remediation is computed from the number of gaps and AI confidence in auto-suggestions</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Three counters: Tier 1 ready / Tier 2 needs input / Tier 3 will archive — with projected migration duration and recommended migration window (between payroll cycles)</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Exportable PDF for ProAdvisor/accountant review before the customer commits. Reduces back-and-forth during the migration window itself</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-4" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#F0EBF8">✦</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI inference</span>
+                <span class="tag tag--human">Confirm / override</span>
+              </div>
+              <div class="tp-card-title">AI gap-fill suggestions</div>
+              <div class="tp-card-summary">For every missing Tier 2 field, AI infers a suggested value from paycheck history — presented as a confirm/override screen, never a blank form.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">W-4 filing status inferred from 6-month withholding patterns. Address inferred from check delivery history. Deduction items matched from paycheck line items</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Confidence score shown per suggestion — high confidence (≥85%) auto-approved in bulk, low confidence flagged amber for explicit human review</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Confirm-or-edit flow — not blank forms. Customer sees pre-populated value with confidence indicator. "Accept all high-confidence" available as a single action</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Bulk confirm: if 15 employees share the same missing 401k deduction item, one action resolves all 15 — not 15 separate screens</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--human">Human touchpoint</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--human"></div><div class="detail-text">Low-confidence and tax-critical fields (W-4 allowances, filing status) require explicit human confirmation regardless of AI confidence — system never silently fills tax fields</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-5" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E5F1FA">🔗</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">Semantic matching</span>
+                <span class="tag tag--ux">UX artifact</span>
+              </div>
+              <div class="tp-card-title">Payroll item mapping preview</div>
+              <div class="tp-card-summary">QBDT payroll items semantically matched to QBO pay types — customer confirms or overrides before migration begins, preventing silent data loss.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Semantic matching of QBDT payroll item names to QBO pay type taxonomy. High-confidence matches (e.g. "Federal Income Tax" → Federal Income Tax) auto-confirmed</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Mapping profile is portable — saved and reusable across multiple company files, reducing per-file setup time for ProAdvisors managing multiple clients</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Two-column table: QBDT item | QBO mapping. Green rows auto-confirmed, amber rows need one-click confirm, red rows need manual selection from a searchable dropdown</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Workers' comp codes, garnishments, and non-standard deductions are explicitly flagged — these are known high-risk mapping areas per QBO migration documentation</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-6" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E6F4E4">📥</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--auto">Zero-click</span>
+                <span class="tag tag--data">Reconciliation anchor</span>
+              </div>
+              <div class="tp-card-title">Pre-migration baseline export</div>
+              <div class="tp-card-summary">System auto-exports Balance Sheet, P&amp;L, Payroll Summary, and Check Register before migration begins — establishing the ground truth for post-migration diff.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--data">Data integrity</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Auto-exports: Balance Sheet (as-of migration date), P&L (current year), Payroll Summary by Employee (YTD), Check Register, and Liability Balance report</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">These become the ground truth for the post-migration diff engine — every discrepancy is measured against these snapshots, not reconstructed from memory</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Zero-click — happens automatically before the migration window opens. Customer receives email confirmation with secure download links. No manual report-running required</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Stored in migration audit trail and accessible from QBO for 7 years — satisfies IRS recordkeeping requirements without additional customer action</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================================================
+         DURING MIGRATION PANEL
+         ================================================== -->
+    <div class="phase-panel" id="panel-during" role="tabpanel">
+      <div class="phase-banner phase-banner--during">
+        <div class="phase-banner-icon">⚡</div>
+        <div>
+          <div class="phase-banner-title">During Migration Phase</div>
+          <div class="phase-banner-desc">Progressive commitment through tiered processing — each batch confirmed before the next begins. No all-or-nothing migration window. The check-to-paycheck intercept layer ensures no paycheck is silently converted to a check. Every exception is grouped, explained in plain English, and resolved with a single suggested action.</div>
+        </div>
+        <div class="phase-banner-stats">
+          <div class="phase-stat-pill"><span>7</span>Touchpoints</div>
+          <div class="phase-stat-pill"><span>5</span>AI-assisted</div>
+          <div class="phase-stat-pill"><span>2</span>Human gates</div>
+        </div>
+      </div>
+
+      <div class="ai-callout">
+        <div class="ai-callout-icon">✦</div>
+        <div>
+          <div class="ai-callout-title">AI automation scope during migration</div>
+          <div class="ai-callout-text">The check-to-paycheck intercept layer is the most critical AI function in this phase — it identifies paychecks that were converted to generic checks by the native QBO migration tool and re-enriches them with full payroll item breakdowns from preserved QBDT data. The exception clustering engine groups related errors by root cause, turning what would be 40 individual alerts into 3–5 grouped actions.</div>
+        </div>
+      </div>
+
+      <p class="tp-section-title">Touchpoints — click to expand details</p>
+      <div class="tp-grid" id="grid-during">
+
+        <div class="tp-card" id="tp-d-1" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E6F4E4">✓</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--auto">Fully automated</span>
+                <span class="tag tag--data">Paycheck object</span>
+              </div>
+              <div class="tp-card-title">Tier 1 paycheck migration</div>
+              <div class="tp-card-summary">Full paychecks migrated as paycheck objects via QBO Payroll API — not as journal entries or checks — with employee record linkage validated per batch.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--data">Data integrity</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Paychecks migrated via QBO Payroll API with full payroll item breakdown — gross wages, each tax line, each deduction, employer contributions, net pay, period dates, check number</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Employee record linkage validated before each batch — migration halts if a required field becomes unavailable mid-batch rather than silently degrading to check conversion</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Post-batch: AI checks gross-to-net math on each migrated paycheck against QBDT source. Mismatches route to exception queue — not silently through</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Negative value detection: employee repayments and deduction reversals that convert to positive in QBO are flagged and corrected using QBDT deduction item setup</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Fully automated — no customer input needed for Tier 1. Progress shown as a completion bar per employee group, not a raw spinner</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-d-2" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:var(--ids-color-warning-light)">✏</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI pre-fill</span>
+                <span class="tag tag--human">Confirm / override</span>
+              </div>
+              <div class="tp-card-title">Tier 2 guided remediation</div>
+              <div class="tp-card-summary">Per-employee micro-wizards surface only the fields that are missing — AI pre-populates suggestions, bulk confirm available for shared issues across employees.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Per-employee micro-wizard: shows only missing or unconfirmed fields. If an employee needs 2 fields filled, the wizard has 2 steps — not 8. Cognitive scope is scoped to the gap, not the full employee profile</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Bulk confirm: if 15 employees all share the same missing deduction item, one action resolves all 15. Grouped issue resolution is the primary mode, not one-by-one</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Customer sees: "Based on John's last 12 paychecks, we suggest: Single filing status, 1 allowance — does that look right?" — not a blank W-4 form</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Mid-period migration handling: AI calculates YTD adjustments needed when migration falls within a tax quarter — surfaces the adjustment with a one-click apply</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-d-3" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:var(--ids-color-error-light)">🗄</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--data">Structured archive</span>
+                <span class="tag tag--auto">Zero-click</span>
+              </div>
+              <div class="tp-card-title">Tier 3 archive creation</div>
+              <div class="tp-card-summary">Inactive employee paychecks stored as fully structured, queryable objects — not converted to checks, not flattened to PDFs. Re-linkable when employees return.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--data">Data integrity</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Each paycheck stored as a structured record: gross wages, each tax line, each deduction, employer contributions, net pay, period dates, check number — all discrete queryable fields, not a string blob</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Tagged by tax year, employment period, W-2 relevance, and payroll quarter — surfaces automatically if a W-2 correction or labor audit arises later</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">"Archived — preserved for compliance" status shown with a restore path. Customer understands these aren't lost — they're protected, accessible, and reportable from within QBO</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Re-linkable: when an archived employee is rehired, their historical paychecks associate to the new QBO employee record with a single action</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-d-4" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#F0EBF8">⚡</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI intercept</span>
+                <span class="tag tag--data">Data recovery</span>
+              </div>
+              <div class="tp-card-title">Check-to-paycheck intercept</div>
+              <div class="tp-card-summary">If the native QBO tool converts any paycheck to a check, the intercept layer catches it, re-matches it to QBDT payroll data, and re-posts it as a full paycheck object.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Identifies check-converted paychecks by matching check date + net amount + employee ID + period end date against the QBDT payroll export — multi-field matching prevents false positives</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Matched records re-enriched with payroll item breakdowns from preserved QBDT data and re-posted as paycheck objects in QBO Payroll — net amount stays identical, payroll structure is restored</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Customer sees "X paychecks recovered from check conversion" — a success signal, not a warning. This communicates that the system is actively protecting their payroll data integrity</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Unmatched check conversions (no QBDT source found) are surfaced in the exception queue with the check details and a guided path to manual reconciliation</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-d-5" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E5F1FA">📈</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ux">Real-time</span>
+                <span class="tag tag--human">Pause / resume</span>
+              </div>
+              <div class="tp-card-title">Migration progress dashboard</div>
+              <div class="tp-card-summary">Live counters for each tier — no black-box waiting. Time estimates update in real time. Migration can be paused between payroll cycles and resumed without data loss.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Live counters: Tier 1 migrated / Tier 2 in remediation / Tier 3 archived / exceptions flagged. Customer knows exactly where they are at every moment</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Time estimate updates in real time based on actual processing speed. If migration runs longer than expected, customer is notified proactively — not surprised</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Pause/resume supported — migration can be paused between payroll cycles and resumed. No requirement to complete in a single session, reducing scheduling pressure</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-d-6" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:var(--ids-color-warning-light)">⚠</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI clustering</span>
+                <span class="tag tag--ux">Plain language</span>
+              </div>
+              <div class="tp-card-title">Exception surfacing</div>
+              <div class="tp-card-summary">Errors grouped by root cause, explained in plain English, each with a single suggested action. Never raw error codes. Blocking vs advisory vs informational classification.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Error clustering: if 8 employees have the same root cause, they're shown as one group with a single-action fix — not 8 separate alerts. Reduces exception-handling cognitive load by up to 80% on large files</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Error categorization: Blocking (must fix before migration completes), Advisory (can proceed but should review), Informational (logged, no action needed)</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Every error shows: what happened / why it happened / one suggested action. Example: "Sarah Chen: missing state tax ID — click here to add it." No error codes, no technical jargon</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Advisory errors include an "explain this difference" link that shows AI-generated context — e.g. known QBO rounding behavior, FIFO vs average cost inventory change</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-d-7" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E6F4E4">✓✓</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--human">Human sign-off</span>
+                <span class="tag tag--ai">AI explanation</span>
+              </div>
+              <div class="tp-card-title">YTD validation checkpoint</div>
+              <div class="tp-card-summary">After each employee batch, a side-by-side QBDT vs QBO YTD comparison is presented for customer sign-off — with AI explaining any delta in plain English.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--data">Data integrity</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Side-by-side comparison per batch: QBDT YTD vs QBO YTD for gross wages, federal tax, state tax, FICA, each deduction line. Line-item diff, not just totals</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Matches shown green (no action), discrepancies shown amber with delta amounts. Customer signs off per batch — incremental review, not one overwhelming final screen</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">AI explains each delta in plain English: "The $12.50 difference in John's federal tax is due to QBO's daily rounding method vs QBDT's per-period method — within IRS tolerance"</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Expected differences (rounding, FIFO/avg cost, audit trail exclusion) are pre-classified and explained automatically — customer only investigates genuinely unexpected items</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================================================
+         POST-MIGRATION PANEL
+         ================================================== -->
+    <div class="phase-panel" id="panel-post" role="tabpanel">
+      <div class="phase-banner phase-banner--post">
+        <div class="phase-banner-icon">◉</div>
+        <div>
+          <div class="phase-banner-title">Post-Migration Phase</div>
+          <div class="phase-banner-desc">Confidence through evidence, not faith. The parallel-run monitor replaces the subjective "I feel ready" with a measurable signal — 5 consecutive clean days before QBDT decommission is recommended. Anomaly detection on the first 3 live QBO payroll runs catches problems before employees experience them. The sign-off report closes the loop with a dated, auditable record of what moved, what was preserved, and what was resolved.</div>
+        </div>
+        <div class="phase-banner-stats">
+          <div class="phase-stat-pill"><span>5</span>Touchpoints</div>
+          <div class="phase-stat-pill"><span>4</span>AI-assisted</div>
+          <div class="phase-stat-pill"><span>1</span>Human gate</div>
+        </div>
+      </div>
+
+      <div class="ai-callout">
+        <div class="ai-callout-icon">✦</div>
+        <div>
+          <div class="ai-callout-title">AI automation scope post-migration</div>
+          <div class="ai-callout-text">Post-migration AI shifts from data transformation to pattern monitoring. The automated diff engine categorizes every discrepancy against known QBO migration behaviors — distinguishing expected differences from genuine problems. The anomaly detector compares the first live QBO payroll runs against QBDT historical patterns, catching statistical outliers before payroll is submitted to employees.</div>
+        </div>
+      </div>
+
+      <p class="tp-section-title">Touchpoints — click to expand details</p>
+      <div class="tp-grid" id="grid-post">
+
+        <div class="tp-card" id="tp-p-1" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E5F1FA">⇌</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI categorization</span>
+                <span class="tag tag--data">Line-item diff</span>
+              </div>
+              <div class="tp-card-title">Automated report comparison</div>
+              <div class="tp-card-summary">QBO reports diffed line-by-line against pre-migration baseline snapshots — discrepancies categorized as expected, known limitation, or genuine anomaly requiring action.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">System diffs QBO Balance Sheet, P&L, and Payroll Summary against pre-migration baseline exports. Line-by-line comparison, not just net totals</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">AI categorizes each difference: Expected (e.g. FIFO vs avg cost inventory), Known limitation (e.g. audit trail not migrated, liability refunds converted to journal entries), or Genuine discrepancy requiring investigation</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Color-coded diff table: green rows match, amber rows have explainable differences, red rows need investigation. Customer never needs to run a single report manually</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">"Expected differences explained" expandable section — customer can review why amber rows are acceptable without needing a ProAdvisor call for routine QBO migration behavior</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-p-2" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E6F4E4">◎</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--auto">Nightly automated</span>
+                <span class="tag tag--human">Decommission gate</span>
+              </div>
+              <div class="tp-card-title">Parallel-run monitor</div>
+              <div class="tp-card-summary">Nightly comparison of QBDT and QBO registers during the dual-run period. Decommission of QBDT only recommended after 5 consecutive clean parallel-run days.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--data">Data integrity</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">During the parallel period (2–4 weeks), nightly automated comparison of QBDT and QBO check registers, payroll registers, and liability balances. All three must reconcile before the day is marked clean</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Decommission gate: system will not recommend closing QBDT until 5 consecutive clean parallel-run days are logged. Customer has a measurable signal, not a subjective judgment call</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Daily digest: "Everything matched today — Day 3 of 5 clean days" or "2 items need your attention today." Not a full report dump. Customer stays informed without cognitive overload</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Clean-day counter shown prominently — gives customer a clear progress signal toward the decommission gate and reduces anxiety during the parallel period</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-p-3" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E5F1FA">🗄</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ux">Searchable portal</span>
+                <span class="tag tag--data">Re-linkable</span>
+              </div>
+              <div class="tp-card-title">Preserved paycheck portal</div>
+              <div class="tp-card-summary">A dedicated section within QBO for all archived Tier 3 paychecks — searchable by employee, period, amount, or tax year. Fully re-linkable when employees return.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ux">UX design</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Accessible from within QBO as a dedicated section — not a separate app or external archive. Search by employee name, pay period, amount range, or tax year. Returns structured paycheck records, not PDF scans</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ux"></div><div class="detail-text">Re-link action: when an archived employee is rehired, their historical paychecks associate to the new QBO record in one click. YTD context carries forward for W-2 accuracy</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">W-2 correction support: if a correction is needed for a prior-year archived paycheck, the portal surfaces the affected record and pre-fills W-2c fields automatically using the structured data</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Compliance surfacing: if a labor audit, FICA reconciliation, or state garnishment inquiry requires historical paycheck detail, AI identifies the relevant archived records from a natural-language query</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-p-4" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#F0EBF8">◈</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">Pattern detection</span>
+                <span class="tag tag--human">Pre-submit alert</span>
+              </div>
+              <div class="tp-card-title">Anomaly detection alerts</div>
+              <div class="tp-card-summary">AI monitors the first 3 live QBO payroll runs against QBDT historical patterns — statistical outliers surface before payroll is submitted, not after employees report issues.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">After each of the first 3 live payroll runs, AI compares gross wages, tax withholdings, net pay distributions, and deduction totals against the last 6 months of QBDT payroll patterns</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">If a run is statistically anomalous (e.g. total net pay is 15% lower than rolling average, or a specific deduction is missing across all employees), an alert fires before payroll is submitted</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--human">Human touchpoint</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--human"></div><div class="detail-text">Customer can mark an anomaly as expected (e.g. seasonal workforce reduction, one-time bonus period) to train the monitor — reduces false positives without requiring IT or ProAdvisor involvement</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--human"></div><div class="detail-text">Anomaly history is retained in the migration audit trail — if a payroll error surfaces later (employee complaint, tax notice), the detection record provides a forensic timeline</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-card" id="tp-p-5" onclick="toggleCard(this)">
+          <div class="tp-card-header">
+            <div class="tp-card-icon" style="background:#E6F4E4">✦</div>
+            <div class="tp-card-meta">
+              <div class="tp-card-tags">
+                <span class="tag tag--ai">AI narrative</span>
+                <span class="tag tag--data">Audit artifact</span>
+              </div>
+              <div class="tp-card-title">Migration sign-off report</div>
+              <div class="tp-card-summary">Auto-generated final report: what moved, what was preserved, what was resolved — shareable with ProAdvisor, auditable, and readable by a non-technical business owner.</div>
+            </div>
+            <svg class="tp-card-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail">
+            <div class="tp-detail-inner">
+              <div class="tp-detail-grid">
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--data">Data integrity</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Auto-generated document: migration date, employee tier breakdown, paychecks migrated vs archived, reconciliation outcomes, exceptions resolved, parallel-run clean days achieved, decommission date</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--data"></div><div class="detail-text">Serves as the legal audit trail if questions arise later about the migration. Stored in QBO and accessible for 7 years — aligned with IRS record retention requirements</div></div>
+                </div>
+                <div>
+                  <div class="tp-detail-col-title tp-detail-col-title--ai">AI automation</div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">AI summary section: plain-English narrative of what moved, what was preserved, and what was resolved — readable by a non-technical business owner, not just a bookkeeper or ProAdvisor</div></div>
+                  <div class="detail-point"><div class="detail-bullet detail-bullet--ai"></div><div class="detail-text">Shareable as PDF and as a time-limited secure link for ProAdvisor/accountant review. Downloadable in structured JSON for integration with client management systems</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================================================
+         COGNITIVE LOAD MAP PANEL
+         ================================================== -->
+    <div class="phase-panel" id="panel-cogload" role="tabpanel">
+      <div style="margin-bottom:var(--ids-space-6)">
+        <h2 style="font-size:var(--ids-font-size-xl);font-weight:var(--ids-font-weight-bold);color:var(--ids-color-neutral-800);margin-bottom:var(--ids-space-2)">Cognitive load reduction map</h2>
+        <p style="font-size:var(--ids-font-size-base);color:var(--ids-color-neutral-500);line-height:var(--ids-line-height-loose)">Across all 18 touchpoints, only 4 require a mandatory human decision. The table below maps each touchpoint to its interaction mode and the cognitive task it replaces — showing where AI reduces memory-and-retrieval tasks to confirmation tasks.</p>
+      </div>
+
+      <div class="principle-box mb-6">
+        <div class="principle-box-title">Core design principles — reducing cognitive burden</div>
+        <div class="principle-list">
+          <div class="principle-item">
+            <div class="principle-num">1</div>
+            <div class="principle-text">Never ask a customer to retrieve information — only ask them to confirm or override what the system already found</div>
+          </div>
+          <div class="principle-item">
+            <div class="principle-num">2</div>
+            <div class="principle-text">Progressive commitment — migration is a sequence of small confirmed steps, not one all-or-nothing window</div>
+          </div>
+          <div class="principle-item">
+            <div class="principle-num">3</div>
+            <div class="principle-text">Group exceptions by root cause — one decision for 15 employees beats 15 identical decisions</div>
+          </div>
+          <div class="principle-item">
+            <div class="principle-num">4</div>
+            <div class="principle-text">Confidence through evidence — decommission is gated on a measurable signal, not a feeling</div>
+          </div>
+          <div class="principle-item">
+            <div class="principle-num">5</div>
+            <div class="principle-text">Every error gets: what happened / why it happened / one suggested action — no error codes, no jargon</div>
+          </div>
+          <div class="principle-item">
+            <div class="principle-num">6</div>
+            <div class="principle-text">AI fills blanks, humans make judgment calls — the boundary is always explicit and never crossed silently</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="cog-table">
+        <thead>
+          <tr>
+            <th style="width:20%">Touchpoint</th>
+            <th style="width:10%">Phase</th>
+            <th style="width:16%">Interaction mode</th>
+            <th style="width:28%">Cognitive task today (current state)</th>
+            <th style="width:26%">Cognitive task with enhancement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>QBDT health scan</strong></td><td><span style="font-size:11px;color:#7B5EA7;font-weight:600">Pre</span></td><td><span class="status-chip status-chip--auto">Fully automated</span></td><td class="text-muted">Customer manually checks file size, version, corruption — often discovers problems after migration starts</td><td>Zero-click — system surfaces go/caution/stop before customer commits</td></tr>
+          <tr><td><strong>Employee completeness scoring</strong></td><td><span style="font-size:11px;color:#7B5EA7;font-weight:600">Pre</span></td><td><span class="status-chip status-chip--auto">AI + override</span></td><td class="text-muted">No upfront visibility — gaps discovered mid-migration as individual errors</td><td>Automated tier assignment; customer reviews table and overrides edge cases only</td></tr>
+          <tr><td><strong>Readiness report</strong></td><td><span style="font-size:11px;color:#7B5EA7;font-weight:600">Pre</span></td><td><span class="status-chip status-chip--auto">AI generated</span></td><td class="text-muted">Customer must run multiple QBDT reports and mentally model the migration impact</td><td>Single generated document with AI risk narrative — exportable for ProAdvisor review</td></tr>
+          <tr><td><strong>AI gap-fill suggestions</strong></td><td><span style="font-size:11px;color:#7B5EA7;font-weight:600">Pre</span></td><td><span class="status-chip status-chip--confirm">Confirm / override</span></td><td class="text-muted">Customer must locate W-4 forms, address records, deduction setup — often across multiple sources</td><td>Pre-populated suggestions based on paycheck history; one-click accept for high-confidence items</td></tr>
+          <tr><td><strong>Payroll item mapping</strong></td><td><span style="font-size:11px;color:#7B5EA7;font-weight:600">Pre</span></td><td><span class="status-chip status-chip--confirm">Confirm / override</span></td><td class="text-muted">Manual mapping of every custom payroll item — no guidance on equivalents, high error rate</td><td>Semantic matching auto-confirms high-confidence mappings; customer reviews amber and red rows only</td></tr>
+          <tr><td><strong>Baseline export</strong></td><td><span style="font-size:11px;color:#7B5EA7;font-weight:600">Pre</span></td><td><span class="status-chip status-chip--auto">Zero-click</span></td><td class="text-muted">Customer must remember to run and save 4+ reports before migration — frequently forgotten</td><td>Automatic — happens before migration window opens, emailed with download links</td></tr>
+          <tr><td><strong>Tier 1 migration</strong></td><td><span style="font-size:11px;color:var(--ids-color-warning-base);font-weight:600">During</span></td><td><span class="status-chip status-chip--auto">Fully automated</span></td><td class="text-muted">Manual YTD entry per employee — every field, every period, every deduction</td><td>Fully automated batch processing — customer monitors progress counter only</td></tr>
+          <tr><td><strong>Tier 2 remediation</strong></td><td><span style="font-size:11px;color:var(--ids-color-warning-base);font-weight:600">During</span></td><td><span class="status-chip status-chip--confirm">Micro-wizard</span></td><td class="text-muted">Full employee profile re-entry — all 9 fields regardless of how many are missing</td><td>Per-employee wizard shows only missing fields, AI pre-populated; bulk confirm for shared issues</td></tr>
+          <tr><td><strong>Tier 3 archiving</strong></td><td><span style="font-size:11px;color:var(--ids-color-warning-base);font-weight:600">During</span></td><td><span class="status-chip status-chip--auto">Zero-click</span></td><td class="text-muted">No preservation option — paychecks silently convert to checks, data lost</td><td>Automatic structured archiving — customer sees "X paychecks preserved" confirmation</td></tr>
+          <tr><td><strong>Check intercept</strong></td><td><span style="font-size:11px;color:var(--ids-color-warning-base);font-weight:600">During</span></td><td><span class="status-chip status-chip--auto">AI recovery</span></td><td class="text-muted">No recovery path — converted checks remain as checks, requiring manual journal entry reconstruction</td><td>AI identifies and re-enriches converted paychecks automatically; customer sees recovery count</td></tr>
+          <tr><td><strong>Progress dashboard</strong></td><td><span style="font-size:11px;color:var(--ids-color-warning-base);font-weight:600">During</span></td><td><span class="status-chip status-chip--auto">Real-time</span></td><td class="text-muted">Black-box migration — customer waits with no visibility into progress or estimated completion</td><td>Live tier counters, real-time time estimate, pause/resume — full transparency throughout</td></tr>
+          <tr><td><strong>Exception surfacing</strong></td><td><span style="font-size:11px;color:var(--ids-color-warning-base);font-weight:600">During</span></td><td><span class="status-chip status-chip--auto">AI clustered</span></td><td class="text-muted">Individual error per employee — 40 employees with same issue = 40 separate error screens</td><td>AI groups by root cause — 40 identical errors become 1 grouped action with bulk resolve</td></tr>
+          <tr><td><strong>YTD checkpoint</strong></td><td><span style="font-size:11px;color:var(--ids-color-warning-base);font-weight:600">During</span></td><td><span class="status-chip status-chip--human">Human sign-off</span></td><td class="text-muted">Single overwhelming final reconciliation after full migration — all discrepancies discovered at once</td><td>Per-batch side-by-side diff with AI delta explanations; incremental sign-off throughout</td></tr>
+          <tr><td><strong>Automated diff</strong></td><td><span style="font-size:11px;color:var(--ids-color-success-base);font-weight:600">Post</span></td><td><span class="status-chip status-chip--auto">AI categorized</span></td><td class="text-muted">Customer must manually run and compare 4+ reports, looking for discrepancies by eye</td><td>System runs and diffs automatically; color-coded results with expected/genuine difference classification</td></tr>
+          <tr><td><strong>Parallel-run monitor</strong></td><td><span style="font-size:11px;color:var(--ids-color-success-base);font-weight:600">Post</span></td><td><span class="status-chip status-chip--auto">Nightly + gate</span></td><td class="text-muted">Customer decides subjectively when to decommission QBDT — no signal, high anxiety</td><td>Nightly automated comparison; 5-clean-day gate provides an objective decommission signal</td></tr>
+          <tr><td><strong>Preserved paycheck portal</strong></td><td><span style="font-size:11px;color:var(--ids-color-success-base);font-weight:600">Post</span></td><td><span class="status-chip status-chip--auto">Searchable</span></td><td class="text-muted">Historical paychecks inaccessible in QBO — must return to QBDT or manually reconstruct from PDFs</td><td>Dedicated QBO section — searchable, reportable, re-linkable, W-2c pre-fillable</td></tr>
+          <tr><td><strong>Anomaly detection</strong></td><td><span style="font-size:11px;color:var(--ids-color-success-base);font-weight:600">Post</span></td><td><span class="status-chip status-chip--auto">AI pre-submit</span></td><td class="text-muted">First payroll errors discovered when employees report incorrect paychecks — post-submission</td><td>Statistical anomaly detection fires before submission; customer marks expected anomalies to reduce false positives</td></tr>
+          <tr><td><strong>Sign-off report</strong></td><td><span style="font-size:11px;color:var(--ids-color-success-base);font-weight:600">Post</span></td><td><span class="status-chip status-chip--auto">AI generated</span></td><td class="text-muted">No formal close — migration has no documented endpoint, no audit record</td><td>Auto-generated audit artifact with AI narrative — shareable, downloadable, 7-year retention</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /phase-container -->
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+  <footer class="doc-footer">
+    <p>QuickBooks Payroll Migration UX Strategy · Intuit Enterprise Suite Design System v3</p>
+    <p style="margin-top:var(--ids-space-1)">Prepared for product and design review · All design tokens follow IDS v3 specification</p>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<script>
+function switchTab(phase, el) {
+  document.querySelectorAll('.phase-tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected','false');
+  });
+  document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  el.setAttribute('aria-selected','true');
+  const panel = document.getElementById('panel-' + phase);
+  if (panel) panel.classList.add('active');
+  document.querySelectorAll('.tp-card').forEach(c => c.classList.remove('expanded'));
+  document.querySelectorAll('.tp-detail').forEach(d => d.style.display = 'none');
+}
+
+function toggleCard(card) {
+  const isExpanded = card.classList.contains('expanded');
+  const phase = card.closest('.phase-panel').id.replace('panel-','');
+  const grid = document.getElementById('grid-' + phase);
+  if (grid) {
+    grid.querySelectorAll('.tp-card').forEach(c => {
+      c.classList.remove('expanded');
+      const d = c.querySelector('.tp-detail');
+      if (d) d.style.display = 'none';
+    });
+  }
+  if (!isExpanded) {
+    card.classList.add('expanded');
+    const detail = card.querySelector('.tp-detail');
+    if (detail) detail.style.display = 'block';
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+}
+
+function goToTouchpoint(phase, tpId) {
+  const phaseBtn = document.querySelector('[data-phase="' + phase + '"]');
+  if (phaseBtn) switchTab(phase, phaseBtn);
+  setTimeout(() => {
+    const card = document.getElementById(tpId);
+    if (card) {
+      toggleCard(card);
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 100);
+}
+</script>
+
+</body>
+</html>

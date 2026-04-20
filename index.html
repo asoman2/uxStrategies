@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Strategies — Intuit Enterprise Suite</title>
+<style>
+/* ============================================================
+   INTUIT DESIGN SYSTEM — ENTERPRISE SUITE THEME
+   Token Reference: IDS v3 / Intuit Enterprise Suite
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Avenir+Next:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* --- Core IDS Tokens --- */
+:root {
+  /* Brand */
+  --ids-color-brand-primary:       #0077C5;
+  --ids-color-brand-primary-dark:  #005A9E;
+  --ids-color-brand-primary-deep:  #003F7A;
+  --ids-color-brand-accent:        #00A3E0;
+  --ids-color-brand-accent-light:  #E5F6FD;
+
+  /* IES Signature — deep navy used in Enterprise Suite hero zones */
+  --ids-ies-navy:                  #0D2340;
+  --ids-ies-navy-mid:              #1A3A5C;
+  --ids-ies-navy-light:            #E6EFF8;
+
+  /* Neutral Scale */
+  --ids-neutral-0:    #FFFFFF;
+  --ids-neutral-50:   #F4F5F8;
+  --ids-neutral-100:  #E8ECF0;
+  --ids-neutral-200:  #D0D7E0;
+  --ids-neutral-300:  #B0BBC8;
+  --ids-neutral-400:  #8D9BB0;
+  --ids-neutral-500:  #6B7A94;
+  --ids-neutral-600:  #4A5568;
+  --ids-neutral-700:  #2D3748;
+  --ids-neutral-800:  #1A202C;
+  --ids-neutral-900:  #0F1420;
+
+  /* Semantic */
+  --ids-success:       #2CA01C;
+  --ids-success-light: #E6F4E4;
+  --ids-warning:       #E8700A;
+  --ids-warning-light: #FDF0E5;
+  --ids-error:         #D52B1E;
+  --ids-error-light:   #FDECEB;
+  --ids-info:          #0077C5;
+  --ids-info-light:    #E5F1FA;
+
+  /* Category chips */
+  --ids-cat-ux:        #7B5EA7;
+  --ids-cat-ux-light:  #F0EBF8;
+  --ids-cat-ai:        #0D7B5F;
+  --ids-cat-ai-light:  #E3F5F0;
+  --ids-cat-eng:       #C05621;
+  --ids-cat-eng-light: #FDF0E5;
+  --ids-cat-pm:        #1A56DB;
+  --ids-cat-pm-light:  #EBF3FF;
+
+  /* Typography */
+  --ids-font:             'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --ids-text-xs:          11px;
+  --ids-text-sm:          12px;
+  --ids-text-base:        14px;
+  --ids-text-md:          16px;
+  --ids-text-lg:          18px;
+  --ids-text-xl:          22px;
+  --ids-text-2xl:         28px;
+  --ids-text-3xl:         36px;
+  --ids-text-4xl:         48px;
+  --ids-weight-regular:   400;
+  --ids-weight-medium:    500;
+  --ids-weight-semibold:  600;
+  --ids-weight-bold:      700;
+  --ids-leading-tight:    1.15;
+  --ids-leading-snug:     1.35;
+  --ids-leading-base:     1.5;
+  --ids-leading-loose:    1.7;
+
+  /* Spacing (4px base) */
+  --ids-sp-1:  4px;
+  --ids-sp-2:  8px;
+  --ids-sp-3:  12px;
+  --ids-sp-4:  16px;
+  --ids-sp-5:  20px;
+  --ids-sp-6:  24px;
+  --ids-sp-8:  32px;
+  --ids-sp-10: 40px;
+  --ids-sp-12: 48px;
+  --ids-sp-16: 64px;
+  --ids-sp-20: 80px;
+  --ids-sp-24: 96px;
+
+  /* Radius */
+  --ids-radius-sm:   4px;
+  --ids-radius-md:   6px;
+  --ids-radius-lg:   8px;
+  --ids-radius-xl:   12px;
+  --ids-radius-2xl:  16px;
+  --ids-radius-pill: 9999px;
+
+  /* Shadow */
+  --ids-shadow-xs: 0 1px 2px rgba(0,0,0,0.06);
+  --ids-shadow-sm: 0 1px 4px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --ids-shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+  --ids-shadow-lg: 0 8px 28px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.07);
+  --ids-shadow-xl: 0 20px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.08);
+
+  /* Transition */
+  --ids-ease:      cubic-bezier(0.16, 1, 0.3, 1);
+  --ids-ease-in:   cubic-bezier(0.4, 0, 1, 1);
+  --ids-ease-out:  cubic-bezier(0, 0, 0.2, 1);
+  --ids-duration:  220ms;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--ids-font);
+  font-size: var(--ids-text-base);
+  font-weight: var(--ids-weight-regular);
+  color: var(--ids-neutral-800);
+  background: var(--ids-neutral-50);
+  line-height: var(--ids-leading-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ============================================================
+   GLOBAL NAV — IES top bar
+   ============================================================ */
+.global-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ids-ies-navy);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ids-sp-8);
+  gap: var(--ids-sp-6);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.global-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--ids-sp-3);
+  flex-shrink: 0;
+}
+.global-nav-logo-mark {
+  width: 28px;
+  height: 28px;
+  background: var(--ids-color-brand-primary);
+  border-radius: var(--ids-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.global-nav-logo-mark svg { width: 16px; height: 16px; }
+.global-nav-product {
+  font-size: var(--ids-text-sm);
+  font-weight: var(--ids-weight-semibold);
+  color: rgba(255,255,255,0.95);
+  letter-spacing: 0.01em;
+}
+.global-nav-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+.global-nav-section {
+  font-size: var(--ids-text-sm);
+  color: rgba(255,255,255,0.55);
+  font-weight: var(--ids-weight-medium);
+}
+.global-nav-spacer { flex: 1; }
+.global-nav-meta {
+  font-size: var(--ids-text-xs);
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   HERO — IES enterprise hero zone
+   ============================================================ */
+.hero {
+  background: var(--ids-ies-navy);
+  padding: var(--ids-sp-20) var(--ids-sp-8) var(--ids-sp-16);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle geometric accent — IES visual language */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -60px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,163,224,0.12);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -20px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,119,197,0.18);
+  pointer-events: none;
+}
+.hero-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ids-color-brand-primary) 0%, var(--ids-color-brand-accent) 60%, transparent 100%);
+}
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ids-sp-2);
+  background: rgba(0,119,197,0.18);
+  border: 1px solid rgba(0,163,224,0.25);
+  border-radius: var(--ids-radius-pill);
+  padding: var(--ids-sp-1) var(--ids-sp-4);
+  margin-bottom: var(--ids-sp-6);
+}
+.hero-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ids-color-brand-accent);
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.75); }
+}
+.hero-eyebrow-text {
+  font-size: var(--ids-text-xs);
+  font-weight: var(--ids-weight-semibold);
+  color: var(--ids-color-brand-accent);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-size: clamp(var(--ids-text-2xl), 4vw, var(--ids-text-4xl));
+  font-weight: var(--ids-weight-bold);
+  color: var(--ids-neutral-0);
+  line-height: var(--ids-leading-tight);
+  margin-bottom: var(--ids-sp-4);
+  letter-spacing: -0.02em;
+}
+.hero-title-accent {
+  color: var(--ids-color-brand-accent);
+}
+.hero-subtitle {
+  font-size: var(--ids-text-lg);
+  color: rgba(255,255,255,0.6);
+  font-weight: var(--ids-weight-regular);
+  line-height: var(--ids-leading-loose);
+  max-width: 560px;
+  margin-bottom: var(--ids-sp-10);
+}
+.hero-stats {
+  display: flex;
+  gap: var(--ids-sp-8);
+  flex-wrap: wrap;
+  padding-top: var(--ids-sp-8);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.hero-stat {}
+.hero-stat-num {
+  font-size: var(--ids-text-2xl);
+  font-weight: var(--ids-weight-bold);
+  color: var(--ids-neutral-0);
+  line-height: 1;
+  margin-bottom: var(--ids-sp-1);
+}
+.hero-stat-label {
+  font-size: var(--ids-text-xs);
+  color: rgba(255,255,255,0.45);
+  font-weight: var(--ids-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   PAGE BODY
+   ============================================================ */
+.page-body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--ids-sp-12) var(--ids-sp-8) var(--ids-sp-20);
+}
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ids-sp-4);
+  margin-bottom: var(--ids-sp-6);
+  padding-bottom: var(--ids-sp-4);
+  border-bottom: 1px solid var(--ids-neutral-200);
+}
+.section-label {
+  font-size: var(--ids-text-xs);
+  font-weight: var(--ids-weight-bold);
+  color: var(--ids-neutral-400);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+.section-count {
+  font-size: var(--ids-text-sm);
+  color: var(--ids-neutral-400);
+}
+
+/* ============================================================
+   DOCUMENT GRID
+   ============================================================ */
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--ids-sp-5);
+  margin-bottom: var(--ids-sp-12);
+}
+
+/* ============================================================
+   DOCUMENT CARD — Featured (primary strategy doc)
+   ============================================================ */
+.doc-card {
+  background: var(--ids-neutral-0);
+  border: 1px solid var(--ids-neutral-200);
+  border-radius: var(--ids-radius-2xl);
+  overflow: hidden;
+  transition:
+    box-shadow var(--ids-duration) var(--ids-ease),
+    border-color var(--ids-duration) var(--ids-ease),
+    transform var(--ids-duration) var(--ids-ease);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+.doc-card:hover {
+  box-shadow: var(--ids-shadow-lg);
+  border-color: var(--ids-color-brand-primary);
+  transform: translateY(-2px);
+}
+.doc-card:active { transform: translateY(0); }
+
+/* Featured card spans 2 columns when grid allows */
+.doc-card--featured {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.doc-card-visual {
+  background: var(--ids-ies-navy);
+  padding: var(--ids-sp-8) var(--ids-sp-10);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.doc-card--featured .doc-card-visual {
+  width: 340px;
+  min-height: unset;
+}
+
+/* Geometric rings in card visual */
+.doc-card-visual::before {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,163,224,0.15);
+  pointer-events: none;
+}
+.doc-card-visual::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,119,197,0.2);
+  pointer-events: none;
+}
+.doc-card-visual-top {
+  position: relative;
+  z-index: 1;
+}
+.doc-card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  background: rgba(0,119,197,0.25);
+  border: 1px solid rgba(0,163,224,0.3);
+  border-radius: var(--ids-radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--ids-sp-4);
+}
+.doc-card-icon-wrap svg { width: 22px; height: 22px; }
+.doc-card-visual-title {
+  font-size: var(--ids-text-sm);
+  font-weight: var(--ids-weight-semibold);
+  color: rgba(255,255,255,0.9);
+  line-height: var(--ids-leading-snug);
+}
+.doc-card-visual-bottom {
+  position: relative;
+  z-index: 1;
+}
+.doc-card-phase-pills {
+  display: flex;
+  gap: var(--ids-sp-2);
+  flex-wrap: wrap;
+}
+.phase-pill {
+  font-size: var(--ids-text-xs);
+  font-weight: var(--ids-weight-semibold);
+  padding: 3px var(--ids-sp-3);
+  border-radius: var(--ids-radius-pill);
+  letter-spacing: 0.03em;
+}
+.phase-pill--pre    { background: rgba(123,94,167,0.35); color: #D4B8F5; }
+.phase-pill--during { background: rgba(232,112,10,0.3);  color: #FAC880; }
+.phase-pill--post   { background: rgba(44,160,28,0.3);   color: #86D47A; }
+
+.doc-card-body {
+  padding: var(--ids-sp-6) var(--ids-sp-7);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.doc-card-tags {
+  display: flex;
+  gap: var(--ids-sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--ids-sp-4);
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--ids-text-xs);
+  font-weight: var(--ids-weight-semibold);
+  padding: 3px var(--ids-sp-2);
+  border-radius: var(--ids-radius-pill);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tag--ux  { background: var(--ids-cat-ux-light);  color: var(--ids-cat-ux); }
+.tag--ai  { background: var(--ids-cat-ai-light);  color: var(--ids-cat-ai); }
+.tag--pm  { background: var(--ids-cat-pm-light);  color: var(--ids-cat-pm); }
+.tag--eng { background: var(--ids-cat-eng-light); color: var(--ids-cat-eng); }
+
+.doc-card-title {
+  font-size: var(--ids-text-xl);
+  font-weight: var(--ids-weight-bold);
+  color: var(--ids-neutral-900);
+  line-height: var(--ids-leading-snug);
+  margin-bottom: var(--ids-sp-3);
+  letter-spacing: -0.01em;
+}
+.doc-card--standard .doc-card-title {
+  font-size: var(--ids-text-md);
+}
+.doc-card-desc {
+  font-size: var(--ids-text-sm);
+  color: var(--ids-neutral-500);
+  line-height: var(--ids-leading-loose);
+  margin-bottom: var(--ids-sp-6);
+  flex: 1;
+}
+.doc-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--ids-sp-4);
+  border-top: 1px solid var(--ids-neutral-100);
+}
+.doc-card-meta-row {
+  display: flex;
+  gap: var(--ids-sp-4);
+}
+.doc-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ids-sp-1);
+  font-size: var(--ids-text-xs);
+  color: var(--ids-neutral-400);
+}
+.doc-card-meta-item svg { width: 12px; height: 12px; opacity: 0.7; }
+.doc-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ids-sp-2);
+  background: var(--ids-color-brand-primary);
+  color: var(--ids-neutral-0);
+  font-size: var(--ids-text-sm);
+  font-weight: var(--ids-weight-semibold);
+  padding: var(--ids-sp-2) var(--ids-sp-4);
+  border-radius: var(--ids-radius-pill);
+  transition: background var(--ids-duration) var(--ids-ease), transform var(--ids-duration) var(--ids-ease);
+  white-space: nowrap;
+  font-family: var(--ids-font);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+.doc-card-cta:hover { background: var(--ids-color-brand-primary-dark); }
+.doc-card-cta svg { width: 14px; height: 14px; transition: transform var(--ids-duration) var(--ids-ease); }
+.doc-card:hover .doc-card-cta svg { transform: translateX(2px); }
+
+/* Standard (placeholder) cards */
+.doc-card--standard .doc-card-visual {
+  min-height: 120px;
+  width: 100%;
+}
+.doc-card--standard { flex-direction: column; }
+.doc-card--placeholder {
+  background: var(--ids-neutral-50);
+  border-style: dashed;
+  border-color: var(--ids-neutral-200);
+  cursor: default;
+}
+.doc-card--placeholder:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--ids-neutral-200);
+}
+.placeholder-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--ids-radius-lg);
+  background: var(--ids-neutral-100);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--ids-sp-3);
+}
+.placeholder-icon svg { width: 18px; height: 18px; color: var(--ids-neutral-400); }
+.placeholder-title {
+  font-size: var(--ids-text-base);
+  font-weight: var(--ids-weight-semibold);
+  color: var(--ids-neutral-400);
+  margin-bottom: var(--ids-sp-2);
+}
+.placeholder-desc {
+  font-size: var(--ids-text-sm);
+  color: var(--ids-neutral-300);
+  line-height: var(--ids-leading-loose);
+}
+
+/* ============================================================
+   INFO STRIP — context beneath the grid
+   ============================================================ */
+.info-strip {
+  background: var(--ids-neutral-0);
+  border: 1px solid var(--ids-neutral-200);
+  border-radius: var(--ids-radius-xl);
+  padding: var(--ids-sp-6) var(--ids-sp-8);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--ids-sp-6);
+  margin-bottom: var(--ids-sp-12);
+}
+.info-strip-item {
+  display: flex;
+  gap: var(--ids-sp-4);
+  align-items: flex-start;
+}
+.info-strip-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--ids-radius-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.info-strip-icon--blue   { background: var(--ids-info-light);    color: var(--ids-color-brand-primary); }
+.info-strip-icon--green  { background: var(--ids-success-light);  color: var(--ids-success); }
+.info-strip-icon--purple { background: var(--ids-cat-ux-light);   color: var(--ids-cat-ux); }
+.info-strip-icon--orange { background: var(--ids-cat-eng-light);  color: var(--ids-cat-eng); }
+.info-strip-icon svg { width: 16px; height: 16px; }
+.info-strip-label {
+  font-size: var(--ids-text-xs);
+  font-weight: var(--ids-weight-semibold);
+  color: var(--ids-neutral-400);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--ids-sp-1);
+}
+.info-strip-value {
+  font-size: var(--ids-text-sm);
+  font-weight: var(--ids-weight-medium);
+  color: var(--ids-neutral-700);
+  line-height: var(--ids-leading-snug);
+}
+
+/* ============================================================
+   STATUS LEGEND
+   ============================================================ */
+.legend-row {
+  display: flex;
+  gap: var(--ids-sp-6);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: var(--ids-sp-8);
+}
+.legend-title {
+  font-size: var(--ids-text-xs);
+  font-weight: var(--ids-weight-bold);
+  color: var(--ids-neutral-400);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-right: var(--ids-sp-2);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ids-sp-2);
+  font-size: var(--ids-text-sm);
+  color: var(--ids-neutral-500);
+}
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-dot--live     { background: var(--ids-success); }
+.legend-dot--draft    { background: var(--ids-warning); }
+.legend-dot--planned  { background: var(--ids-neutral-300); }
+
+/* ============================================================
+   GITHUB CALLOUT BANNER
+   ============================================================ */
+.github-banner {
+  background: var(--ids-ies-navy);
+  border-radius: var(--ids-radius-2xl);
+  padding: var(--ids-sp-8) var(--ids-sp-10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ids-sp-6);
+  position: relative;
+  overflow: hidden;
+}
+.github-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.github-banner-content { position: relative; z-index: 1; }
+.github-banner-label {
+  font-size: var(--ids-text-xs);
+  font-weight: var(--ids-weight-bold);
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: var(--ids-sp-2);
+}
+.github-banner-title {
+  font-size: var(--ids-text-xl);
+  font-weight: var(--ids-weight-bold);
+  color: var(--ids-neutral-0);
+  margin-bottom: var(--ids-sp-2);
+  letter-spacing: -0.01em;
+}
+.github-banner-desc {
+  font-size: var(--ids-text-sm);
+  color: rgba(255,255,255,0.55);
+  line-height: var(--ids-leading-loose);
+}
+.github-banner-actions {
+  display: flex;
+  gap: var(--ids-sp-3);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ids-sp-2);
+  font-family: var(--ids-font);
+  font-size: var(--ids-text-sm);
+  font-weight: var(--ids-weight-semibold);
+  padding: var(--ids-sp-3) var(--ids-sp-5);
+  border-radius: var(--ids-radius-pill);
+  border: none;
+  cursor: pointer;
+  transition: all var(--ids-duration) var(--ids-ease);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn svg { width: 16px; height: 16px; }
+.btn--primary { background: var(--ids-color-brand-primary); color: var(--ids-neutral-0); }
+.btn--primary:hover { background: var(--ids-color-brand-primary-dark); transform: translateY(-1px); }
+.btn--ghost { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); }
+.btn--ghost:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  background: var(--ids-neutral-0);
+  border-top: 1px solid var(--ids-neutral-200);
+  padding: var(--ids-sp-8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ids-sp-4);
+  flex-wrap: wrap;
+}
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: var(--ids-sp-4);
+}
+.footer-logo-mark {
+  width: 24px; height: 24px;
+  background: var(--ids-color-brand-primary);
+  border-radius: var(--ids-radius-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.footer-logo-mark svg { width: 12px; height: 12px; }
+.footer-text {
+  font-size: var(--ids-text-xs);
+  color: var(--ids-neutral-400);
+}
+.footer-text strong {
+  color: var(--ids-neutral-600);
+  font-weight: var(--ids-weight-semibold);
+}
+.footer-links {
+  display: flex;
+  gap: var(--ids-sp-5);
+}
+.footer-link {
+  font-size: var(--ids-text-xs);
+  color: var(--ids-neutral-400);
+  font-weight: var(--ids-weight-medium);
+  transition: color var(--ids-duration) var(--ids-ease);
+}
+.footer-link:hover { color: var(--ids-color-brand-primary); }
+
+/* ============================================================
+   ENTRY ANIMATION
+   ============================================================ */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fade-up 0.5s var(--ids-ease) both;
+}
+.animate-in:nth-child(1) { animation-delay: 0.05s; }
+.animate-in:nth-child(2) { animation-delay: 0.12s; }
+.animate-in:nth-child(3) { animation-delay: 0.19s; }
+.animate-in:nth-child(4) { animation-delay: 0.26s; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .global-nav { padding: 0 var(--ids-sp-4); }
+  .hero { padding: var(--ids-sp-12) var(--ids-sp-4) var(--ids-sp-10); }
+  .page-body { padding: var(--ids-sp-8) var(--ids-sp-4) var(--ids-sp-12); }
+  .doc-card--featured { flex-direction: column; }
+  .doc-card--featured .doc-card-visual { width: 100%; min-height: 160px; }
+  .github-banner { flex-direction: column; align-items: flex-start; }
+  .hero-stats { gap: var(--ids-sp-6); }
+  .site-footer { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 480px) {
+  .doc-card--featured .doc-card-visual { display: none; }
+  .github-banner-actions { flex-direction: column; width: 100%; }
+  .btn { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     GLOBAL NAV
+     ============================================================ -->
+<nav class="global-nav" role="navigation" aria-label="Global navigation">
+  <div class="global-nav-logo">
+    <div class="global-nav-logo-mark">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="2" width="6" height="12" rx="1" fill="white"/>
+        <rect x="2" y="5" width="3" height="6" rx="0.5" fill="white" fill-opacity="0.6"/>
+        <rect x="11" y="5" width="3" height="6" rx="0.5" fill="white" fill-opacity="0.6"/>
+      </svg>
+    </div>
+    <span class="global-nav-product">Intuit Enterprise Suite</span>
+  </div>
+  <div class="global-nav-divider" aria-hidden="true"></div>
+  <span class="global-nav-section">UX Strategies</span>
+  <div class="global-nav-spacer"></div>
+  <span class="global-nav-meta">Design · Product · Engineering</span>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero" role="banner">
+  <div class="hero-accent-bar" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow animate-in">
+      <div class="hero-eyebrow-dot" aria-hidden="true"></div>
+      <span class="hero-eyebrow-text">Strategy Repository</span>
+    </div>
+    <h1 class="hero-title animate-in">
+      UX Strategies &amp;<br>
+      <span class="hero-title-accent">Product Thinking</span>
+    </h1>
+    <p class="hero-subtitle animate-in">
+      Living documents capturing migration strategy, AI automation touchpoints, and design system decisions — built for handoff to Product and Engineering.
+    </p>
+    <div class="hero-stats animate-in" role="list" aria-label="Repository statistics">
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num">1</div>
+        <div class="hero-stat-label">Published doc</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num">18</div>
+        <div class="hero-stat-label">UX touchpoints</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num">3</div>
+        <div class="hero-stat-label">Migration phases</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num">IDS v3</div>
+        <div class="hero-stat-label">Design system</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     PAGE BODY
+     ============================================================ -->
+<main class="page-body" id="main-content">
+
+  <!-- Legend -->
+  <div class="legend-row" role="legend" aria-label="Document status legend">
+    <span class="legend-title">Status</span>
+    <div class="legend-item"><div class="legend-dot legend-dot--live" aria-hidden="true"></div>Published</div>
+    <div class="legend-item"><div class="legend-dot legend-dot--draft" aria-hidden="true"></div>In progress</div>
+    <div class="legend-item"><div class="legend-dot legend-dot--planned" aria-hidden="true"></div>Planned</div>
+  </div>
+
+  <!-- Section header -->
+  <div class="section-header">
+    <span class="section-label">Strategy Documents</span>
+    <span class="section-count">1 of 4 published</span>
+  </div>
+
+  <!-- Document grid -->
+  <div class="doc-grid" role="list" aria-label="Strategy documents">
+
+    <!-- ── FEATURED CARD: QB Migration Strategy ── -->
+    <article class="doc-card doc-card--featured animate-in" role="listitem">
+      <a href="qbPayrollPayChqMigration.html"
+         aria-label="Open QuickBooks Payroll Migration UX Strategy document"
+         style="display:contents">
+
+        <!-- Left visual panel -->
+        <div class="doc-card-visual" aria-hidden="true">
+          <div class="doc-card-visual-top">
+            <div class="doc-card-icon-wrap">
+              <!-- Payroll/migration icon -->
+              <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6C3 4.895 3.895 4 5 4h12c1.105 0 2 .895 2 2v10c0 1.105-.895 2-2 2H5c-1.105 0-2-.895-2-2V6z" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/>
+                <path d="M7 9h8M7 12h5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M14 14.5l2-2-2-2" stroke="#00A3E0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="doc-card-visual-title">QuickBooks Desktop<br>→ QBO Payroll</div>
+          </div>
+          <div class="doc-card-visual-bottom">
+            <div class="doc-card-phase-pills" aria-label="Migration phases covered">
+              <span class="phase-pill phase-pill--pre">Pre-migration</span>
+              <span class="phase-pill phase-pill--during">During</span>
+              <span class="phase-pill phase-pill--post">Post-migration</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right body -->
+        <div class="doc-card-body">
+          <div class="doc-card-tags" aria-label="Document tags">
+            <span class="tag tag--ux">UX Strategy</span>
+            <span class="tag tag--ai">AI Automation</span>
+            <span class="tag tag--pm">PM Ready</span>
+            <span class="tag tag--eng">Eng Handoff</span>
+          </div>
+          <h2 class="doc-card-title">QuickBooks Payroll Migration — 3-Phase UX Strategy</h2>
+          <p class="doc-card-desc">
+            End-to-end strategy for migrating paychecks from QuickBooks Desktop to QuickBooks Online Payroll using a tiered employee classification model. Covers 18 detailed touchpoints across pre-migration readiness, live migration processing, and post-migration validation — with AI automation scope, cognitive load mapping, and a full fact-check against QBO API capabilities.
+          </p>
+          <div class="doc-card-footer">
+            <div class="doc-card-meta-row" aria-label="Document metadata">
+              <div class="doc-card-meta-item">
+                <!-- Status dot -->
+                <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <circle cx="6" cy="6" r="4" fill="#2CA01C"/>
+                </svg>
+                Published
+              </div>
+              <div class="doc-card-meta-item">
+                <!-- Touchpoints icon -->
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                  <circle cx="6" cy="6" r="4.5"/>
+                  <path d="M6 3.5v2.5l1.5 1.5" stroke-linecap="round"/>
+                </svg>
+                18 touchpoints
+              </div>
+              <div class="doc-card-meta-item">
+                <!-- Phases icon -->
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                  <rect x="1" y="3" width="3" height="7" rx="0.5"/>
+                  <rect x="4.5" y="1.5" width="3" height="8.5" rx="0.5"/>
+                  <rect x="8" y="4.5" width="3" height="5.5" rx="0.5"/>
+                </svg>
+                3 phases
+              </div>
+              <div class="doc-card-meta-item">
+                <!-- IDS icon -->
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                  <path d="M2 10l3-3 2 2 3-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                IDS v3 · IES theme
+              </div>
+            </div>
+            <a class="doc-card-cta"
+               href="qb-payroll-migration-ux-strategy.html"
+               aria-label="Open QuickBooks Payroll Migration strategy document">
+              Open document
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </a>
+    </article>
+
+    <!-- ── PLACEHOLDER: API Feasibility Memo ── -->
+    <article class="doc-card doc-card--standard doc-card--placeholder animate-in" role="listitem" aria-label="Planned document: API Feasibility Memo">
+      <div class="doc-card-body" style="padding:var(--ids-sp-7)">
+        <div class="placeholder-icon" aria-hidden="true">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+            <rect x="2" y="2" width="14" height="14" rx="2"/>
+            <path d="M6 9h6M6 12h4M6 6h3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="doc-card-tags" aria-label="Document tags">
+          <span class="tag tag--eng">Engineering</span>
+          <span class="tag tag--pm">PM</span>
+        </div>
+        <div class="placeholder-title">API Feasibility Memo</div>
+        <div class="placeholder-desc">
+          Engineering validation of QBO Payroll internal API capabilities — check-to-paycheck intercept, preserved paycheck store schema, and Payroll Compensation API access tiers.
+        </div>
+        <div style="margin-top:var(--ids-sp-4);display:flex;align-items:center;gap:var(--ids-sp-2)">
+          <div class="legend-dot legend-dot--planned" aria-hidden="true"></div>
+          <span style="font-size:var(--ids-text-xs);color:var(--ids-neutral-300);font-weight:500">Planned — pending Engineering review</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ── PLACEHOLDER: PM Requirements Translation ── -->
+    <article class="doc-card doc-card--standard doc-card--placeholder animate-in" role="listitem" aria-label="Planned document: PM Requirements Translation">
+      <div class="doc-card-body" style="padding:var(--ids-sp-7)">
+        <div class="placeholder-icon" aria-hidden="true">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M9 2L2 6v6l7 4 7-4V6L9 2z"/>
+            <path d="M9 2v16M2 6l7 4 7-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="doc-card-tags" aria-label="Document tags">
+          <span class="tag tag--pm">PM</span>
+          <span class="tag tag--ux">UX</span>
+        </div>
+        <div class="placeholder-title">PM Requirements Translation</div>
+        <div class="placeholder-desc">
+          Feature decomposition, MVP scope decision, success metrics definition, and assumption register — translated from UX strategy into backlog-ready requirements.
+        </div>
+        <div style="margin-top:var(--ids-sp-4);display:flex;align-items:center;gap:var(--ids-sp-2)">
+          <div class="legend-dot legend-dot--planned" aria-hidden="true"></div>
+          <span style="font-size:var(--ids-text-xs);color:var(--ids-neutral-300);font-weight:500">Planned — after API feasibility confirmed</span>
+        </div>
+      </div>
+    </article>
+
+  </div><!-- /doc-grid -->
+
+  <!-- ── INFO STRIP ── -->
+  <div class="info-strip" aria-label="Repository context information">
+    <div class="info-strip-item">
+      <div class="info-strip-icon info-strip-icon--blue" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 2a6 6 0 100 12A6 6 0 008 2zM8 6v4M8 5.5v-.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="info-strip-label">Design system</div>
+        <div class="info-strip-value">Intuit Design System v3 · Enterprise Suite theme · Avenir Next typeface</div>
+      </div>
+    </div>
+    <div class="info-strip-item">
+      <div class="info-strip-icon info-strip-icon--green" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="info-strip-label">Fact-check status</div>
+        <div class="info-strip-value">Validated against QBO community docs, Intuit developer portal, and public API documentation</div>
+      </div>
+    </div>
+    <div class="info-strip-item">
+      <div class="info-strip-icon info-strip-icon--purple" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="5" r="2.5"/>
+          <path d="M3.5 13c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="info-strip-label">Audience</div>
+        <div class="info-strip-value">UX, Product Management, Engineering — QB Desktop to Online migration workstream</div>
+      </div>
+    </div>
+    <div class="info-strip-item">
+      <div class="info-strip-icon info-strip-icon--orange" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="12" height="12" rx="2"/>
+          <path d="M5 8h6M8 5v6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="info-strip-label">Hosted on</div>
+        <div class="info-strip-value">GitHub Pages · asoman2/uxStrategies · Static HTML, no build step required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GITHUB CALLOUT ── -->
+  <div class="github-banner" aria-label="GitHub repository information">
+    <div class="github-banner-content">
+      <div class="github-banner-label">Source repository</div>
+      <div class="github-banner-title">github.com/asoman2/uxStrategies</div>
+      <div class="github-banner-desc">
+        Add new strategy documents by dropping HTML files into the repository root and pushing to main — GitHub Pages deploys automatically within ~2 minutes.
+      </div>
+    </div>
+    <div class="github-banner-actions">
+      <a class="btn btn--primary"
+         href="https://github.com/asoman2/uxStrategies"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="Open GitHub repository (opens in new tab)">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        View on GitHub
+      </a>
+      <a class="btn btn--ghost"
+         href="https://github.com/asoman2/uxStrategies/settings/pages"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="Open GitHub Pages settings (opens in new tab)">
+        Pages settings
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M6 3H3a1 1 0 00-1 1v9a1 1 0 001 1h9a1 1 0 001-1v-3M9 2h5v5M14 2L8 8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-left">
+    <div class="footer-logo-mark" aria-hidden="true">
+      <svg viewBox="0 0 12 12" fill="none">
+        <rect x="3.5" y="1" width="5" height="10" rx="0.75" fill="white"/>
+        <rect x="1" y="3.5" width="2.5" height="5" rx="0.5" fill="white" fill-opacity="0.6"/>
+        <rect x="8.5" y="3.5" width="2.5" height="5" rx="0.5" fill="white" fill-opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="footer-text">
+      <strong>Intuit Enterprise Suite</strong> · UX Strategies · Intuit Design System v3
+    </div>
+  </div>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a class="footer-link"
+       href="https://github.com/asoman2/uxStrategies"
+       target="_blank"
+       rel="noopener noreferrer">GitHub</a>
+    <a class="footer-link"
+       href="https://designsystem.intuit.com"
+       target="_blank"
+       rel="noopener noreferrer">IDS Docs</a>
+    <a class="footer-link"
+       href="https://developer.intuit.com"
+       target="_blank"
+       rel="noopener noreferrer">Developer Portal</a>
+  </nav>
+</footer>
+
+</body>
+</html>
