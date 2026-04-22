@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collaborative Payroll Migration — ProAdvisor + Business Owner Workflow</title>
+<style>
+/* ============================================================
+   INTUIT DESIGN SYSTEM — ENTERPRISE SUITE THEME
+   IDS v3 Tokens + ProAdvisor Workflow Layer
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Avenir+Next:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Brand */
+  --ids-blue:          #0077C5;
+  --ids-blue-dark:     #005A9E;
+  --ids-blue-deeper:   #003F7A;
+  --ids-blue-light:    #E5F1FA;
+  --ids-accent:        #00A3E0;
+  --ids-navy:          #0D2340;
+  --ids-navy-mid:      #1A3A5C;
+
+  /* Role colours — ProAdvisor vs Business Owner */
+  --role-pa:           #7B5EA7;   /* ProAdvisor — purple */
+  --role-pa-light:     #F0EBF8;
+  --role-pa-mid:       #C9B8E8;
+  --role-bo:           #0D7B5F;   /* Business Owner — teal */
+  --role-bo-light:     #E3F5F0;
+  --role-bo-mid:       #9FD9C8;
+  --role-shared:       #E8700A;   /* Shared / joint — amber */
+  --role-shared-light: #FDF0E5;
+  --role-ai:           #185FA5;   /* AI-automated — blue */
+  --role-ai-light:     #E5F1FA;
+
+  /* Semantic */
+  --ids-success:       #2CA01C;
+  --ids-success-light: #E6F4E4;
+  --ids-warning:       #E8700A;
+  --ids-warning-light: #FDF0E5;
+  --ids-error:         #D52B1E;
+  --ids-error-light:   #FDECEB;
+
+  /* Neutrals */
+  --n0:   #FFFFFF;
+  --n50:  #F4F5F8;
+  --n100: #E8ECF0;
+  --n200: #D0D7E0;
+  --n300: #B0BBC8;
+  --n400: #8D9BB0;
+  --n500: #6B7A94;
+  --n600: #4A5568;
+  --n700: #2D3748;
+  --n800: #1A202C;
+  --n900: #0F1420;
+
+  /* Type */
+  --font: 'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --text-xs:  11px;
+  --text-sm:  12px;
+  --text-base:14px;
+  --text-md:  16px;
+  --text-lg:  18px;
+  --text-xl:  22px;
+  --text-2xl: 28px;
+  --text-3xl: 36px;
+
+  /* Spacing */
+  --sp1:4px; --sp2:8px; --sp3:12px; --sp4:16px;
+  --sp5:20px; --sp6:24px; --sp8:32px; --sp10:40px;
+  --sp12:48px; --sp16:64px; --sp20:80px;
+
+  /* Radius */
+  --r-sm:4px; --r-md:6px; --r-lg:8px;
+  --r-xl:12px; --r-2xl:16px; --r-pill:9999px;
+
+  /* Shadow */
+  --sh-sm: 0 1px 4px rgba(0,0,0,0.08);
+  --sh-md: 0 4px 12px rgba(0,0,0,0.10);
+  --sh-lg: 0 8px 28px rgba(0,0,0,0.12);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);font-size:var(--text-base);color:var(--n800);background:var(--n50);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* ── GLOBAL NAV ── */
+.gnav{position:sticky;top:0;z-index:200;background:var(--ids-navy);height:52px;display:flex;align-items:center;padding:0 var(--sp8);gap:var(--sp6);border-bottom:1px solid rgba(255,255,255,0.08)}
+.gnav-logo{display:flex;align-items:center;gap:var(--sp3)}
+.gnav-mark{width:28px;height:28px;background:var(--ids-blue);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center}
+.gnav-mark svg{width:16px;height:16px}
+.gnav-name{font-size:var(--text-sm);font-weight:600;color:rgba(255,255,255,0.95)}
+.gnav-div{width:1px;height:20px;background:rgba(255,255,255,0.15)}
+.gnav-section{font-size:var(--text-sm);color:rgba(255,255,255,0.5);font-weight:500}
+.gnav-spacer{flex:1}
+.gnav-pill{background:rgba(123,94,167,0.3);border:1px solid rgba(180,150,220,0.3);border-radius:var(--r-pill);padding:3px 12px;font-size:var(--text-xs);font-weight:600;color:#D4B8F5;letter-spacing:0.04em}
+
+/* ── HERO ── */
+.hero{background:var(--ids-navy);padding:var(--sp20) var(--sp8) var(--sp16);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-60px;width:480px;height:480px;border-radius:50%;border:1px solid rgba(0,163,224,0.1);pointer-events:none}
+.hero::after{content:'';position:absolute;top:-30px;right:-10px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(123,94,167,0.15);pointer-events:none}
+.hero-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--role-pa) 0%,var(--ids-blue) 50%,var(--role-bo) 100%)}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:var(--sp2);background:rgba(123,94,167,0.2);border:1px solid rgba(180,150,220,0.25);border-radius:var(--r-pill);padding:3px var(--sp4);margin-bottom:var(--sp6)}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--role-pa);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero-eyebrow-text{font-size:var(--text-xs);font-weight:700;color:#D4B8F5;letter-spacing:0.07em;text-transform:uppercase}
+.hero-title{font-size:clamp(var(--text-2xl),4vw,var(--text-3xl));font-weight:700;color:var(--n0);line-height:1.15;margin-bottom:var(--sp4);letter-spacing:-0.02em}
+.hero-title em{font-style:normal;color:var(--ids-accent)}
+.hero-subtitle{font-size:var(--text-lg);color:rgba(255,255,255,0.55);line-height:1.7;max-width:620px;margin-bottom:var(--sp10)}
+.hero-roles{display:flex;gap:var(--sp4);flex-wrap:wrap;margin-bottom:var(--sp10)}
+.role-pill{display:flex;align-items:center;gap:var(--sp2);border-radius:var(--r-pill);padding:var(--sp2) var(--sp4);font-size:var(--text-sm);font-weight:600}
+.role-pill--pa{background:rgba(123,94,167,0.3);color:#D4B8F5;border:1px solid rgba(123,94,167,0.4)}
+.role-pill--bo{background:rgba(13,123,95,0.3);color:#86D4C0;border:1px solid rgba(13,123,95,0.4)}
+.role-pill--ai{background:rgba(0,119,197,0.25);color:#7DC5F0;border:1px solid rgba(0,119,197,0.3)}
+.role-pill .dot{width:7px;height:7px;border-radius:50%}
+.hero-stats{display:flex;gap:var(--sp8);flex-wrap:wrap;padding-top:var(--sp8);border-top:1px solid rgba(255,255,255,0.08)}
+.hero-stat-num{font-size:var(--text-2xl);font-weight:700;color:var(--n0);line-height:1;margin-bottom:2px}
+.hero-stat-lbl{font-size:var(--text-xs);color:rgba(255,255,255,0.4);font-weight:500;text-transform:uppercase;letter-spacing:0.05em}
+
+/* ── PAGE BODY ── */
+.page{max-width:1100px;margin:0 auto;padding:var(--sp12) var(--sp8) var(--sp20)}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;align-items:baseline;gap:var(--sp4);margin-bottom:var(--sp6);padding-bottom:var(--sp4);border-bottom:1px solid var(--n200)}
+.sec-lbl{font-size:var(--text-xs);font-weight:700;color:var(--n400);text-transform:uppercase;letter-spacing:0.09em}
+.sec-sub{font-size:var(--text-sm);color:var(--n400)}
+
+/* ── PHASE NAV ── */
+.phase-nav{display:flex;gap:0;border-bottom:1px solid var(--n200);margin-bottom:0;overflow-x:auto}
+.phase-btn{display:flex;align-items:center;gap:var(--sp2);padding:var(--sp4) var(--sp5);font-family:var(--font);font-size:var(--text-sm);font-weight:500;color:var(--n500);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s;margin-bottom:-1px}
+.phase-btn:hover{color:var(--ids-blue)}
+.phase-btn.on{color:var(--ids-blue);border-bottom-color:var(--ids-blue);font-weight:600}
+.phase-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── PHASE CONTAINER ── */
+.phase-container{background:var(--n0);border:1px solid var(--n200);border-top:none;border-radius:0 0 var(--r-2xl) var(--r-2xl);box-shadow:var(--sh-sm);margin-bottom:var(--sp12)}
+.phase-panel{display:none;padding:var(--sp8)}
+.phase-panel.on{display:block}
+
+/* ── PHASE BANNER ── */
+.phase-banner{display:flex;align-items:flex-start;gap:var(--sp6);padding:var(--sp6) var(--sp8);border-radius:var(--r-lg);margin-bottom:var(--sp8)}
+.phase-banner--pre{background:rgba(123,94,167,0.08);border-left:4px solid var(--role-pa)}
+.phase-banner--during{background:rgba(232,112,10,0.07);border-left:4px solid var(--role-shared)}
+.phase-banner--post{background:rgba(44,160,28,0.07);border-left:4px solid var(--ids-success)}
+.phase-icon{width:48px;height:48px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
+.phase-icon--pre{background:var(--role-pa)}
+.phase-icon--during{background:var(--role-shared)}
+.phase-icon--post{background:var(--ids-success)}
+.phase-banner-title{font-size:var(--text-xl);font-weight:700;color:var(--n800);margin-bottom:var(--sp1)}
+.phase-banner-desc{font-size:var(--text-base);color:var(--n600);line-height:1.7}
+.phase-stats{margin-left:auto;display:flex;gap:var(--sp3);flex-shrink:0}
+.phase-stat{background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.08);border-radius:var(--r-pill);padding:var(--sp2) var(--sp4);font-size:var(--text-xs);font-weight:600;color:var(--n700);text-align:center;white-space:nowrap}
+.phase-stat span{display:block;font-size:var(--text-lg);font-weight:700;color:var(--n800)}
+
+/* ── COLLABORATIVE WORKFLOW STEPS ── */
+.workflow{display:flex;flex-direction:column;gap:var(--sp3);margin-bottom:var(--sp8)}
+.wf-step{border:1px solid var(--n200);border-radius:var(--r-xl);overflow:hidden;background:var(--n0);transition:box-shadow .2s,border-color .2s}
+.wf-step:hover{box-shadow:var(--sh-md)}
+.wf-step.open{border-color:var(--ids-blue);box-shadow:var(--sh-md)}
+.wf-head{display:flex;align-items:flex-start;gap:var(--sp4);padding:var(--sp5) var(--sp6);cursor:pointer}
+.wf-step-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--text-sm);font-weight:700;flex-shrink:0;margin-top:2px}
+.wf-step-meta{flex:1;min-width:0}
+.wf-tags{display:flex;gap:var(--sp2);flex-wrap:wrap;margin-bottom:var(--sp2)}
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:var(--text-xs);font-weight:700;padding:2px 8px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap}
+.tag--pa{background:var(--role-pa-light);color:var(--role-pa)}
+.tag--bo{background:var(--role-bo-light);color:var(--role-bo)}
+.tag--shared{background:var(--role-shared-light);color:var(--role-shared)}
+.tag--ai{background:var(--role-ai-light);color:var(--role-ai)}
+.tag--new{background:#E6F4E4;color:#1A6612}
+.wf-title{font-size:var(--text-md);font-weight:600;color:var(--n800);margin-bottom:3px;line-height:1.3}
+.wf-summary{font-size:var(--text-sm);color:var(--n500);line-height:1.6}
+.wf-chev{width:20px;height:20px;color:var(--n400);flex-shrink:0;margin-top:4px;transition:transform .2s}
+.wf-step.open .wf-chev{transform:rotate(180deg)}
+
+/* ── STEP DETAIL ── */
+.wf-body{display:none;border-top:1px solid var(--n100);background:var(--n50)}
+.wf-step.open .wf-body{display:block}
+.wf-body-inner{padding:var(--sp6) var(--sp6) var(--sp6) var(--sp8)}
+.wf-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--sp5);margin-bottom:var(--sp5)}
+.wf-col-label{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:var(--sp3);padding-bottom:var(--sp2);border-bottom:1px solid var(--n200)}
+.wf-col-label--pa{color:var(--role-pa)}
+.wf-col-label--bo{color:var(--role-bo)}
+.wf-col-label--ai{color:var(--role-ai)}
+.wf-col-label--shared{color:var(--role-shared)}
+.wf-pt{display:flex;gap:var(--sp2);margin-bottom:var(--sp3);align-items:flex-start}
+.wf-pt-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.wf-pt-dot--pa{background:var(--role-pa)}
+.wf-pt-dot--bo{background:var(--role-bo)}
+.wf-pt-dot--ai{background:var(--role-ai)}
+.wf-pt-dot--shared{background:var(--role-shared)}
+.wf-pt-text{font-size:var(--text-sm);color:var(--n600);line-height:1.6}
+
+/* handoff box */
+.handoff{background:var(--n0);border:1px solid var(--n200);border-radius:var(--r-lg);padding:var(--sp4) var(--sp5);margin-top:var(--sp4)}
+.handoff-label{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--n400);margin-bottom:var(--sp3)}
+.handoff-flow{display:flex;align-items:center;gap:var(--sp3);flex-wrap:wrap}
+.handoff-node{display:flex;flex-direction:column;align-items:center;gap:4px}
+.handoff-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--text-xs);font-weight:700}
+.handoff-avatar--pa{background:var(--role-pa-light);color:var(--role-pa)}
+.handoff-avatar--bo{background:var(--role-bo-light);color:var(--role-bo)}
+.handoff-avatar--ai{background:var(--role-ai-light);color:var(--role-ai)}
+.handoff-node-name{font-size:var(--text-xs);color:var(--n500);font-weight:500}
+.handoff-arrow{display:flex;flex-direction:column;align-items:center;gap:2px}
+.handoff-arrow svg{width:28px;height:16px;color:var(--n300)}
+.handoff-arrow-label{font-size:var(--text-xs);color:var(--n400);white-space:nowrap}
+
+/* ── ROLE LEGEND ── */
+.role-legend{display:flex;gap:var(--sp5);flex-wrap:wrap;margin-bottom:var(--sp6);padding:var(--sp4) var(--sp5);background:var(--n0);border:1px solid var(--n200);border-radius:var(--r-lg)}
+.role-legend-title{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--n400);margin-right:var(--sp2)}
+.role-item{display:flex;align-items:center;gap:var(--sp2);font-size:var(--text-sm);color:var(--n600)}
+.role-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── NEW CAPABILITIES CALLOUT ── */
+.new-cap{background:linear-gradient(135deg,rgba(123,94,167,0.06) 0%,rgba(0,119,197,0.06) 100%);border:1px solid rgba(123,94,167,0.2);border-radius:var(--r-xl);padding:var(--sp6) var(--sp8);margin-bottom:var(--sp8)}
+.new-cap-title{font-size:var(--text-base);font-weight:600;color:var(--role-pa);margin-bottom:var(--sp4);display:flex;align-items:center;gap:var(--sp3)}
+.new-cap-title svg{width:18px;height:18px}
+.new-cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--sp4)}
+.new-cap-item{background:var(--n0);border:1px solid var(--n200);border-radius:var(--r-lg);padding:var(--sp4)}
+.new-cap-item-label{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp2)}
+.new-cap-item-text{font-size:var(--text-sm);color:var(--n600);line-height:1.6}
+
+/* ── CONCERN CARDS ── */
+.concern-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp4);margin-bottom:var(--sp8)}
+.concern-card{border-radius:var(--r-xl);padding:var(--sp5) var(--sp6);border:1px solid}
+.concern-card--critical{background:var(--ids-error-light);border-color:#F5A49F}
+.concern-card--watch{background:var(--ids-warning-light);border-color:#F5C18A}
+.concern-card--design{background:var(--ids-blue-light);border-color:#B5D4F4}
+.concern-card--new{background:var(--ids-success-light);border-color:#A3D9A0}
+.concern-lbl{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px}
+.concern-card--critical .concern-lbl{color:var(--ids-error)}
+.concern-card--watch .concern-lbl{color:var(--ids-warning)}
+.concern-card--design .concern-lbl{color:var(--ids-blue)}
+.concern-card--new .concern-lbl{color:var(--ids-success)}
+.concern-title{font-size:var(--text-base);font-weight:600;color:var(--n800);margin-bottom:var(--sp2);line-height:1.3}
+.concern-desc{font-size:var(--text-sm);color:var(--n600);line-height:1.6}
+
+/* ── PRINCIPLE CARDS ── */
+.principle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--sp4)}
+.principle-card{background:var(--n0);border:1px solid var(--n200);border-radius:var(--r-xl);padding:var(--sp5) var(--sp6)}
+.principle-num{width:28px;height:28px;border-radius:50%;background:var(--ids-navy);color:var(--n0);font-size:var(--text-sm);font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:var(--sp3)}
+.principle-title{font-size:var(--text-base);font-weight:600;color:var(--n800);margin-bottom:var(--sp2)}
+.principle-text{font-size:var(--text-sm);color:var(--n600);line-height:1.7}
+
+/* ── FEATURE TABLE ── */
+.feat-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);margin-bottom:var(--sp8)}
+.feat-table th{background:var(--n100);padding:var(--sp3) var(--sp4);text-align:left;font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--n600);border-bottom:1px solid var(--n200)}
+.feat-table td{padding:var(--sp3) var(--sp4);border-bottom:1px solid var(--n100);color:var(--n700);vertical-align:top;line-height:1.5}
+.feat-table tr:last-child td{border-bottom:none}
+.feat-table tr:hover td{background:var(--n50)}
+.check{color:var(--ids-success);font-weight:700}
+.cross{color:var(--ids-error);font-weight:700}
+.partial{color:var(--ids-warning);font-weight:700}
+
+/* ── FOOTER ── */
+.doc-footer{background:var(--n0);border-top:1px solid var(--n200);padding:var(--sp8);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp4)}
+.footer-logo{display:flex;align-items:center;gap:var(--sp3)}
+.footer-mark{width:24px;height:24px;background:var(--ids-blue);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center}
+.footer-mark svg{width:12px;height:12px}
+.footer-text{font-size:var(--text-xs);color:var(--n400)}
+.footer-text strong{color:var(--n600);font-weight:600}
+.footer-links{display:flex;gap:var(--sp5)}
+.footer-link{font-size:var(--text-xs);color:var(--n400);font-weight:500;transition:color .2s}
+.footer-link:hover{color:var(--ids-blue)}
+
+/* animations */
+@keyframes fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fade-up .45s cubic-bezier(.16,1,.3,1) both}
+
+@media(max-width:768px){
+  .gnav{padding:0 var(--sp4)}
+  .hero{padding:var(--sp12) var(--sp4) var(--sp10)}
+  .page{padding:var(--sp8) var(--sp4) var(--sp12)}
+  .phase-banner{flex-direction:column}
+  .phase-stats{margin-left:0}
+  .handoff-flow{gap:var(--sp2)}
+}
+</style>
+</head>
+<body>
+
+<!-- ── GLOBAL NAV ── -->
+<nav class="gnav">
+  <div class="gnav-logo">
+    <div class="gnav-mark">
+      <svg viewBox="0 0 16 16" fill="none">
+        <rect x="5" y="2" width="6" height="12" rx="1" fill="white"/>
+        <rect x="2" y="5" width="3" height="6" rx=".5" fill="white" fill-opacity=".6"/>
+        <rect x="11" y="5" width="3" height="6" rx=".5" fill="white" fill-opacity=".6"/>
+      </svg>
+    </div>
+    <span class="gnav-name">Intuit Enterprise Suite</span>
+  </div>
+  <div class="gnav-div"></div>
+  <span class="gnav-section">UX Strategies</span>
+  <div class="gnav-spacer"></div>
+  <span class="gnav-pill">ProAdvisor Collaboration Layer</span>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-bar"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow fade-in">
+      <div class="hero-eyebrow-dot"></div>
+      <span class="hero-eyebrow-text">Collaborative Migration · Multi-Role Workflow</span>
+    </div>
+    <h1 class="hero-title fade-in">
+      Payroll Migration for<br>
+      <em>ProAdvisors &amp; Business Owners</em>
+    </h1>
+    <p class="hero-subtitle fade-in">
+      A share-and-confirm workflow that routes the right tasks to the right people — accountants handle payroll complexity, business owners handle business decisions. Migration becomes a coordinated handoff, not a solo obstacle course.
+    </p>
+    <div class="hero-roles fade-in">
+      <div class="role-pill role-pill--pa">
+        <div class="dot" style="background:#D4B8F5"></div>
+        ProAdvisor / Accountant
+      </div>
+      <div class="role-pill role-pill--bo">
+        <div class="dot" style="background:#86D4C0"></div>
+        Business Owner
+      </div>
+      <div class="role-pill role-pill--ai">
+        <div class="dot" style="background:#7DC5F0"></div>
+        AI-Automated
+      </div>
+    </div>
+    <div class="hero-stats fade-in">
+      <div class="hero-stat">
+        <div class="hero-stat-num">3</div>
+        <div class="hero-stat-lbl">Actor roles</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">12</div>
+        <div class="hero-stat-lbl">Collaborative touchpoints</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">5</div>
+        <div class="hero-stat-lbl">Structured handoffs</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">0</div>
+        <div class="hero-stat-lbl">Assumed single user</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── PAGE BODY ── -->
+<main class="page">
+
+  <!-- ROLE LEGEND -->
+  <div class="role-legend">
+    <span class="role-legend-title">Roles</span>
+    <div class="role-item"><div class="role-dot" style="background:var(--role-pa)"></div>ProAdvisor / Accountant — owns payroll complexity</div>
+    <div class="role-item"><div class="role-dot" style="background:var(--role-bo)"></div>Business Owner — owns business decisions &amp; approvals</div>
+    <div class="role-item"><div class="role-dot" style="background:var(--role-ai)"></div>AI-automated — no human input required</div>
+    <div class="role-item"><div class="role-dot" style="background:var(--role-shared)"></div>Shared / joint — both parties act</div>
+  </div>
+
+  <!-- WHAT CHANGES -->
+  <div class="new-cap">
+    <div class="new-cap-title">
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2l1.5 4.5H15l-3.75 2.75 1.5 4.5L9 11l-3.75 2.75 1.5-4.5L3 6.5h4.5L9 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      What the collaborative model adds — beyond the single-user strategy
+    </div>
+    <div class="new-cap-grid">
+      <div class="new-cap-item">
+        <div class="new-cap-item-label" style="color:var(--role-pa)">Role-aware task routing</div>
+        <div class="new-cap-item-text">Tasks are explicitly owned — mapping screens route to ProAdvisors, business approval screens route to owners. No task is presented to the wrong person.</div>
+      </div>
+      <div class="new-cap-item">
+        <div class="new-cap-item-label" style="color:var(--role-bo)">Save-and-share at every step</div>
+        <div class="new-cap-item-text">Any screen can be paused, exported as a pre-filled review package, and shared via a secure link. No migration requires a single synchronous session.</div>
+      </div>
+      <div class="new-cap-item">
+        <div class="new-cap-item-label" style="color:var(--role-ai)">Cross-client mapping templates</div>
+        <div class="new-cap-item-text">A ProAdvisor who has migrated one client's payroll builds a reusable mapping profile — subsequent clients with similar payroll structures reuse it with one-click confirmation.</div>
+      </div>
+      <div class="new-cap-item">
+        <div class="new-cap-item-label" style="color:var(--role-shared)">Structured handoff receipts</div>
+        <div class="new-cap-item-text">Every handoff between ProAdvisor and business owner generates a dated receipt — who sent what, what decision was requested, and what was confirmed. Full audit trail, no ambiguity.</div>
+      </div>
+      <div class="new-cap-item">
+        <div class="new-cap-item-label" style="color:var(--role-pa)">ProAdvisor dashboard</div>
+        <div class="new-cap-item-text">A single view of all in-progress client migrations — status, pending actions, blockers, and estimated completion. The ProAdvisor never needs to ask "where are we?" for any client.</div>
+      </div>
+      <div class="new-cap-item">
+        <div class="new-cap-item-label" style="color:var(--ids-success)">Async-first by design</div>
+        <div class="new-cap-item-text">The workflow is designed for asynchronous execution. Business owner and ProAdvisor do not need to be in the same session — or even the same timezone — to complete migration.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE TABS -->
+  <div class="sec-hdr">
+    <span class="sec-lbl">Collaborative Workflow — Phase by Phase</span>
+    <span class="sec-sub">Click any step to expand the role breakdown</span>
+  </div>
+
+  <nav class="phase-nav" role="tablist">
+    <button class="phase-btn on" data-tab="pre" onclick="switchTab('pre',this)" role="tab">
+      <span class="phase-dot" style="background:var(--role-pa)"></span>Phase 1 · Pre-Migration
+    </button>
+    <button class="phase-btn" data-tab="during" onclick="switchTab('during',this)" role="tab">
+      <span class="phase-dot" style="background:var(--role-shared)"></span>Phase 2 · During Migration
+    </button>
+    <button class="phase-btn" data-tab="post" onclick="switchTab('post',this)" role="tab">
+      <span class="phase-dot" style="background:var(--ids-success)"></span>Phase 3 · Post-Migration
+    </button>
+    <button class="phase-btn" data-tab="dashboard" onclick="switchTab('dashboard',this)" role="tab">
+      <span class="phase-dot" style="background:var(--ids-blue)"></span>ProAdvisor Dashboard
+    </button>
+    <button class="phase-btn" data-tab="concerns" onclick="switchTab('concerns',this)" role="tab">
+      <span class="phase-dot" style="background:var(--ids-error)"></span>Residual Concerns
+    </button>
+  </nav>
+
+  <div class="phase-container">
+
+    <!-- ══ PRE-MIGRATION ══ -->
+    <div class="phase-panel on" id="panel-pre">
+      <div class="phase-banner phase-banner--pre">
+        <div class="phase-icon phase-icon--pre">◈</div>
+        <div>
+          <div class="phase-banner-title">Phase 1 — Pre-Migration Setup &amp; Readiness</div>
+          <div class="phase-banner-desc">The ProAdvisor leads this phase. Business owner is engaged only for decisions that require business knowledge — which period to migrate, whether the company has a payroll currently in progress, and authorising the migration to begin. Everything else — file health, mapping, gap-fill — is ProAdvisor territory.</div>
+        </div>
+        <div class="phase-stats">
+          <div class="phase-stat"><span>5</span>Steps</div>
+          <div class="phase-stat"><span>PA</span>Lead role</div>
+          <div class="phase-stat"><span>2</span>BO gates</div>
+        </div>
+      </div>
+
+      <div class="workflow">
+
+        <!-- STEP 1 -->
+        <div class="wf-step" id="s-pre1">
+          <div class="wf-head" onclick="toggleStep('s-pre1')">
+            <div class="wf-step-num" style="background:var(--role-pa-light);color:var(--role-pa)">1</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags">
+                <span class="tag tag--pa">ProAdvisor</span>
+                <span class="tag tag--ai">AI-automated</span>
+              </div>
+              <div class="wf-title">ProAdvisor initiates — scans QBDT file and receives readiness report</div>
+              <div class="wf-summary">ProAdvisor logs into QBO Accountant, selects the client company, and triggers the QBDT health scan. AI runs autonomously. No business owner involvement at this step.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">ProAdvisor actions</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Connects to client QBDT file from QBO Accountant portal — no need to visit client's premises or remote-in to their machine</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Reviews the readiness report: file health, employee tier breakdown (Tier 1/2/3), payroll item taxonomy, and flagged risks</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Checks whether a cross-client mapping template already exists from a similar prior migration — reuses if applicable, reduces setup time</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--ai">AI-automated</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Scans file: version, target count, payroll service type, last payroll run date, active vs inactive employee ratio</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Runs completeness scoring across all 9 fields per employee — assigns Tier 1/2/3 automatically</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Detects: rehired employees, negative-value pay items, voided/amended paychecks, multi-state employees, potential SSN mismatches</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Generates draft payroll item mapping using semantic matching — flags confidence level (auto / review / unmatched) per item</div></div>
+                </div>
+              </div>
+              <div class="handoff">
+                <div class="handoff-label">No handoff at this step — ProAdvisor reviews output solo</div>
+                <div class="handoff-flow">
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--ai">AI</div><div class="handoff-node-name">Scan &amp; score</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Report</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--pa">PA</div><div class="handoff-node-name">Reviews</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="wf-step" id="s-pre2">
+          <div class="wf-head" onclick="toggleStep('s-pre2')">
+            <div class="wf-step-num" style="background:var(--role-pa-light);color:var(--role-pa)">2</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags">
+                <span class="tag tag--pa">ProAdvisor</span>
+                <span class="tag tag--ai">AI pre-fill</span>
+              </div>
+              <div class="wf-title">ProAdvisor completes payroll item mapping &amp; employee detail mapping</div>
+              <div class="wf-summary">With AI pre-filling high-confidence items, the ProAdvisor reviews and resolves medium/low confidence mappings. Edge cases — rehired employees, negative values, multi-state — are resolved here, not during migration.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">ProAdvisor completes</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Reviews mapping screen using progressive disclosure — 32 auto-confirmed items collapsed, 6 medium-confidence items presented one group at a time, 2 unmatched items requiring manual selection</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Resolves rehired employee split — confirms "keep as separate employment periods" or "merge into single YTD" per flagged employee</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Resolves negative-value pay items — confirms they map as deductions in QBO, not inverted to positive values</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Resolves SSN mismatches — manually links QBDT employee record to the correct QBO employee where auto-match failed</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Confirms voided/amended paycheck handling — includes void reversals to preserve accurate YTD</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Saves mapping as a versioned profile — timestamped, attributed to PA name, reusable for similar clients</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--ai">AI assists</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Both labels shown per mapping row: "QBDT: Hlth Ben ER → QBO: Employer Health Insurance Contribution — covers company's share of employee health premiums"</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Confidence badge per item: green (auto) / amber (review) / red (unmatched). PA attention directed to amber and red only</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">W-4 gap-fill: infers filing status from 6-month withholding pattern for Tier 2 employees — PA reviews, not customer</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Pre-flight dry run: validates each confirmed mapping against HistoricalPaycheck API payload requirements before any migration begins</div></div>
+                </div>
+              </div>
+              <div class="handoff">
+                <div class="handoff-label">Internal PA step — no handoff yet. Mapping saved as versioned snapshot.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 — HANDOFF 1 -->
+        <div class="wf-step" id="s-pre3">
+          <div class="wf-head" onclick="toggleStep('s-pre3')">
+            <div class="wf-step-num" style="background:var(--role-shared-light);color:var(--role-shared)">3</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags">
+                <span class="tag tag--shared">Handoff 1</span>
+                <span class="tag tag--bo">Business Owner</span>
+                <span class="tag tag--new">Async</span>
+              </div>
+              <div class="wf-title">ProAdvisor sends migration review package to Business Owner for period confirmation &amp; authorisation</div>
+              <div class="wf-summary">ProAdvisor generates a shareable, pre-filled review link. Business Owner confirms: which periods to migrate, whether any payroll is currently in progress, and authorises migration to begin. Business decisions only — no payroll taxonomy.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">ProAdvisor sends</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Generates migration review package: a secure, time-limited link containing a plain-English summary of what will migrate, what will be archived, and the estimated timeline</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">The package does NOT show payroll taxonomy — only business-readable content: employee names, date ranges, paycheck counts, and the two decisions required from the business owner</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Sets a review deadline (default: 5 business days). If no response, a reminder is sent automatically and the ProAdvisor is notified</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--bo">Business Owner confirms</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Decision 1 — Migration period: "We'll migrate paychecks from [auto-detected first payroll date] to [migration date]. Is this correct?" — single confirm or date adjustment</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Decision 2 — In-progress payroll check: "Is there a payroll currently being processed in QuickBooks Desktop?" — Yes/No. If yes, instructions to complete it first are shown</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Decision 3 — Migration authorisation: "I authorise [ProAdvisor name] to migrate payroll history for [Company name] on my behalf." — named, dated, logged</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Business Owner can add notes or flag concerns before confirming — routed back to ProAdvisor as an annotated review</div></div>
+                </div>
+              </div>
+              <div class="handoff">
+                <div class="handoff-label">Handoff 1 — ProAdvisor → Business Owner → ProAdvisor</div>
+                <div class="handoff-flow">
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--pa">PA</div><div class="handoff-node-name">Sends package</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Secure link</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--bo">BO</div><div class="handoff-node-name">Confirms 3 decisions</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Receipt + auth</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--pa">PA</div><div class="handoff-node-name">Receives authorisation</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="wf-step" id="s-pre4">
+          <div class="wf-head" onclick="toggleStep('s-pre4')">
+            <div class="wf-step-num" style="background:var(--role-ai-light);color:var(--role-ai)">4</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--ai">AI-automated</span><span class="tag tag--pa">PA reviews</span></div>
+              <div class="wf-title">Pre-flight validation — dry run against HistoricalPaycheck API before committing</div>
+              <div class="wf-summary">Once authorisation is received, AI runs a silent validation pass. Every confirmed mapping is tested against the API payload requirements. Failures are surfaced to the ProAdvisor before any data moves — not mid-migration.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--ai">AI validates</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Runs every confirmed paycheck mapping through a sandbox call to the HistoricalPaycheck API — no records are created, only validated</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Flags: math-error paychecks (will become read-only overrides), payload-rejection candidates (need ProAdvisor resolution), and paychecks that would duplicate Chart of Accounts entries</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Generates a pre-flight report: X ready / Y read-only overrides / Z need resolution</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">ProAdvisor resolves</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Reviews pre-flight report — each failure shows: employee name, paycheck date, specific reason, and three choices: skip / archive as PDF / override as read-only</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Can resolve all failures of the same type in bulk — "archive all math-error paychecks as PDF" in one action</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Pre-flight report is saved and attached to the final migration sign-off document — complete provenance of every decision</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="wf-step" id="s-pre5">
+          <div class="wf-head" onclick="toggleStep('s-pre5')">
+            <div class="wf-step-num" style="background:var(--role-pa-light);color:var(--role-pa)">5</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--ai">Zero-click</span><span class="tag tag--pa">PA triggered</span></div>
+              <div class="wf-title">Baseline snapshot — auto-exported before migration window opens</div>
+              <div class="wf-summary">System auto-exports Balance Sheet, P&amp;L, Payroll Summary by Employee, and Check Register as reconciliation anchors. Stored in both ProAdvisor's QBO Accountant portal and Business Owner's QBO account.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--ai">AI-automated</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Exports: Balance Sheet (as-of date), P&L (YTD), Payroll Summary by Employee, Check Register, Liability Balance — stored as reconciliation anchors for post-migration diff</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Both PA and BO receive secure download links via email. Stored for 7 years to satisfy IRS retention requirements.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ DURING MIGRATION ══ -->
+    <div class="phase-panel" id="panel-during">
+      <div class="phase-banner phase-banner--during">
+        <div class="phase-icon phase-icon--during">⚡</div>
+        <div>
+          <div class="phase-banner-title">Phase 2 — Migration Execution</div>
+          <div class="phase-banner-desc">The ProAdvisor owns and monitors migration execution. The Business Owner is not engaged during active processing — they receive progress notifications and are only pulled in for blocking exceptions that require a business decision. AI handles tier routing, check intercept, and exception clustering.</div>
+        </div>
+        <div class="phase-stats">
+          <div class="phase-stat"><span>4</span>Steps</div>
+          <div class="phase-stat"><span>PA</span>Lead role</div>
+          <div class="phase-stat"><span>1</span>BO gate</div>
+        </div>
+      </div>
+
+      <div class="workflow">
+
+        <div class="wf-step" id="s-d1">
+          <div class="wf-head" onclick="toggleStep('s-d1')">
+            <div class="wf-step-num" style="background:var(--role-ai-light);color:var(--role-ai)">1</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--ai">Fully automated</span><span class="tag tag--pa">PA monitors</span></div>
+              <div class="wf-title">Tiered migration runs — Tier 1 auto, Tier 2 PA-guided, Tier 3 archived</div>
+              <div class="wf-summary">Migration proceeds by tier. Tier 1 (full data) runs fully automatically. Tier 2 (partial data) surfaces remaining gaps to the ProAdvisor — not the business owner. Tier 3 (inactive/incomplete) is archived as structured objects.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--ai">Tier 1 — Automated</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Full paychecks posted to HistoricalPaycheck API with complete payroll item breakdown. Employee record linkage validated per batch. Gross-to-net verified against QBDT source.</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">Tier 2 — PA-guided</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Remaining gaps surfaced to PA via micro-wizard — only the specific missing fields, pre-populated by AI. PA resolves; BO is not engaged for payroll detail.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Bulk resolve: if 15 employees share the same missing deduction item, one PA action resolves all 15.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-step" id="s-d2">
+          <div class="wf-head" onclick="toggleStep('s-d2')">
+            <div class="wf-step-num" style="background:var(--role-ai-light);color:var(--role-ai)">2</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--ai">AI intercept</span><span class="tag tag--pa">PA reviews</span></div>
+              <div class="wf-title">Check-to-paycheck intercept — paychecks recovered from native-tool conversion</div>
+              <div class="wf-summary">Any paycheck the native QBO migration tool converts to a check is caught, re-matched to QBDT payroll data, and re-posted as a HistoricalPaycheck object. PA sees a recovery count — not a warning.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--ai">AI recovers</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Match key: check date + net amount + employee ID + period end date. Multi-field matching prevents false positives.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Unmatched conversions (no QBDT source) surface to PA as exception queue items with guided resolution path.</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">PA sees</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">"14 paychecks recovered from check conversion" — positive framing. Unmatched checks appear in exception queue with specific details and three resolution options.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-step" id="s-d3">
+          <div class="wf-head" onclick="toggleStep('s-d3')">
+            <div class="wf-step-num" style="background:var(--role-ai-light);color:var(--role-ai)">3</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--ai">AI clustered</span><span class="tag tag--pa">PA resolves</span><span class="tag tag--bo">BO if blocking</span></div>
+              <div class="wf-title">Exception surfacing — grouped by root cause, PA resolves, BO contacted only for business-blocking issues</div>
+              <div class="wf-summary">AI clusters errors by root cause. PA resolves the majority. BO is contacted only for exceptions that require a business decision — e.g., a paycheck period the BO specifically wanted that cannot be migrated.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">PA resolves</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Technical exceptions: payload rejections, API rate limits, validation failures, multi-state mapping gaps — PA domain, no BO involvement</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Bulk resolution: "Archive all math-error paychecks as read-only overrides" — one action for all same-type failures</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--bo">BO contacted only for</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">A paycheck period the BO explicitly selected that cannot be migrated — BO must decide: skip, accept partial, or defer migration</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Scope change: if migration will take significantly longer than estimated, BO is notified with a revised ETA and a continue/pause choice</div></div>
+                </div>
+              </div>
+              <div class="handoff">
+                <div class="handoff-label">Handoff 2 — PA → BO (only if business-blocking exception occurs)</div>
+                <div class="handoff-flow">
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--pa">PA</div><div class="handoff-node-name">Flags BO issue</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Email + in-app</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--bo">BO</div><div class="handoff-node-name">Decides</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Decision receipt</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--pa">PA</div><div class="handoff-node-name">Resumes</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-step" id="s-d4">
+          <div class="wf-head" onclick="toggleStep('s-d4')">
+            <div class="wf-step-num" style="background:var(--role-shared-light);color:var(--role-shared)">4</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--shared">Handoff 3</span><span class="tag tag--pa">PA signs</span><span class="tag tag--bo">BO co-signs</span></div>
+              <div class="wf-title">Per-batch YTD validation — PA signs off, BO co-signs if discrepancy exceeds threshold</div>
+              <div class="wf-summary">After each employee batch, system renders a side-by-side QBDT vs QBO YTD diff. PA reviews and signs off. If any delta exceeds a defined threshold (e.g. &gt;$100 on any single line), BO is also asked to co-sign before the batch is committed.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">PA reviews</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Side-by-side diff: QBDT YTD vs QBO YTD per employee per line item. Green (match), amber (explained difference), red (investigate).</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">AI explains each amber delta: "The $12.50 difference in John's federal tax is QBO's daily rounding vs QBDT's per-period method — within IRS tolerance."</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">PA adds notes to any line item before signing — notes are preserved in the audit trail and visible to BO in the final sign-off report.</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--bo">BO co-signs if threshold exceeded</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Threshold (configurable, default $100 per line): BO receives a plain-English summary — "Your February payroll shows a $143 difference in state tax for Maria Lopez. Your accountant has explained this is due to [reason]. Do you approve continuing?"</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">BO never sees the raw diff table — only the PA-curated summary with the specific items that need BO awareness.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ POST-MIGRATION ══ -->
+    <div class="phase-panel" id="panel-post">
+      <div class="phase-banner phase-banner--post">
+        <div class="phase-icon phase-icon--post">◉</div>
+        <div>
+          <div class="phase-banner-title">Phase 3 — Post-Migration Validation &amp; Handback</div>
+          <div class="phase-banner-desc">ProAdvisor runs the parallel-run monitor and reviews the automated diff. Business Owner is handed back a fully validated QBO environment with a clear visual distinction between migrated history and live payroll. The sign-off report closes the engagement formally for both parties.</div>
+        </div>
+        <div class="phase-stats">
+          <div class="phase-stat"><span>3</span>Steps</div>
+          <div class="phase-stat"><span>PA</span>Lead role</div>
+          <div class="phase-stat"><span>2</span>BO gates</div>
+        </div>
+      </div>
+
+      <div class="workflow">
+
+        <div class="wf-step" id="s-p1">
+          <div class="wf-head" onclick="toggleStep('s-p1')">
+            <div class="wf-step-num" style="background:var(--role-ai-light);color:var(--role-ai)">1</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--ai">AI diff</span><span class="tag tag--pa">PA reviews</span></div>
+              <div class="wf-title">Automated report diff — QBO vs baseline snapshot, categorised by AI</div>
+              <div class="wf-summary">System diffs QBO Balance Sheet, P&L, and Payroll Summary against pre-migration baselines. AI categorises every discrepancy: expected, known limitation, or genuine anomaly. PA reviews and annotates before sharing with BO.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">PA reviews &amp; annotates</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Reviews line-by-line diff — green (match), amber (explained), red (investigate). Adds PA notes to any item before sharing the report with BO.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Chart of Accounts change notification: sends BO a plain-English explanation of which bank transactions were replaced by native paychecks and why CoA looks different.</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--ai">AI categorises</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Expected: FIFO vs avg cost, rounding method differences, audit trail exclusion — pre-classified and explained automatically.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--ai"></div><div class="wf-pt-text">Genuine anomalies: flagged for PA investigation before the diff report is released to BO.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-step" id="s-p2">
+          <div class="wf-head" onclick="toggleStep('s-p2')">
+            <div class="wf-step-num" style="background:var(--role-ai-light);color:var(--role-ai)">2</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--ai">Nightly automated</span><span class="tag tag--pa">PA monitors</span><span class="tag tag--new">5-day gate</span></div>
+              <div class="wf-title">Parallel-run monitor — nightly comparison, 5-day clean gate before QBDT decommission</div>
+              <div class="wf-summary">During the parallel period, nightly automated comparison of QBDT and QBO registers. PA receives a daily digest. BO receives a weekly summary. Decommission is only recommended after 5 consecutive clean days — PA and BO both sign the decommission confirmation.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">PA daily digest</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">"Everything matched today — Day 3 of 5 clean days" or specific items to investigate. PA resolves any discrepancies before they reach BO.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Anomaly detection on first 3 live QBO payroll runs — AI flags statistical outliers vs QBDT historical patterns before payroll is submitted.</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--bo">BO weekly summary + decommission gate</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Weekly summary: "Your migration is proceeding cleanly. 3 of 5 clean days achieved." BO is not involved in daily monitoring.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Decommission gate: both PA and BO must co-sign before QBDT is decommissioned. BO sees: "Your accountant [PA name] confirms QuickBooks Desktop can now be retired. Do you agree?" — named, dated, irreversible confirmation.</div></div>
+                </div>
+              </div>
+              <div class="handoff">
+                <div class="handoff-label">Handoff 4 — PA recommends decommission → BO co-signs</div>
+                <div class="handoff-flow">
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--ai">AI</div><div class="handoff-node-name">5 clean days</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Signal</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--pa">PA</div><div class="handoff-node-name">Recommends</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Named consent</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--bo">BO</div><div class="handoff-node-name">Co-signs</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-step" id="s-p3">
+          <div class="wf-head" onclick="toggleStep('s-p3')">
+            <div class="wf-step-num" style="background:var(--role-shared-light);color:var(--role-shared)">3</div>
+            <div class="wf-step-meta">
+              <div class="wf-tags"><span class="tag tag--shared">Handoff 5</span><span class="tag tag--bo">BO receives</span><span class="tag tag--ai">AI generated</span></div>
+              <div class="wf-title">Migration sign-off &amp; formal handback to Business Owner</div>
+              <div class="wf-summary">ProAdvisor delivers a final migration sign-off report to the Business Owner. BO receives a clear, non-technical summary of what moved, what was preserved, and what the Pay History tab now contains. The engagement formally closes with a dated co-signature.</div>
+            </div>
+            <svg class="wf-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wf-body">
+            <div class="wf-body-inner">
+              <div class="wf-cols">
+                <div>
+                  <div class="wf-col-label wf-col-label--pa">PA delivers</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Signs the migration sign-off report — includes: paychecks migrated vs archived, reconciliation outcomes, exceptions resolved, mapping version, parallel-run clean days, decommission date.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--pa"></div><div class="wf-pt-text">Delivers a "Pay History orientation" — a 2-minute walkthrough of the Pay History tab showing the migration timeline anchor, the historical vs live paycheck distinction, and how to download a pay stub.</div></div>
+                </div>
+                <div>
+                  <div class="wf-col-label wf-col-label--bo">BO receives</div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">AI-generated plain-English summary: "Your payroll history from [date] to [date] is now available in QBO. X paychecks are in Pay History. Y paychecks were archived as PDFs. You can download any pay stub from Pay History at any time."</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Co-signs the sign-off report — named, dated. Stored in QBO for 7 years as the legal audit record of the migration.</div></div>
+                  <div class="wf-pt"><div class="wf-pt-dot wf-pt-dot--bo"></div><div class="wf-pt-text">Receives access to the Preserved Paycheck Portal — searchable archive for all Tier 3 / prior-year paychecks, linked from within QBO Payroll.</div></div>
+                </div>
+              </div>
+              <div class="handoff">
+                <div class="handoff-label">Handoff 5 — Final formal handback. PA → BO. Migration complete.</div>
+                <div class="handoff-flow">
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--pa">PA</div><div class="handoff-node-name">Signs report</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Formal handback</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--bo">BO</div><div class="handoff-node-name">Co-signs</div></div>
+                  <div class="handoff-arrow"><svg viewBox="0 0 28 16" fill="none"><path d="M2 8h22M19 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="handoff-arrow-label">Archive</div></div>
+                  <div class="handoff-node"><div class="handoff-avatar handoff-avatar--ai">AI</div><div class="handoff-node-name">7-year retention</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ PA DASHBOARD ══ -->
+    <div class="phase-panel" id="panel-dashboard">
+      <div style="margin-bottom:var(--sp6)">
+        <h2 style="font-size:var(--text-xl);font-weight:700;color:var(--n800);margin-bottom:var(--sp2)">ProAdvisor Migration Dashboard</h2>
+        <p style="font-size:var(--text-base);color:var(--n500);line-height:1.7;max-width:680px">A single view of all active client migrations — status, pending actions, blockers, and ETA. The PA never needs to log into individual client files to check migration progress. Cross-client mapping templates and reusable profiles are managed here.</p>
+      </div>
+
+      <table class="feat-table">
+        <thead>
+          <tr>
+            <th style="width:22%">Feature</th>
+            <th style="width:26%">What it does</th>
+            <th style="width:18%">Today (absent)</th>
+            <th style="width:34%">With collaborative model</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Client migration status board</strong></td><td>One row per client: status, pending actor, days in current step, blocker if any</td><td><span class="cross">✗</span> PA must log into each client file</td><td>PA sees all clients in one dashboard. Colour-coded: green (clean), amber (awaiting BO), red (exception)</td></tr>
+          <tr><td><strong>Cross-client mapping templates</strong></td><td>Reusable mapping profiles saved from prior migrations</td><td><span class="cross">✗</span> Every migration starts from scratch</td><td>PA selects "use template from [similar client]" — AI auto-applies and flags any differences for review</td></tr>
+          <tr><td><strong>Pending action queue</strong></td><td>All items awaiting PA action across all clients — sorted by urgency</td><td><span class="cross">✗</span> No cross-client visibility</td><td>Single queue: "3 items need your attention today" — exception resolutions, BO responses, pre-flight failures</td></tr>
+          <tr><td><strong>BO response tracker</strong></td><td>Shows which clients have pending BO confirmations and when the reminder fires</td><td><span class="cross">✗</span> PA must follow up manually</td><td>Automatic reminders sent to BO. PA sees: "Awaiting BO response — reminder sent Day 3 of 5"</td></tr>
+          <tr><td><strong>Mapping version history</strong></td><td>All confirmed mapping snapshots — who confirmed, when, which version</td><td><span class="cross">✗</span> Mappings are not persisted after migration</td><td>Each mapping snapshot is versioned, attributed, and searchable. If a mapping error is found, PA can trace exactly what was confirmed and when</td></tr>
+          <tr><td><strong>Parallel-run digest</strong></td><td>Daily nightly comparison results across all active clients</td><td><span class="cross">✗</span> PA must check each client individually</td><td>Morning digest: "4 clients — all clean. 1 client — 2 items to review" — directly actionable from the notification</td></tr>
+          <tr><td><strong>Client handback tracker</strong></td><td>Shows which clients have completed migration and received formal handback</td><td><span class="cross">✗</span> No formal close state</td><td>Green checkmark per client once BO co-signs sign-off report. PA firm has a clean record of completed engagements</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══ RESIDUAL CONCERNS ══ -->
+    <div class="phase-panel" id="panel-concerns">
+      <div style="margin-bottom:var(--sp6)">
+        <h2 style="font-size:var(--text-xl);font-weight:700;color:var(--n800);margin-bottom:var(--sp2)">Still-Overlooked Concerns</h2>
+        <p style="font-size:var(--text-base);color:var(--n500);line-height:1.7;max-width:680px">Even with the collaborative model in place and both mapping screens confirmed, these concerns persist. They require deliberate design decisions before wireframing begins.</p>
+      </div>
+
+      <div class="concern-grid">
+        <div class="concern-card concern-card--critical">
+          <div class="concern-lbl">Critical — design before wire</div>
+          <div class="concern-title">Pay History timeline anchor must be permanent</div>
+          <div class="concern-desc">The visual distinction between migrated (QBDT) and live (QBO) paychecks must persist forever in Pay History — not just as a one-time migration notice. Six months post-migration, an auditor needs to know instantly which records came from where. Badge, divider, and provenance label are permanent design decisions.</div>
+        </div>
+        <div class="concern-card concern-card--critical">
+          <div class="concern-lbl">Critical — design before wire</div>
+          <div class="concern-title">Rollback path must be a defined UX state</div>
+          <div class="concern-desc">Neither document defines rollback. Once bank transactions are suppressed and native paychecks are created, rolling back requires reversing both. The BO must know — before migration begins — whether rollback is possible, what it means, and what the window is. "Can I undo this?" must have a designed answer.</div>
+        </div>
+        <div class="concern-card concern-card--critical">
+          <div class="concern-lbl">Critical — compliance risk</div>
+          <div class="concern-title">Voided and amended paychecks must be explicitly included</div>
+          <div class="concern-desc">If only the original paycheck migrates without its void reversal, YTD totals are overstated. The pay history configuration screen needs a specific "include voided and amended paychecks" confirmation — with a plain-English explanation of why this is required for W-2 accuracy.</div>
+        </div>
+        <div class="concern-card concern-card--watch">
+          <div class="concern-lbl">Watch — surfaces in QA</div>
+          <div class="concern-title">Mid-pay-period migration timing gate</div>
+          <div class="concern-desc">If a customer migrates mid-period — Wednesday of a bi-weekly cycle — the in-progress payroll in QBDT must be completed first. The pre-migration flow needs an explicit gate: "Is there a payroll currently in progress in QBDT?" with a hard block until the answer is no.</div>
+        </div>
+        <div class="concern-card concern-card--watch">
+          <div class="concern-lbl">Watch — surfaces in QA</div>
+          <div class="concern-title">Company-side payroll items (FUTA, SUTA, employer FICA) are out of scope in both mapping screens</div>
+          <div class="concern-desc">Employer-side payroll items affect the Chart of Accounts. If the mapping screen covers only employee-facing pay items, the company-side data silently migrates as generic journal entries — recreating the exact problem the PRD is trying to solve, just on the employer side.</div>
+        </div>
+        <div class="concern-card concern-card--watch">
+          <div class="concern-lbl">Watch — IES segment specific</div>
+          <div class="concern-title">Mapping template portability across PA firm's client base</div>
+          <div class="concern-desc">A PA managing 20 clients with similar payroll structures should not rebuild the mapping from scratch for each one. The cross-client mapping template must handle: same-industry defaults, custom item variations per client, and a diff-from-template view that shows only what changed — not the full mapping again.</div>
+        </div>
+        <div class="concern-card concern-card--design">
+          <div class="concern-lbl">Design decision needed</div>
+          <div class="concern-title">What happens when the BO ignores the review link?</div>
+          <div class="concern-desc">The collaborative model depends on the BO responding to review requests. When they don't — and they will not, for some percentage of clients — the PA needs escalation paths: automatic reminders, a PA-override option (with audit log), and a clear definition of when migration is allowed to proceed without BO response.</div>
+        </div>
+        <div class="concern-card concern-card--design">
+          <div class="concern-lbl">Design decision needed</div>
+          <div class="concern-title">Idempotency — every action must be safely re-runnable</div>
+          <div class="concern-desc">If migration fails halfway and restarts, the system must produce the same output. The resume migration path must show PA exactly which paychecks already migrated and which still need to run — not a blank-slate restart that risks duplicating records already posted to the HistoricalPaycheck API.</div>
+        </div>
+      </div>
+
+      <!-- DESIGN PRINCIPLES -->
+      <div class="sec-hdr" style="margin-top:var(--sp8)">
+        <span class="sec-lbl">Design Principles — Collaborative Model</span>
+      </div>
+      <div class="principle-grid">
+        <div class="principle-card">
+          <div class="principle-num">P1</div>
+          <div class="principle-title">Route complexity to competence</div>
+          <div class="principle-text">Payroll taxonomy, API errors, and mapping edge cases go to ProAdvisors. Business period selection, authorisation, and decommission decisions go to Business Owners. No screen presents both types of decision to the same person simultaneously.</div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">P2</div>
+          <div class="principle-title">Every handoff generates a receipt</div>
+          <div class="principle-text">Every time responsibility moves between PA and BO, a dated receipt is generated — who sent what, what decision was requested, and what was confirmed. Ambiguity about "who said what" is a support call. Receipts eliminate it.</div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">P3</div>
+          <div class="principle-title">Async-first — no synchronous session required</div>
+          <div class="principle-text">PA and BO do not need to be in the same room, the same session, or even the same timezone to complete migration. Save-and-share at every step. Time-limited review links. Automatic reminders. The workflow accommodates real-world scheduling constraints.</div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">P4</div>
+          <div class="principle-title">The ProAdvisor is the primary user — design for their scale</div>
+          <div class="principle-text">A PA managing 20 clients simultaneously cannot afford a per-client setup overhead. Cross-client templates, a single-view dashboard, and bulk resolution across clients are not nice-to-haves — they are the primary design surface for the IES segment.</div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">P5</div>
+          <div class="principle-title">Irreversible actions require named, dated co-signatures</div>
+          <div class="principle-text">Migration authorisation, decommission confirmation, and sign-off are irreversible. Each requires a named, dated co-signature from both PA and BO — not a generic checkbox. The signature is the audit record. "I, [PA name], confirm this migration is complete" carries legal weight that "confirm" does not.</div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">P6</div>
+          <div class="principle-title">Historical and live paychecks are permanently differentiated</div>
+          <div class="principle-text">The Pay History timeline anchor — visual divider, provenance badge, migration date label — is a permanent design decision on the Pay History screen. It is not a transient notification. Six months after migration, an auditor must be able to identify provenance at a glance, without reading metadata.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phase-container -->
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="doc-footer">
+  <div class="footer-logo">
+    <div class="footer-mark">
+      <svg viewBox="0 0 12 12" fill="none"><rect x="3.5" y="1" width="5" height="10" rx=".75" fill="white"/><rect x="1" y="3.5" width="2.5" height="5" rx=".5" fill="white" fill-opacity=".6"/><rect x="8.5" y="3.5" width="2.5" height="5" rx=".5" fill="white" fill-opacity=".6"/></svg>
+    </div>
+    <div class="footer-text"><strong>Intuit Enterprise Suite</strong> · Collaborative Migration UX Strategy · IDS v3</div>
+  </div>
+  <nav class="footer-links">
+    <a class="footer-link" href="index.html">← Strategy index</a>
+    <a class="footer-link" href="qb-payroll-migration-ux-strategy.html">Migration strategy</a>
+    <a class="footer-link" href="https://github.com/asoman2/uxStrategies" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</footer>
+
+<script>
+function switchTab(id, el) {
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('panel-' + id).classList.add('on');
+  document.querySelectorAll('.wf-step').forEach(s => s.classList.remove('open'));
+}
+function toggleStep(id) {
+  const el = document.getElementById(id);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.wf-step').forEach(s => s.classList.remove('open'));
+  if (!isOpen) {
+    el.classList.add('open');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+  }
+}
+</script>
+</body>
+</html>
