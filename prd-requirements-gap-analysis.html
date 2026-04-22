@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD Requirements — Extraction &amp; Alignment Gap Analysis</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Avenir+Next:wght@400;500;600;700&display=swap');
+:root {
+  --font:'Avenir Next','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --navy:#0D2340; --blue:#0077C5; --blue-dk:#005A9E; --blue-lt:#E5F1FA;
+  --succ:#2CA01C; --succ-lt:#E6F4E4; --warn:#E8700A; --warn-lt:#FDF0E5;
+  --err:#D52B1E; --err-lt:#FDECEB; --info:#0077C5; --info-lt:#E5F1FA;
+  --n0:#fff; --n50:#F4F5F8; --n100:#E8ECF0; --n200:#D0D7E0;
+  --n300:#B0BBC8; --n400:#8D9BB0; --n500:#6B7A94; --n600:#4A5568;
+  --n700:#2D3748; --n800:#1A202C; --n900:#0F1420;
+  --r-md:6px; --r-lg:8px; --r-xl:12px; --r-2xl:16px; --r-pill:999px;
+  --sh-sm:0 1px 4px rgba(0,0,0,.08); --sh-md:0 4px 14px rgba(0,0,0,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n50);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+.gnav{position:sticky;top:0;z-index:200;background:var(--navy);height:52px;display:flex;align-items:center;padding:0 32px;gap:20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.gnav-mark{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.gnav-mark svg{width:16px;height:16px}
+.gnav-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.95)}
+.gnav-div{width:1px;height:20px;background:rgba(255,255,255,.15)}
+.gnav-section{font-size:12px;color:rgba(255,255,255,.5);font-weight:500}
+.gnav-spacer{flex:1}
+.gnav-chip{font-size:11px;font-weight:600;color:#F0EBF8;background:rgba(123,94,167,.3);border:1px solid rgba(180,150,220,.3);border-radius:99px;padding:2px 12px;letter-spacing:.04em}
+
+/* HERO */
+.hero{background:var(--navy);padding:56px 32px 40px;position:relative;overflow:hidden}
+.hero-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--succ) 0%,var(--warn) 35%,var(--err) 65%,var(--blue) 100%)}
+.hero::before{content:'';position:absolute;top:-50px;right:-30px;width:340px;height:340px;border-radius:50%;border:1px solid rgba(0,163,224,.1)}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:99px;padding:3px 14px;margin-bottom:18px}
+.hero-badge-txt{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.07em;text-transform:uppercase}
+.hero-title{font-size:clamp(24px,3.5vw,34px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
+.hero-title em{font-style:normal;color:#86D4C0}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.55);line-height:1.7;max-width:600px;margin-bottom:28px}
+.hero-stats{display:flex;gap:36px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)}
+.hs{}.hs-num{font-size:26px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px}
+.hs-lbl{font-size:11px;color:rgba(255,255,255,.4);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:36px 32px 72px}
+
+/* STRIP */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+.strip-cell{border-radius:var(--r-xl);padding:14px 16px;text-align:center}
+.sc-t{background:var(--n100)} .sc-a{background:var(--succ-lt)} .sc-p{background:var(--warn-lt)} .sc-m{background:var(--err-lt)}
+.s-n{font-size:26px;font-weight:700;line-height:1;margin-bottom:4px}
+.sc-t .s-n{color:var(--n800)} .sc-a .s-n{color:var(--succ)} .sc-p .s-n{color:var(--warn)} .sc-m .s-n{color:var(--err)}
+.s-l{font-size:11px;color:var(--n500);line-height:1.4}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--n200);overflow-x:auto;margin-bottom:0}
+.tab{display:flex;align-items:center;gap:6px;padding:10px 16px;font-family:var(--font);font-size:12px;font-weight:500;color:var(--n500);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:color .18s,border-color .18s;margin-bottom:-1px}
+.tab:hover{color:var(--blue)}
+.tab.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.tab-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* PANELS */
+.panels{background:var(--n0);border:1px solid var(--n200);border-top:none;border-radius:0 0 var(--r-2xl) var(--r-2xl);box-shadow:var(--sh-sm)}
+.panel{display:none;padding:24px 28px}
+.panel.on{display:block}
+
+/* SECTION GROUP */
+.sec-group{margin-bottom:8px}
+.sec-group-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--n400);margin-bottom:8px;padding:8px 4px;border-bottom:0.5px solid var(--n100);display:flex;align-items:center;justify-content:space-between}
+.sec-count{font-size:10px;color:var(--n300)}
+
+/* REQ CARDS */
+.req-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.req{border:0.5px solid var(--n200);border-radius:var(--r-xl);overflow:hidden;background:var(--n0);transition:border-color .18s,box-shadow .18s}
+.req:hover{border-color:var(--n300);box-shadow:var(--sh-sm)}
+.req.open{border-color:var(--blue);box-shadow:var(--sh-md)}
+.req-head{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;cursor:pointer;user-select:none}
+.req-head:hover{background:var(--n50)}
+.req.open .req-head{background:var(--n50)}
+
+/* req id */
+.req-id{background:var(--n100);border:0.5px solid var(--n200);border-radius:5px;font-size:10px;font-weight:700;color:var(--n500);padding:3px 7px;flex-shrink:0;margin-top:2px;letter-spacing:.04em;white-space:nowrap}
+
+.req-meta{flex:1;min-width:0}
+.req-prd-sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--n400);margin-bottom:3px}
+.req-title{font-size:13px;font-weight:600;color:var(--n800);margin-bottom:3px;line-height:1.35}
+.req-quote{font-size:11px;color:var(--n400);font-style:italic;line-height:1.5;border-left:2px solid var(--n200);padding-left:8px;margin-top:4px}
+
+/* status badges */
+.status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap;flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
+.s-a{background:var(--succ-lt);color:var(--succ)}
+.s-p{background:var(--warn-lt);color:var(--warn)}
+.s-m{background:var(--err-lt);color:var(--err)}
+.s-o{background:var(--info-lt);color:var(--blue-dk)}
+
+.chev{width:18px;height:18px;color:var(--n400);flex-shrink:0;margin-top:2px;transition:transform .18s}
+.req.open .chev{transform:rotate(180deg)}
+
+/* REQ BODY */
+.req-body{display:none;border-top:0.5px solid var(--n100);background:var(--n50)}
+.req.open .req-body{display:block}
+.req-body-inner{padding:14px 14px 14px 16px}
+.body-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
+.body-col-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;padding-bottom:5px;border-bottom:0.5px solid var(--n200)}
+.bcl-prd{color:var(--blue-dk)} .bcl-gap{color:var(--err)} .bcl-add{color:var(--succ)}
+.body-pt{display:flex;gap:7px;align-items:flex-start;margin-bottom:7px}
+.body-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:8px}
+.bd-prd{background:var(--blue)} .bd-gap{background:var(--err)} .bd-add{background:var(--succ)}
+.body-text{font-size:12px;color:var(--n600);line-height:1.65}
+
+/* discussion question */
+.disc-q{background:var(--n0);border:0.5px solid var(--warn);border-radius:var(--r-lg);padding:10px 14px;margin-top:8px}
+.disc-q-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--warn);margin-bottom:5px}
+.disc-q-text{font-size:12px;color:var(--n700);line-height:1.65}
+
+/* ALIGNMENT TABLE */
+.align-wrap{overflow-x:auto}
+.align-table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+.align-table th{background:var(--n100);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--n600);border-bottom:0.5px solid var(--n200)}
+.align-table td{padding:8px 10px;border-bottom:0.5px solid var(--n100);vertical-align:top;line-height:1.5;font-size:12px;color:var(--n600)}
+.align-table tr:last-child td{border-bottom:none}
+.align-table tr:hover td{background:var(--n50)}
+.at-req{font-weight:600;color:var(--n800)}
+.chk{color:var(--succ);font-weight:700;font-size:14px}
+.wrn{color:var(--warn);font-weight:700;font-size:14px}
+.crs{color:var(--err);font-weight:700;font-size:14px}
+.legend-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:0.5px solid var(--n200)}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--n500)}
+
+/* INTRO TEXT */
+.intro{font-size:13px;color:var(--n500);line-height:1.7;margin-bottom:16px;max-width:720px}
+
+/* FOOTER */
+.doc-footer{background:var(--n0);border-top:1px solid var(--n200);padding:24px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-mark{width:22px;height:22px;background:var(--blue);border-radius:4px;display:flex;align-items:center;justify-content:center}
+.footer-mark svg{width:11px;height:11px}
+.footer-txt{font-size:11px;color:var(--n400)}
+.footer-txt strong{color:var(--n600);font-weight:600}
+.footer-links{display:flex;gap:18px}
+.footer-link{font-size:11px;color:var(--n400);font-weight:500;transition:color .18s}
+.footer-link:hover{color:var(--blue)}
+
+@media(max-width:768px){
+  .gnav,.hero,.page,.doc-footer{padding-left:16px;padding-right:16px}
+  .strip{grid-template-columns:1fr 1fr}
+  .body-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="gnav">
+  <div class="gnav-mark"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="2" width="6" height="12" rx="1" fill="white"/><rect x="2" y="5" width="3" height="6" rx=".5" fill="white" fill-opacity=".6"/><rect x="11" y="5" width="3" height="6" rx=".5" fill="white" fill-opacity=".6"/></svg></div>
+  <span class="gnav-name">Intuit Enterprise Suite</span>
+  <div class="gnav-div"></div>
+  <span class="gnav-section">UX Strategies</span>
+  <div class="gnav-spacer"></div>
+  <span class="gnav-chip">PRD Requirements · Gap Analysis</span>
+</nav>
+
+<header class="hero">
+  <div class="hero-bar"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="hero-badge-txt">Source: PRD — Migrating Historical Paychecks from DT to QBO/IES</span></div>
+    <h1 class="hero-title">PRD Requirements —<br><em>Extraction &amp; Alignment Gap Analysis</em></h1>
+    <p class="hero-sub">Every requirement extracted directly from the PRD, evaluated against our three strategy documents, with specific discussion questions for alignment sessions with PM and Engineering.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-num">21</div><div class="hs-lbl">Total requirements</div></div>
+      <div class="hs"><div class="hs-num">7</div><div class="hs-lbl">Fully addressed</div></div>
+      <div class="hs"><div class="hs-num">8</div><div class="hs-lbl">Partially addressed</div></div>
+      <div class="hs"><div class="hs-num">6</div><div class="hs-lbl">Not addressed</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="strip">
+    <div class="strip-cell sc-t"><div class="s-n">21</div><div class="s-l">Requirements extracted from PRD</div></div>
+    <div class="strip-cell sc-a"><div class="s-n">7</div><div class="s-l">Fully addressed across our docs</div></div>
+    <div class="strip-cell sc-p"><div class="s-n">8</div><div class="s-l">Partial — specific gaps remain</div></div>
+    <div class="strip-cell sc-m"><div class="s-n">6</div><div class="s-l">Not addressed — open for discussion</div></div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab on" onclick="sw('all',this)"><span class="tab-dot" style="background:var(--n400)"></span>All 21 requirements</button>
+    <button class="tab" onclick="sw('partial',this)"><span class="tab-dot" style="background:var(--warn)"></span>Partial gaps (8)</button>
+    <button class="tab" onclick="sw('missing',this)"><span class="tab-dot" style="background:var(--err)"></span>Not addressed (6)</button>
+    <button class="tab" onclick="sw('align',this)"><span class="tab-dot" style="background:var(--blue)"></span>Alignment table</button>
+  </nav>
+
+  <div class="panels">
+
+    <!-- ══ ALL ══ -->
+    <div class="panel on" id="panel-all">
+      <p class="intro">All 21 requirements extracted verbatim or by clear implication from the PRD. Click any requirement to see what the PRD states, what our documents address, what is still missing, and the specific discussion question to raise in alignment sessions.</p>
+
+      <!-- §2 Business Case -->
+      <div class="sec-group">
+        <div class="sec-group-lbl">Section 2 — Business case &amp; problem statement <span class="sec-count">4 requirements</span></div>
+        <div class="req-list">
+
+          <div class="req" id="r01"><div class="req-head" onclick="tog('r01')">
+            <span class="req-id">R01</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§2 · Problem</div>
+              <div class="req-title">Historical paychecks must migrate as native QBO paycheck entities — not bank transactions</div>
+              <div class="req-quote">"Upgrade the migration engine to translate Desktop paycheck records into native QBO/IES historical paycheck objects, rather than just dumping them as standard journal entries/bank transactions."</div>
+            </div>
+            <span class="status s-a">Addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div>
+                <div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">The migration engine must query DT paycheck tables and post records via the HistoricalPaycheck API endpoint — not write them as journal entries to the accounting ledger</div></div>
+              </div>
+              <div><div class="body-col-lbl bcl-add">Addressed in our docs</div>
+                <div class="body-pt"><div class="body-dot bd-add"></div><div class="body-text">UX Strategy: Tier 1 migration as paycheck object. Requirements doc: Screen S11 progress dashboard, S15 check intercept. Collaborative workflow: PA-led tiered processing. Deduplication and intercept layer fully designed across all three documents.</div></div>
+              </div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r02"><div class="req-head" onclick="tog('r02')">
+            <span class="req-id">R02</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§2 · Problem</div>
+              <div class="req-title">Customers must be able to view past pay stubs in the familiar DT paycheck format</div>
+              <div class="req-quote">"Users cannot view or interact with their historical payroll runs in the familiar paycheck format."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div>
+                <div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">Pay stubs must be viewable in the format customers know from Desktop — DT shows: earnings, gross pay, tax withholdings, employee summary, other payroll items, company summary. The word "familiar" implies field-level continuity, not just data presence.</div></div>
+              </div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div>
+                <div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">No document specifies the field-for-field mapping between DT's paycheck view and QBO's Pay History stub template. Which DT fields appear in QBO? In what order? With the same labels? This is a design task that is entirely unscoped.</div></div>
+              </div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">What is the exact field-for-field mapping between the six DT paycheck sections (earnings, gross pay, tax withholdings, employee summary, other payroll items, company summary) and QBO's Pay History stub template? Are any DT fields absent in QBO's template? Who owns the decision on stub layout — this migration team or the QBO Payroll product team?</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r03"><div class="req-head" onclick="tog('r03')">
+            <span class="req-id">R03</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§2 · Context</div>
+              <div class="req-title">Zero manual reconciliation — the two mandatory wizard review tasks must be eliminated</div>
+              <div class="req-quote">"Customers are forced to manually review two critical items: employee-level YTD pay, and gross pay versus tax withheld at the individual payrun level." Ideal: "seamless review with zero manual reconciliation."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div>
+                <div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">The two wizard tasks exist because migration data is incomplete. If native paychecks migrate with full detail, both tasks become redundant — the data is already correct before the customer reaches the wizard. Ideal state: zero manual review required.</div></div>
+              </div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div>
+                <div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">PRD notes the setup wizard is QBO-owned — "not in our control." Our docs flag this as a dependency but no cross-team commitment exists. If QBO doesn't update the wizard, customers still hit the manual tasks after a successful migration — making "zero manual reconciliation" impossible to deliver.</div></div>
+              </div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">Has the QBO product team been formally engaged to remove or simplify the two setup wizard tasks (YTD review + gross vs tax review) once native paychecks migrate successfully? Who is the QBO owner, what is the committed delivery date, and what is the fallback plan if QBO cannot deliver this change in time?</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r04"><div class="req-head" onclick="tog('r04')">
+            <span class="req-id">R04</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§2 · Usage data</div>
+              <div class="req-title">Usage data — number of DT companies actively reviewing backdated paychecks (marked XX)</div>
+              <div class="req-quote">"No of Companies in DT reviewing backdated paychecks — XX (to be shared by PD team)"</div>
+            </div>
+            <span class="status s-m">Not addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div>
+                <div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">The PRD explicitly flags this as a data gap — the number is critical for sizing the migration experience. This figure determines whether historical paycheck migration is a primary MVP flow or a niche enhancement.</div></div>
+              </div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div>
+                <div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">This data point has not appeared in any of our strategy or requirements documents. Without it, scope investment in the migration UX cannot be proportionally justified to stakeholders.</div></div>
+              </div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">Has the PD team shared the XX figure? Specifically: what percentage of active QBDT payroll companies have accessed paycheck history in the last 90 days? And what percentage of IES migration customers have raised historical paycheck access as a concern? These two numbers determine whether this is a $5M problem or a $50M problem.</div>
+            </div>
+          </div></div></div>
+
+        </div>
+      </div>
+
+      <!-- §3 Current State -->
+      <div class="sec-group">
+        <div class="sec-group-lbl">Section 3 — Current state analysis <span class="sec-count">2 requirements</span></div>
+        <div class="req-list">
+
+          <div class="req" id="r05"><div class="req-head" onclick="tog('r05')">
+            <span class="req-id">R05</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§3 · Ideal state</div>
+              <div class="req-title">Full payrun history in QBO must include DT's "company summary" — not just employee-side items</div>
+              <div class="req-quote">"Full historical paychecks matching DT records" — DT paycheck view covers: earnings, gross pay, tax withholdings, employee summary, other payroll items, and company summary.</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div>
+                <div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">DT's paycheck view includes a "company summary" section alongside the employee-facing sections. The ideal state is "full historical paychecks matching DT records" — implying the company summary is in scope.</div></div>
+              </div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div>
+                <div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">The "company summary" in DT contains employer-side payroll items: ER FICA match, FUTA, SUTA, workers comp premiums. Our docs cover employee-side items (earnings, taxes, deductions) but do not confirm where employer-side items land in QBO Pay History — or whether QBO Pay History shows them at all.</div></div>
+              </div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">Does QBO's Pay History tab include a company/employer-side section showing ER payroll items (FUTA, SUTA, ER FICA match, workers comp)? If not, are these items in scope for the HistoricalPaycheck API migration, and if so where do they surface in QBO? Or are they out of scope and handled only via the Chart of Accounts sync?</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r06"><div class="req-head" onclick="tog('r06')">
+            <span class="req-id">R06</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§3 · Current pain</div>
+              <div class="req-title">Setup wizard experience for a successfully migrated customer — transition state is undesigned</div>
+              <div class="req-quote">Current: "Must manually review employee YTD pay and gross vs. tax withheld." Ideal: this review is eliminated because data is already correct from native paycheck migration.</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div>
+                <div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">The mandatory wizard review tasks should be rendered unnecessary by successful native paycheck migration. The customer should proceed through setup without manual data review.</div></div>
+              </div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div>
+                <div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">No design exists for what the wizard shows to a customer who has already successfully migrated via native paychecks. Does it auto-skip both tasks? Show pre-filled confirmation? Show a new "already migrated" screen? This is the customer's first QBO payroll experience and getting it wrong is a churn risk.</div></div>
+              </div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">When a customer who migrated via native HistoricalPaycheck enters the QBO setup wizard, exactly what does the wizard show for the two review tasks? Options: (A) tasks auto-completed and skipped, (B) tasks shown as pre-filled for confirmation only, (C) a new "your pay history was migrated" confirmation screen replacing both tasks. Which is the intended behaviour, and who designs and builds this — this team or QBO?</div>
+            </div>
+          </div></div></div>
+
+        </div>
+      </div>
+
+      <!-- §4 MECE -->
+      <div class="sec-group">
+        <div class="sec-group-lbl">Section 4 — MECE data taxonomy <span class="sec-count">3 requirements</span></div>
+        <div class="req-list">
+
+          <div class="req" id="r07"><div class="req-head" onclick="tog('r07')">
+            <span class="req-id">R07</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§4 · Entity mapping</div>
+              <div class="req-title">Accounting entity (bank transaction) must be replaced by payroll entity (native paycheck object)</div>
+              <div class="req-quote">"Accounting Entity: Bank Transactions / Chart of Accounts (Current state). Payroll Entity: Native QBO Paycheck Object (Target state)."</div>
+            </div>
+            <span class="status s-a">Addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">The fundamental entity type must change — from an accounting journal entry to a QBO payroll paycheck object. This is the root of the selected solution architecture.</div></div></div>
+              <div><div class="body-col-lbl bcl-add">Addressed in our docs</div><div class="body-pt"><div class="body-dot bd-add"></div><div class="body-text">Check-to-paycheck intercept, deduplication logic, Tier 1 migration as HistoricalPaycheck — all three strategy documents address this at both UX and data level.</div></div></div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r08"><div class="req-head" onclick="tog('r08')">
+            <span class="req-id">R08</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§4 · Data granularity</div>
+              <div class="req-title">Both YTD aggregate data and payrun-level transactional data must migrate</div>
+              <div class="req-quote">"Aggregate Data: YTD Totals. Transactional Data: Payrun level (Gross pay, specific tax withheld per check)."</div>
+            </div>
+            <span class="status s-a">Addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">Both levels required — YTD for tax filing accuracy and payrun-level detail for individual stub review. Neither alone is sufficient.</div></div></div>
+              <div><div class="body-col-lbl bcl-add">Addressed in our docs</div><div class="body-pt"><div class="body-dot bd-add"></div><div class="body-text">Requirements doc data model separates PAYCHECK_LINE_ITEM (transactional) from PAYCHECK_TAX.ytd fields (aggregate). Screen S14 (YTD validation) and S13 (archive) preserve both levels.</div></div></div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r09"><div class="req-head" onclick="tog('r09')">
+            <span class="req-id">R09</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§4 · Validation</div>
+              <div class="req-title">Two validation stages required — system-side mapping validation AND user-facing review in Pay History</div>
+              <div class="req-quote">"System-side mapping validation during migration. User-facing review in QBO Pay History."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">Two distinct validation stages: (1) system-side — migration engine validates mappings before posting; (2) user-facing — customer reviews Pay History and confirms it looks correct post-migration.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">System-side validation is fully designed (pre-flight screen S9). User-facing validation in Pay History is not — specifically, when Pay History looks wrong to a customer, what do they do? No "report an issue" or "this doesn't match" flow is designed. Without it, the user-facing validation stage defaults to a support call — which is an escalation.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">What is the designed user action when a customer opens Pay History post-migration and a stub looks wrong — a missing deduction line, an incorrect gross amount? Is there a structured "this doesn't match my DT records" flow, or does it go straight to the support channel? The latter produces an escalation that would violate the PRD's primary metric.</div>
+            </div>
+          </div></div></div>
+
+        </div>
+      </div>
+
+      <!-- §6 Use Case -->
+      <div class="sec-group">
+        <div class="sec-group-lbl">Section 6 — Use case: mid-year audit scenario <span class="sec-count">3 requirements</span></div>
+        <div class="req-list">
+
+          <div class="req" id="r10"><div class="req-head" onclick="tog('r10')">
+            <span class="req-id">R10</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§6 · Use case</div>
+              <div class="req-title">Employee Pay History tab must be navigable for a migrated employee — even before their first live QBO payroll run</div>
+              <div class="req-quote">"Customer navigates to the employee's Pay History in QBO, clicks on the February pay period."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">The navigation path is clear: employee → Pay History tab → specific pay period → stub. This journey must work for a migrated employee regardless of whether they have had a live QBO payroll run.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">In QBO today, it is not confirmed whether the Pay History tab appears for an employee who exists in the system but has not yet had a live QBO payroll run. If the tab only appears after the first live run, migrated employees have no accessible Pay History for weeks after migration — making the north-star use case impossible during that window.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">In the current QBO UI, does the Pay History tab appear for an employee who was created but has not yet had a live QBO payroll run? If not, does the HistoricalPaycheck API posting trigger the tab to appear even without a live run? This needs Engineering to confirm before Pay History screen design begins.</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r11"><div class="req-head" onclick="tog('r11')">
+            <span class="req-id">R11</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§6 · Use case</div>
+              <div class="req-title">Downloaded historical pay stub must match DT format exactly — for third-party acceptance</div>
+              <div class="req-quote">"Downloads a cleanly formatted historical pay stub that matches exactly what was in Desktop."</div>
+            </div>
+            <span class="status s-m">Not addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">"Matches exactly" — for a housing verification, a third party (landlord, lender) may compare the stub against a known format. If QBO's stub PDF looks different from DT's (different labels, layout, missing company EIN), the stub may be rejected by the third party even if the data is correct.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">No document specifies what "matching exactly" means. Field order, label names, currency formatting, date format, company header, VOID watermark for voided paychecks — none of these format requirements are documented anywhere. This is a design and Engineering task that is entirely unscoped.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">Does QBO's generated pay stub PDF template produce a document that a mortgage lender or landlord would accept as equivalent to a DT-generated stub? If not, is "matching exactly" a hard requirement or a target quality standard? Who decides if the QBO template is acceptable — this team, QBO product, or a UX research study with actual landlord/lender workflows?</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r12"><div class="req-head" onclick="tog('r12')">
+            <span class="req-id">R12</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§6 · Use case</div>
+              <div class="req-title">The broken CoA search path must be fully replaced — not coexist alongside the new Pay History path</div>
+              <div class="req-quote">"Navigate to the Chart of Accounts, find the bank transaction… Frustrated, they call support." This path must be eliminated, not just supplemented.</div>
+            </div>
+            <span class="status s-a">Addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">Suppressing bank transactions when native paychecks are posted ensures customers cannot find payroll history via CoA — they are directed to Pay History instead. Coexistence of both paths confuses customers about where to look.</div></div></div>
+              <div><div class="body-col-lbl bcl-add">Addressed in our docs</div><div class="body-pt"><div class="body-dot bd-add"></div><div class="body-text">Deduplication logic + CoA change notification screen (S17) + Pay History orientation (S25) collectively address the replacement. The customer is proactively notified why CoA looks different and directed to Pay History.</div></div></div>
+            </div>
+          </div></div></div>
+
+        </div>
+      </div>
+
+      <!-- §7 Metrics -->
+      <div class="sec-group">
+        <div class="sec-group-lbl">Section 7 — Success metrics <span class="sec-count">3 requirements</span></div>
+        <div class="req-list">
+
+          <div class="req" id="r13"><div class="req-head" onclick="tog('r13')">
+            <span class="req-id">R13</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§7 · Primary metric</div>
+              <div class="req-title">Reduce IES payroll migration escalations related to historical paychecks from 8/252 to 0</div>
+              <div class="req-quote">"Reduce IES payroll migration escalations related to historical paychecks from current baseline (8 per 252) to 0."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">Hard numeric target: escalations from historical paycheck issues must drop to 0. This is the primary measure of whether the solution works. The 8 escalations out of 252 total IES issues = 3.1% of the migration escalation volume.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">No UX touchpoint in our documents is explicitly mapped to "this screen prevents escalation type X." Without a touchpoint-to-metric trace, there is no way to know which screens are mandatory for hitting zero vs which are enhancements. The escalation root causes (what exactly were those 8 tickets about?) are not documented.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">What were the specific reasons for the 8 escalations? Were all 8 "can't find pay stub in QBO"? Or a mix of: YTD totals wrong, missing pay periods, CoA confusion, incorrect stub format? The breakdown determines which of our 26 screens are mandatory for hitting zero vs optional enhancements. Can Tushar or ArunKumar share the SF escalation ticket categories?</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r14"><div class="req-head" onclick="tog('r14')">
+            <span class="req-id">R14</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§7 · Secondary metric</div>
+              <div class="req-title">Eliminate IES customer churn attributed to missing historical paychecks — no proactive detection path</div>
+              <div class="req-quote">"Eliminate IES customer churn attributed to missing historical paychecks." 1 confirmed churn, goal is 0.</div>
+            </div>
+            <span class="status s-m">Not addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">1 confirmed IES churn directly attributed to missing historical paycheck functionality. The goal is to eliminate this category of churn entirely. Implies a need to detect and recover at-risk customers before they cancel.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">Churn is a lagging indicator — by the time it is counted, the customer is gone. No document addresses how churn-at-risk customers are detected before cancellation. There is no designed proactive intervention — no in-app nudge, no success team trigger, no usage signal monitoring.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">Is there a customer health score or usage signal that could indicate a customer is at risk of churning due to historical paycheck issues — e.g., "migrated 14 days ago but has never opened Pay History"? Who owns this customer success workflow — the migration team, the IES success team, or a separate retention function? Without proactive detection, eliminating churn as a metric is aspirational but not actionable.</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r15"><div class="req-head" onclick="tog('r15')">
+            <span class="req-id">R15</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§7 · Guardrail metric</div>
+              <div class="req-title">Migration must not time out — no chunk size, rate limit, or timeout recovery UX is defined</div>
+              <div class="req-quote">"Ensure processing thousands of historical paycheck objects does not cause the migration tool to time out."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">A guardrail metric — a failure prevention boundary. Processing must complete within the migration tool's timeout threshold. Implies a maximum payload size or a chunking strategy for large files.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">Our docs flag the timeout risk (period selector S3, progress dashboard S11) but define neither the actual timeout threshold, the maximum paycheck count before chunking is required, nor the customer experience when a chunk fails mid-run. The timeout recovery UX is entirely undesigned.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">What is the HistoricalPaycheck API's rate limit per minute and the migration tool's timeout threshold in minutes? At what paycheck volume does chunking become required? When a chunk fails, does the migration resume from the last successful paycheck (idempotent checkpoint) or restart from the beginning? These are Engineering questions that must be answered before the progress dashboard (S11) can be accurately designed.</div>
+            </div>
+          </div></div></div>
+
+        </div>
+      </div>
+
+      <!-- §8 UX -->
+      <div class="sec-group">
+        <div class="sec-group-lbl">Section 8 — User experience &amp; visualisations <span class="sec-count">3 requirements</span></div>
+        <div class="req-list">
+
+          <div class="req" id="r16"><div class="req-head" onclick="tog('r16')">
+            <span class="req-id">R16</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§8 · Pre-migration UX</div>
+              <div class="req-title">Pre-migration: ask the user which period of past paychecks they require</div>
+              <div class="req-quote">"Pre-Migration: Check on the period for which past paychecks are required by user."</div>
+            </div>
+            <span class="status s-a">Addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">A single UX requirement for pre-migration: determine the period scope from the user before migration runs. No further detail in the PRD.</div></div></div>
+              <div><div class="body-col-lbl bcl-add">Addressed in our docs</div><div class="body-pt"><div class="body-dot bd-add"></div><div class="body-text">Requirements doc Screen S3 fully addresses this — date range, default logic (January 1 of current year), mid-year warning, prior-year toggle, paycheck count preview, ETA estimate, and guardrail metric link.</div></div></div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r17"><div class="req-head" onclick="tog('r17')">
+            <span class="req-id">R17</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§8 · Post-migration UX</div>
+              <div class="req-title">Pay History tab must be fully populated with historical pay runs after pay item mapping</div>
+              <div class="req-quote">"Mapping of pay item in DT paycheck with QBOP pay item and post which The 'Pay History' tab will be fully populated with historical pay runs."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">Two sequential steps: (1) pay item mapping between DT and QBO, then (2) Pay History tab fully populated. The word "fully" implies all selected-period paychecks are present — not a partial list.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">Pay History screen (S19 in requirements doc) is referenced but not mocked. Four distinct states — empty, in-progress, populated, partial — are described but undesigned. What does "fully populated" look like vs 80% populated? How does the customer know if paychecks are still being processed vs done?</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">When the PRD says "fully populated" — does this mean every paycheck from the selected period must be present before Pay History is visible? Or does QBO show paychecks as they land (streaming population)? And what does the customer see for the 4 states: before migration, during migration, after full success, after partial success (some failed or archived)?</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r18"><div class="req-head" onclick="tog('r18')">
+            <span class="req-id">R18</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§8 · Setup wizard</div>
+              <div class="req-title">Setup wizard improvement required — but listed as out of scope (QBO-owned) with no owner or date</div>
+              <div class="req-quote">"Improve the mandatory setup step where customers are currently asked to review employee YTD pay and gross vs. tax withheld. (not in our control as QBO owns it)"</div>
+            </div>
+            <span class="status s-m">Not addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">The PRD lists this as a UX requirement while immediately disclaiming ownership. It recognises the wizard must change but cannot commit to changing it. This is an unresolved organisational risk presented as a resolved design decision.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">No cross-team agreement, no design for the updated wizard experience, no defined owner, no timeline, no fallback plan. Without this, the PRD's zero manual reconciliation ideal state is architecturally impossible — the wizard will still show both tasks to successfully migrated customers.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">Escalation path: Santosh (approver) and Tushar (escalation) need to be engaged on this specific item. The question is: who is the QBO product owner for the setup wizard, has this been raised as a formal cross-team dependency with a delivery date, and what is the mitigation plan if QBO cannot deliver the wizard change before this migration feature ships?</div>
+            </div>
+          </div></div></div>
+
+        </div>
+      </div>
+
+      <!-- §9, §11, §12 -->
+      <div class="sec-group">
+        <div class="sec-group-lbl">Sections 9, 11 &amp; 12 — Technical solution, risks &amp; decisions <span class="sec-count">6 requirements</span></div>
+        <div class="req-list">
+
+          <div class="req" id="r19"><div class="req-head" onclick="tog('r19')">
+            <span class="req-id">R19</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§11 · Risk 1</div>
+              <div class="req-title">Deduplication — suppress bank transactions when native paychecks are successfully posted; restore if posting fails</div>
+              <div class="req-quote">"The migration engine must suppress the creation of the raw accounting journal entries for payroll if the native paycheck objects are successfully generated."</div>
+            </div>
+            <span class="status s-a">Addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">Conditional suppression — bank transaction suppressed IF AND ONLY IF the corresponding native paycheck was successfully posted. Failure to post must not suppress the bank transaction (would leave a missing CoA entry).</div></div></div>
+              <div><div class="body-col-lbl bcl-add">Addressed in our docs</div><div class="body-pt"><div class="body-dot bd-add"></div><div class="body-text">Check intercept (S15), CoA notification (S17), and dedup conflict detection in pre-flight (S9) all address this. The conditional logic and the customer-facing confirmation are designed.</div></div></div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r20"><div class="req-head" onclick="tog('r20')">
+            <span class="req-id">R20</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§11 · Risk 2</div>
+              <div class="req-title">Read-only historical overrides — math-error paychecks accepted as-is; UI treatment in Pay History undesigned</div>
+              <div class="req-quote">"Map these specific records as read-only historical overrides so QBO accepts the DT math as fact for past dates, preventing validation errors."</div>
+            </div>
+            <span class="status s-p">Partial</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">A specific data state in QBO: read-only historical override. Present in Pay History but cannot be edited. QBO accepts the DT math without re-running its own tax calculation validation.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">Pre-flight detection of math-error paychecks is designed (S9). But the Pay History UI treatment of read-only overrides is not: what visual indicator, what tooltip explains why it's locked, what correction request path exists. In Pay History, the customer will see three types of record but currently has no way to distinguish them visually.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">In the Pay History tab, how will a customer visually distinguish: (1) an editable live QBO paycheck, (2) a standard historical paycheck (read-only, correct data), and (3) a read-only historical override (read-only, math-error data accepted as-is)? What badge or indicator differentiates type 3? And when a customer clicks "edit" on a type-3 record, what message do they see and is there a correction request path?</div>
+            </div>
+          </div></div></div>
+
+          <div class="req" id="r21"><div class="req-head" onclick="tog('r21')">
+            <span class="req-id">R21</span>
+            <div class="req-meta">
+              <div class="req-prd-sec">§12 · Fast-follow</div>
+              <div class="req-title">Fast-follow: Desktop export tool for prior-year paychecks — contradicts our Tier 3 QBO archive design</div>
+              <div class="req-quote">"Build an export tool in Desktop for prior-year paychecks (e.g., a bulk PDF export of past W-2s and stubs) so users still have a record of older data without bogging down the QBO migration payload."</div>
+            </div>
+            <span class="status s-m">Not addressed</span>
+            <svg class="chev" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75l4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div><div class="req-body"><div class="req-body-inner">
+            <div class="body-grid">
+              <div><div class="body-col-lbl bcl-prd">What the PRD states</div><div class="body-pt"><div class="body-dot bd-prd"></div><div class="body-text">A fast-follow (not MVP) item: a Desktop-side tool that exports prior-year paychecks as bulk PDFs of W-2s and stubs. This defers prior-year data from the QBO API migration to a separate DT-side tool.</div></div></div>
+              <div><div class="body-col-lbl bcl-gap">What is still missing</div><div class="body-pt"><div class="body-dot bd-gap"></div><div class="body-text">Our strategy documents propose a Tier 3 structured QBO archive for prior-year and inactive employee paychecks. The PRD's fast-follow proposes a Desktop PDF export for prior-year paychecks. These two approaches directly contradict each other for the prior-year scope. Neither has been resolved as the agreed direction.</div></div></div>
+            </div>
+            <div class="disc-q"><div class="disc-q-lbl">Discussion question for alignment</div>
+              <div class="disc-q-text">Three questions need resolution: (1) Has the fast-follow Desktop PDF export tool been scoped and assigned to a team, with a timeline? (2) Does our proposed Tier 3 QBO structured archive replace this fast-follow, coexist with it, or is it out of scope? (3) In the gap period — before either solution is built — what do customers do when they need a prior-year paycheck? This gap will produce support calls if not proactively addressed.</div>
+            </div>
+          </div></div></div>
+
+        </div>
+      </div>
+
+    </div><!-- /panel-all -->
+
+    <!-- ══ PARTIAL ══ -->
+    <div class="panel" id="panel-partial">
+      <p class="intro">8 requirements where our strategy documents have made progress but leave specific, actionable gaps. Each gap is framed as a discussion question for the next alignment session.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R02 — Pay stub format fidelity</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">No field-for-field mapping between DT's six paycheck sections and QBO's stub template. "Familiar format" is undefined as a design spec.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: Does QBO's Pay History stub template include all 6 DT sections? Who owns the stub layout decision?</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R03 — Zero manual reconciliation</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">Requires QBO team to remove/simplify wizard tasks. No cross-team commitment exists. If QBO doesn't act, "zero manual reconciliation" is undeliverable.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: Who is the QBO wizard owner, what is the committed date, what is the fallback?</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R05 — Company summary items</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">DT's "company summary" (ER FICA, FUTA, SUTA, workers comp) has no confirmed QBO Pay History destination. Our docs cover employee-side items only.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: Does QBO Pay History show employer-side items? If not, where do they land?</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R06 — Wizard experience post-migration</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">What does the setup wizard show to a customer who already migrated via native paychecks? Auto-skip? Pre-filled? New screen? Entirely undesigned — this is the customer's first QBO payroll experience.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: Which of the three options (A/B/C) is the intended wizard behaviour, and who builds it?</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R09 — User-facing Pay History validation</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">No "this doesn't match my DT records" flow exists in Pay History. When a stub looks wrong, the customer defaults to calling support — which is an escalation against the primary metric.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: What is the structured user action when Pay History shows an incorrect stub?</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R10 — Pay History tab availability</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">Unconfirmed whether QBO's Pay History tab appears for an employee who exists but has not yet had a live QBO payroll run. If it doesn't, the north-star use case fails for the weeks post-migration.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: Engineering to confirm Pay History tab trigger — does HistoricalPaycheck API posting activate the tab?</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R15 — Timeout guardrail recovery UX</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">API rate limit, chunk size, and timeout recovery UX are all undefined. For companies with 5+ years of payroll history, chunked migration is the most likely real-world scenario — and the most likely failure mode.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: Engineering to confirm API rate limit, chunk threshold, and checkpoint/restart behaviour.</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R17 — Pay History four states</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">Empty, in-progress, fully populated, and partially populated states of the Pay History tab are described but not mocked. "Fully populated" as defined by the PRD has no design spec.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: Does QBO stream paychecks into Pay History as they land, or batch-populate at completion?</div>
+        </div>
+        <div style="border:0.5px solid var(--n200);border-radius:var(--r-xl);padding:14px 16px;background:var(--n0);grid-column:1/-1">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--warn);margin-bottom:8px">R20 — Read-only override visual treatment</div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">Three distinct paycheck types in Pay History (live editable, standard historical, read-only override) have no designed visual differentiation. Pre-flight detection of math-error paychecks is designed — but the Pay History display of the resulting read-only state is not.</div>
+          <div style="font-size:11px;font-style:italic;color:var(--n500)">→ Ask: What badge/icon distinguishes a read-only override? What happens when a customer clicks "edit" on one? Is there a correction request path?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MISSING ══ -->
+    <div class="panel" id="panel-missing">
+      <p class="intro">6 requirements from the PRD that are entirely absent from our three strategy documents. Each requires either new design work or an explicit cross-team decision before it can be closed.</p>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="border:0.5px solid var(--err);border-radius:var(--r-xl);padding:16px 18px;background:var(--err-lt)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--err);margin-bottom:4px">R04 — §2 Usage data</div><div style="font-size:14px;font-weight:600;color:var(--n800)">Number of DT companies actively reviewing backdated paychecks (XX — not yet shared)</div></div>
+            <span class="status s-m" style="flex-shrink:0">Not addressed</span>
+          </div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">This number determines whether the historical paycheck migration feature is a mandatory primary flow (high XX) or a niche opt-in path (low XX). All scope investment decisions depend on it.</div>
+          <div style="font-size:12px;font-weight:500;color:var(--err)">Action required: PD team must share this figure before MVP scope is finalised. Ask Raj / Anil directly.</div>
+        </div>
+        <div style="border:0.5px solid var(--err);border-radius:var(--r-xl);padding:16px 18px;background:var(--err-lt)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--err);margin-bottom:4px">R11 — §6 Stub format fidelity</div><div style="font-size:14px;font-weight:600;color:var(--n800)">Downloaded stub must match DT format exactly — no format spec exists anywhere in any document</div></div>
+            <span class="status s-m" style="flex-shrink:0">Not addressed</span>
+          </div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">Field order, label names, currency format, date format, company header, VOID watermark — none of this is specified. The PRD's north-star use case (housing verification) may fail if a lender rejects a QBO stub that looks different from a DT stub.</div>
+          <div style="font-size:12px;font-weight:500;color:var(--err)">Action required: Compare DT stub PDF vs QBO Pay History stub PDF side by side. Document all differences. Decide if "matching exactly" is a hard requirement or a quality target.</div>
+        </div>
+        <div style="border:0.5px solid var(--err);border-radius:var(--r-xl);padding:16px 18px;background:var(--err-lt)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--err);margin-bottom:4px">R14 — §7 Churn detection</div><div style="font-size:14px;font-weight:600;color:var(--n800)">Eliminate customer churn — no proactive detection mechanism or recovery path designed</div></div>
+            <span class="status s-m" style="flex-shrink:0">Not addressed</span>
+          </div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">Churn is a lagging indicator. 1 confirmed churn already happened. The PRD sets a goal to eliminate it but provides no mechanism. A customer who migrates and never opens Pay History is likely to churn — but there is no designed signal or intervention.</div>
+          <div style="font-size:12px;font-weight:500;color:var(--err)">Action required: Define a usage signal ("customer has not opened Pay History within 14 days of migration") and assign a response owner — migration team, IES success team, or retention function.</div>
+        </div>
+        <div style="border:0.5px solid var(--err);border-radius:var(--r-xl);padding:16px 18px;background:var(--err-lt)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--err);margin-bottom:4px">R18 — §8 Setup wizard (QBO-owned)</div><div style="font-size:14px;font-weight:600;color:var(--n800)">Wizard improvement required — listed as out of scope with no owner, no date, no fallback</div></div>
+            <span class="status s-m" style="flex-shrink:0">Not addressed</span>
+          </div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">The PRD lists this as a UX requirement and immediately disclaims ownership. The wizard's two review tasks will remain visible to successfully migrated customers unless QBO explicitly removes them. Without a commitment, "zero manual reconciliation" is not achievable.</div>
+          <div style="font-size:12px;font-weight:500;color:var(--err)">Action required: Escalate to Santosh (approver) and Tushar (escalation) to get a formal cross-team commitment from QBO with a delivery date before this feature ships.</div>
+        </div>
+        <div style="border:0.5px solid var(--err);border-radius:var(--r-xl);padding:16px 18px;background:var(--err-lt)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--err);margin-bottom:4px">R21 — §12 Fast-follow conflict</div><div style="font-size:14px;font-weight:600;color:var(--n800)">Desktop PDF export for prior-year paychecks contradicts our Tier 3 QBO structured archive design</div></div>
+            <span class="status s-m" style="flex-shrink:0">Not addressed</span>
+          </div>
+          <div style="font-size:12px;color:var(--n700);line-height:1.65;margin-bottom:8px">PRD: prior-year paychecks go to a Desktop-side PDF export tool (fast-follow). Our docs: prior-year paychecks go to a QBO-side structured Tier 3 archive. These are mutually contradictory for the same scope. One approach must be selected before either can be designed.</div>
+          <div style="font-size:12px;font-weight:500;color:var(--err)">Action required: Decide: (A) PRD fast-follow (Desktop PDF export) or (B) our Tier 3 QBO archive. If A, who builds it and when? If B, does the PRD fast-follow still exist as a parallel path? And what do customers do in the gap before either solution ships?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ALIGNMENT TABLE ══ -->
+    <div class="panel" id="panel-align">
+      <p class="intro">Quick-reference coverage matrix — all 21 PRD requirements against each of the three strategy documents produced in this workstream.</p>
+      <div class="align-wrap">
+        <table class="align-table">
+          <thead>
+            <tr>
+              <th style="width:6%">ID</th>
+              <th style="width:28%">PRD requirement</th>
+              <th style="width:14%">UX strategy doc</th>
+              <th style="width:14%">Collaborative workflow</th>
+              <th style="width:14%">Requirements doc</th>
+              <th style="width:24%">Key gap / open question</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>R01</td><td class="at-req">Native paycheck objects via HistoricalPaycheck API</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td>Fully addressed — intercept + dedup designed</td></tr>
+            <tr><td>R02</td><td class="at-req">Familiar DT paycheck format for stubs</td><td class="wrn">~</td><td class="crs">✗</td><td class="wrn">~</td><td>Field-level DT→QBO stub format spec absent</td></tr>
+            <tr><td>R03</td><td class="at-req">Zero manual reconciliation — remove wizard tasks</td><td class="wrn">~</td><td class="wrn">~</td><td class="wrn">~</td><td>QBO wizard owner and commitment date missing</td></tr>
+            <tr><td>R04</td><td class="at-req">Usage data — XX companies reviewing backdated paychecks</td><td class="crs">✗</td><td class="crs">✗</td><td class="crs">✗</td><td>PD team action outstanding — number not shared</td></tr>
+            <tr><td>R05</td><td class="at-req">Full payrun history including DT company summary</td><td class="wrn">~</td><td class="crs">✗</td><td class="wrn">~</td><td>Employer-side items destination in QBO unconfirmed</td></tr>
+            <tr><td>R06</td><td class="at-req">Wizard experience for post-migration customers</td><td class="crs">✗</td><td class="crs">✗</td><td class="crs">✗</td><td>No design for wizard state after successful migration</td></tr>
+            <tr><td>R07</td><td class="at-req">Entity type change: bank transaction → paycheck object</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td>Fully addressed across all three documents</td></tr>
+            <tr><td>R08</td><td class="at-req">Both YTD aggregate and payrun-level transactional data</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td>Fully addressed — data model separates both levels</td></tr>
+            <tr><td>R09</td><td class="at-req">User-facing validation stage in Pay History</td><td class="wrn">~</td><td class="crs">✗</td><td class="wrn">~</td><td>No "report an issue" path from Pay History</td></tr>
+            <tr><td>R10</td><td class="at-req">Pay History accessible before first live payroll run</td><td class="wrn">~</td><td class="crs">✗</td><td class="wrn">~</td><td>Tab availability for migrated-only employees unconfirmed</td></tr>
+            <tr><td>R11</td><td class="at-req">Downloaded stub matches DT format exactly</td><td class="crs">✗</td><td class="crs">✗</td><td class="crs">✗</td><td>Format spec entirely absent — no DT→QBO stub mapping</td></tr>
+            <tr><td>R12</td><td class="at-req">CoA bank transaction path replaced — not coexisting</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td>Fully addressed — dedup + notification + orientation</td></tr>
+            <tr><td>R13</td><td class="at-req">Primary metric: escalations from 8 to 0</td><td class="wrn">~</td><td class="crs">✗</td><td class="crs">✗</td><td>No touchpoint-to-metric trace; escalation root causes unknown</td></tr>
+            <tr><td>R14</td><td class="at-req">Secondary metric: eliminate churn</td><td class="crs">✗</td><td class="crs">✗</td><td class="crs">✗</td><td>No proactive churn detection or recovery path</td></tr>
+            <tr><td>R15</td><td class="at-req">Guardrail: no migration timeout</td><td class="wrn">~</td><td class="wrn">~</td><td class="wrn">~</td><td>Chunk size, rate limit, timeout recovery UX all undefined</td></tr>
+            <tr><td>R16</td><td class="at-req">Pre-migration: period check from user</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td>Fully addressed — Screen S3 with all edge cases</td></tr>
+            <tr><td>R17</td><td class="at-req">Pay History fully populated post-migration</td><td class="wrn">~</td><td class="crs">✗</td><td class="wrn">~</td><td>Four Pay History states undesigned — no mockups</td></tr>
+            <tr><td>R18</td><td class="at-req">Setup wizard improvement (QBO-owned)</td><td class="crs">✗</td><td class="crs">✗</td><td class="crs">✗</td><td>No owner, no date, no fallback plan</td></tr>
+            <tr><td>R19</td><td class="at-req">Deduplication: suppress bank tx on successful post</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td>Fully addressed — S9 + S15 + S17</td></tr>
+            <tr><td>R20</td><td class="at-req">Read-only override UI treatment in Pay History</td><td class="wrn">~</td><td class="crs">✗</td><td class="wrn">~</td><td>No visual design distinguishing three paycheck types</td></tr>
+            <tr><td>R21</td><td class="at-req">Fast-follow: Desktop PDF export for prior-year</td><td class="crs">✗</td><td class="crs">✗</td><td class="crs">✗</td><td>Contradicts Tier 3 QBO archive — scope conflict unresolved</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend-row">
+        <div class="leg-item"><span class="chk">✓</span> Fully addressed in this document</div>
+        <div class="leg-item"><span class="wrn">~</span> Partially addressed — specific gaps remain</div>
+        <div class="leg-item"><span class="crs">✗</span> Not addressed — open for discussion</div>
+      </div>
+    </div>
+
+  </div><!-- /panels -->
+
+</main>
+
+<footer class="doc-footer">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="footer-mark"><svg viewBox="0 0 12 12" fill="none"><rect x="3.5" y="1" width="5" height="10" rx=".75" fill="white"/><rect x="1" y="3.5" width="2.5" height="5" rx=".5" fill="white" fill-opacity=".6"/><rect x="8.5" y="3.5" width="2.5" height="5" rx=".5" fill="white" fill-opacity=".6"/></svg></div>
+    <div class="footer-txt"><strong>Intuit Enterprise Suite</strong> · PRD Requirements Gap Analysis · IDS v3</div>
+  </div>
+  <nav class="footer-links">
+    <a class="footer-link" href="index.html">← Strategy index</a>
+    <a class="footer-link" href="ux-requirements-migration-screens.html">UX requirements</a>
+    <a class="footer-link" href="proadvisor-collaborative-migration.html">Collaborative workflow</a>
+    <a class="footer-link" href="https://github.com/asoman2/uxStrategies" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</footer>
+
+<script>
+function sw(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('panel-'+id).classList.add('on');
+  document.querySelectorAll('.req').forEach(r=>r.classList.remove('open'));
+}
+function tog(id){
+  const el=document.getElementById(id);
+  const open=el.classList.contains('open');
+  document.querySelectorAll('.req').forEach(r=>r.classList.remove('open'));
+  if(!open){el.classList.add('open');setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60)}
+}
+</script>
+</body>
+</html>
