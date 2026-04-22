@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBooks Payroll Migration — Revised UX Strategy v2</title>
+<style>
+/* ============================================================
+   INTUIT DESIGN SYSTEM — ENTERPRISE SUITE THEME
+   IDS v3 Tokens · Individual Business Owner Flow
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Avenir+Next:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Brand */
+  --blue:       #0077C5;
+  --blue-dk:    #005A9E;
+  --blue-lt:    #E5F1FA;
+  --accent:     #00A3E0;
+  --navy:       #0D2340;
+  --navy-mid:   #1A3A5C;
+
+  /* Semantic */
+  --succ:       #2CA01C;  --succ-lt: #E6F4E4;  --succ-dk: #1A6612;
+  --warn:       #E8700A;  --warn-lt: #FDF0E5;  --warn-dk: #B35208;
+  --err:        #D52B1E;  --err-lt:  #FDECEB;  --err-dk:  #A01F16;
+
+  /* Phase colours */
+  --pre:        #7B5EA7;  --pre-lt:  #F0EBF8;
+  --dur:        #E8700A;  --dur-lt:  #FDF0E5;
+  --post:       #2CA01C;  --post-lt: #E6F4E4;
+
+  /* PRD-grounded feature colours */
+  --feat-hist:  #0077C5;  /* Historical paycheck objects */
+  --feat-ytd:   #0D7B5F;  /* YTD accuracy */
+  --feat-pay:   #7B5EA7;  /* Pay History tab */
+  --feat-dep:   #E8700A;  /* Dependencies / open items */
+
+  /* Neutrals */
+  --n0:#fff; --n50:#F4F5F8; --n100:#E8ECF0; --n200:#D0D7E0;
+  --n300:#B0BBC8; --n400:#8D9BB0; --n500:#6B7A94; --n600:#4A5568;
+  --n700:#2D3748; --n800:#1A202C; --n900:#0F1420;
+
+  /* Type */
+  --font:'Avenir Next','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --xs:11px; --sm:12px; --base:14px; --md:16px; --lg:18px;
+  --xl:22px; --2xl:28px; --3xl:36px;
+
+  /* Spacing */
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;
+  --s8:32px;--s10:40px;--s12:48px;--s16:64px;--s20:80px;
+
+  /* Radius */
+  --r-sm:4px;--r-md:6px;--r-lg:8px;--r-xl:12px;--r-2xl:16px;--r-pill:999px;
+
+  /* Shadow */
+  --sh-sm:0 1px 4px rgba(0,0,0,.08);
+  --sh-md:0 4px 14px rgba(0,0,0,.10);
+  --sh-lg:0 8px 28px rgba(0,0,0,.13);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);font-size:var(--base);color:var(--n800);background:var(--n50);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* ── NAV ── */
+.gnav{position:sticky;top:0;z-index:200;background:var(--navy);height:52px;display:flex;align-items:center;padding:0 var(--s8);gap:var(--s6);border-bottom:1px solid rgba(255,255,255,.08)}
+.gnav-mark{width:28px;height:28px;background:var(--blue);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gnav-mark svg{width:16px;height:16px}
+.gnav-prod{font-size:var(--sm);font-weight:600;color:rgba(255,255,255,.95)}
+.gnav-div{width:1px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0}
+.gnav-sec{font-size:var(--sm);color:rgba(255,255,255,.5);font-weight:500}
+.gnav-spacer{flex:1}
+.gnav-badge{background:rgba(44,160,28,.25);border:1px solid rgba(44,160,28,.35);border-radius:var(--r-pill);padding:2px 12px;font-size:var(--xs);font-weight:700;color:#86D4A0;letter-spacing:.04em}
+.gnav-v2{background:rgba(0,119,197,.25);border:1px solid rgba(0,163,224,.3);border-radius:var(--r-pill);padding:2px 10px;font-size:var(--xs);font-weight:700;color:var(--accent);letter-spacing:.04em}
+
+/* ── HERO ── */
+.hero{background:var(--navy);padding:var(--s20) var(--s8) var(--s16);position:relative;overflow:hidden}
+.hero-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pre) 0%,var(--blue) 40%,var(--succ) 100%)}
+.hero::before{content:'';position:absolute;top:-60px;right:-40px;width:380px;height:380px;border-radius:50%;border:1px solid rgba(0,163,224,.1);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:var(--s2);background:rgba(44,160,28,.18);border:1px solid rgba(44,160,28,.28);border-radius:var(--r-pill);padding:3px 14px;margin-bottom:var(--s5)}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:#86D4A0;animation:pd 2.4s ease-in-out infinite}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
+.hero-eyebrow-txt{font-size:var(--xs);font-weight:700;color:#86D4A0;letter-spacing:.07em;text-transform:uppercase}
+.hero-title{font-size:clamp(26px,4vw,var(--3xl));font-weight:700;color:var(--n0);line-height:1.15;margin-bottom:var(--s3);letter-spacing:-.02em}
+.hero-title em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:var(--lg);color:rgba(255,255,255,.55);line-height:1.7;max-width:640px;margin-bottom:var(--s8)}
+.v2-diff{display:flex;gap:var(--s3);flex-wrap:wrap;margin-bottom:var(--s10)}
+.v2-chip{display:inline-flex;align-items:center;gap:var(--s2);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:var(--r-pill);padding:var(--s1) var(--s4);font-size:var(--xs);font-weight:500;color:rgba(255,255,255,.7)}
+.v2-chip-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.hero-stats{display:flex;gap:var(--s8);flex-wrap:wrap;padding-top:var(--s8);border-top:1px solid rgba(255,255,255,.08)}
+.hs-num{font-size:26px;font-weight:700;color:var(--n0);line-height:1;margin-bottom:2px}
+.hs-lbl{font-size:var(--xs);color:rgba(255,255,255,.4);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+
+/* ── PAGE ── */
+.page{max-width:1100px;margin:0 auto;padding:var(--s12) var(--s8) var(--s20)}
+
+/* ── PHASE TABS ── */
+.phase-nav{display:flex;gap:0;border-bottom:1px solid var(--n200);overflow-x:auto;margin-bottom:0}
+.phase-btn{display:flex;align-items:center;gap:var(--s2);padding:var(--s4) var(--s5);font-family:var(--font);font-size:var(--sm);font-weight:500;color:var(--n500);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:color .18s,border-color .18s;margin-bottom:-1px}
+.phase-btn:hover{color:var(--blue)}
+.phase-btn.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.phase-container{background:var(--n0);border:1px solid var(--n200);border-top:none;border-radius:0 0 var(--r-2xl) var(--r-2xl);box-shadow:var(--sh-sm);margin-bottom:var(--s12)}
+.phase-panel{display:none;padding:var(--s8)}
+.phase-panel.on{display:block}
+
+/* ── PHASE BANNER ── */
+.phase-banner{display:flex;align-items:flex-start;gap:var(--s5);padding:var(--s5) var(--s8);border-radius:var(--r-lg);margin-bottom:var(--s8)}
+.pb--pre{background:var(--pre-lt);border-left:4px solid var(--pre)}
+.pb--dur{background:var(--dur-lt);border-left:4px solid var(--dur)}
+.pb--post{background:var(--post-lt);border-left:4px solid var(--post)}
+.pb--ov{background:var(--blue-lt);border-left:4px solid var(--blue)}
+.pb-icon{width:44px;height:44px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.pb-icon--pre{background:var(--pre)} .pb-icon--dur{background:var(--dur)}
+.pb-icon--post{background:var(--post)} .pb-icon--ov{background:var(--blue)}
+.pb-title{font-size:var(--xl);font-weight:700;color:var(--n800);margin-bottom:var(--s1)}
+.pb-desc{font-size:var(--base);color:var(--n600);line-height:1.7}
+.pb-stats{margin-left:auto;display:flex;gap:var(--s3);flex-shrink:0;flex-wrap:wrap}
+.pb-stat{background:rgba(255,255,255,.8);border:1px solid rgba(0,0,0,.08);border-radius:var(--r-pill);padding:var(--s2) var(--s4);font-size:var(--xs);font-weight:600;color:var(--n700);text-align:center;white-space:nowrap}
+.pb-stat span{display:block;font-size:var(--lg);font-weight:700;color:var(--n800)}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{font-size:var(--xs);font-weight:700;color:var(--n400);text-transform:uppercase;letter-spacing:.09em;margin-bottom:var(--s4);display:block}
+
+/* ── TOUCHPOINT CARDS ── */
+.tp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s4);margin-bottom:var(--s6)}
+.tp-card{background:var(--n0);border:1px solid var(--n200);border-radius:var(--r-2xl);overflow:hidden;cursor:pointer;transition:border-color .18s,box-shadow .18s,transform .18s}
+.tp-card:hover{border-color:var(--blue);box-shadow:var(--sh-md);transform:translateY(-1px)}
+.tp-card.open{border-color:var(--blue);box-shadow:var(--sh-md)}
+.tp-head{display:flex;align-items:flex-start;gap:var(--s3);padding:var(--s5) var(--s6)}
+.tp-icon{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tp-meta{flex:1;min-width:0}
+.tp-tags{display:flex;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s2)}
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:var(--xs);font-weight:700;padding:2px 7px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.t-req{background:var(--blue-lt);color:var(--blue-dk)}
+.t-ai{background:var(--pre-lt);color:var(--pre)}
+.t-warn{background:var(--warn-lt);color:var(--warn-dk)}
+.t-crit{background:var(--err-lt);color:var(--err-dk)}
+.t-new{background:var(--succ-lt);color:var(--succ-dk)}
+.t-dep{background:var(--n100);color:var(--n700)}
+.t-gate{background:var(--n100);color:var(--n600)}
+.tp-title{font-size:var(--md);font-weight:600;color:var(--n800);margin-bottom:var(--s1);line-height:1.3}
+.tp-summary{font-size:var(--sm);color:var(--n500);line-height:1.6}
+.tp-chev{width:20px;height:20px;color:var(--n400);flex-shrink:0;margin-top:3px;transition:transform .18s}
+.tp-card.open .tp-chev{transform:rotate(180deg)}
+
+/* ── CARD DETAIL ── */
+.tp-detail{display:none;border-top:1px solid var(--n100);background:var(--n50)}
+.tp-card.open .tp-detail{display:block}
+.tp-detail-inner{padding:var(--s5) var(--s6)}
+.det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--s5);margin-bottom:var(--s4)}
+.det-col-lbl{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:var(--s3);padding-bottom:var(--s2);border-bottom:1px solid var(--n200)}
+.dcl-what{color:var(--blue)} .dcl-why{color:var(--succ)} .dcl-risk{color:var(--err)} .dcl-dep{color:var(--warn)}
+.det-pt{display:flex;gap:var(--s2);margin-bottom:var(--s3);align-items:flex-start}
+.det-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.dd-what{background:var(--blue)} .dd-why{background:var(--succ)} .dd-risk{background:var(--err)} .dd-dep{background:var(--warn)}
+.det-text{font-size:var(--sm);color:var(--n600);line-height:1.65}
+
+/* PRD ref pill */
+.prd-ref{display:inline-flex;align-items:center;gap:4px;font-size:var(--xs);font-weight:700;background:rgba(0,119,197,.1);color:var(--blue-dk);border:1px solid rgba(0,119,197,.2);border-radius:var(--r-pill);padding:2px 8px;margin-right:4px;letter-spacing:.03em}
+
+/* dependency callout */
+.dep-callout{background:var(--warn-lt);border:1px solid rgba(232,112,10,.3);border-radius:var(--r-lg);padding:var(--s3) var(--s4);margin-top:var(--s3);display:flex;gap:var(--s3);align-items:flex-start}
+.dep-callout-icon{width:18px;height:18px;flex-shrink:0;color:var(--warn);margin-top:1px}
+.dep-callout-text{font-size:var(--sm);color:var(--warn-dk);line-height:1.6}
+.dep-callout-text strong{font-weight:600}
+
+/* ── NORTH-STAR BANNER ── */
+.ns-banner{background:var(--navy);border-radius:var(--r-2xl);padding:var(--s8) var(--s10);margin-bottom:var(--s10);position:relative;overflow:hidden}
+.ns-banner::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;border:1px solid rgba(0,163,224,.15)}
+.ns-banner-lbl{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.4);margin-bottom:var(--s3)}
+.ns-banner-title{font-size:var(--xl);font-weight:700;color:var(--n0);margin-bottom:var(--s3);line-height:1.3}
+.ns-banner-scenario{display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);margin-top:var(--s5)}
+.ns-col{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);padding:var(--s4) var(--s5)}
+.ns-col-lbl{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--s2)}
+.ns-col--before .ns-col-lbl{color:rgba(213,43,30,.9)} .ns-col--after .ns-col-lbl{color:rgba(44,160,28,.9)}
+.ns-col-text{font-size:var(--sm);color:rgba(255,255,255,.65);line-height:1.7}
+
+/* ── DECISION STRIP (PRD-grounded) ── */
+.decision-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s4);margin-bottom:var(--s8)}
+.dec-card{border-radius:var(--r-xl);padding:var(--s5) var(--s6);border:1px solid}
+.dec-card--discard{background:var(--err-lt);border-color:rgba(213,43,30,.25)}
+.dec-card--select{background:var(--succ-lt);border-color:rgba(44,160,28,.3)}
+.dec-card-lbl{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:var(--s2)}
+.dec-card--discard .dec-card-lbl{color:var(--err)} .dec-card--select .dec-card-lbl{color:var(--succ)}
+.dec-card-title{font-size:var(--md);font-weight:600;color:var(--n800);margin-bottom:var(--s2)}
+.dec-card-reason{font-size:var(--sm);color:var(--n600);line-height:1.6}
+
+/* ── METRIC CARDS ── */
+.metric-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-bottom:var(--s8)}
+.metric-card{background:var(--n0);border:1px solid var(--n200);border-radius:var(--r-xl);padding:var(--s5) var(--s6)}
+.metric-lbl{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--s2)}
+.metric-card--primary .metric-lbl{color:var(--succ)} .metric-card--secondary .metric-lbl{color:var(--blue)} .metric-card--guard .metric-lbl{color:var(--warn)}
+.metric-val{font-size:var(--2xl);font-weight:700;color:var(--n800);line-height:1;margin-bottom:var(--s2)}
+.metric-desc{font-size:var(--sm);color:var(--n600);line-height:1.6}
+
+/* ── OPEN QUESTIONS TABLE ── */
+.oq-table{width:100%;border-collapse:collapse;font-size:var(--sm);margin-bottom:var(--s6)}
+.oq-table th{background:var(--n100);padding:var(--s3) var(--s4);text-align:left;font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--n600);border-bottom:1px solid var(--n200)}
+.oq-table td{padding:var(--s3) var(--s4);border-bottom:1px solid var(--n100);vertical-align:top;color:var(--n600);line-height:1.5}
+.oq-table tr:last-child td{border-bottom:none}
+.oq-table tr:hover td{background:var(--n50)}
+.oq-prio{display:inline-block;font-size:var(--xs);font-weight:700;padding:2px 8px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.04em}
+.oq-p1{background:var(--err-lt);color:var(--err-dk)} .oq-p2{background:var(--warn-lt);color:var(--warn-dk)} .oq-p3{background:var(--blue-lt);color:var(--blue-dk)}
+.oq-owner{font-size:var(--xs);font-weight:600;color:var(--n400)}
+
+/* ── PAY HISTORY STATE CARDS ── */
+.ph-states{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s4);margin-bottom:var(--s6)}
+.ph-state{border-radius:var(--r-xl);padding:var(--s5) var(--s6);border:1px solid}
+.ph-state--empty{background:var(--n100);border-color:var(--n200)} .ph-state--progress{background:var(--blue-lt);border-color:rgba(0,119,197,.3)} .ph-state--full{background:var(--succ-lt);border-color:rgba(44,160,28,.3)} .ph-state--partial{background:var(--warn-lt);border-color:rgba(232,112,10,.3)}
+.ph-state-lbl{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:var(--s2)}
+.ph-state--empty .ph-state-lbl{color:var(--n500)} .ph-state--progress .ph-state-lbl{color:var(--blue-dk)} .ph-state--full .ph-state-lbl{color:var(--succ-dk)} .ph-state--partial .ph-state-lbl{color:var(--warn-dk)}
+.ph-state-title{font-size:var(--md);font-weight:600;color:var(--n800);margin-bottom:var(--s2)}
+.ph-state-desc{font-size:var(--sm);color:var(--n600);line-height:1.6}
+
+/* ── PAYCHECK TYPE LEGEND ── */
+.pc-types{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-bottom:var(--s6)}
+.pc-type{border-radius:var(--r-xl);padding:var(--s5) var(--s6);border:1px solid}
+.pc-type--live{background:var(--succ-lt);border-color:rgba(44,160,28,.3)} .pc-type--hist{background:var(--blue-lt);border-color:rgba(0,119,197,.25)} .pc-type--ro{background:var(--warn-lt);border-color:rgba(232,112,10,.3)}
+.pc-type-badge{display:inline-block;font-size:var(--xs);font-weight:700;padding:2px 8px;border-radius:var(--r-pill);margin-bottom:var(--s2)}
+.pc-type--live .pc-type-badge{background:var(--succ);color:#fff} .pc-type--hist .pc-type-badge{background:var(--blue);color:#fff} .pc-type--ro .pc-type-badge{background:var(--warn);color:#fff}
+.pc-type-title{font-size:var(--md);font-weight:600;color:var(--n800);margin-bottom:var(--s2)}
+.pc-type-desc{font-size:var(--sm);color:var(--n600);line-height:1.6}
+
+/* ── WIZARD DEPENDENCY BLOCK ── */
+.wizard-dep{background:var(--warn-lt);border:2px dashed var(--warn);border-radius:var(--r-xl);padding:var(--s6) var(--s8);margin-bottom:var(--s8)}
+.wizard-dep-title{font-size:var(--lg);font-weight:700;color:var(--warn-dk);margin-bottom:var(--s3)}
+.wizard-dep-body{font-size:var(--sm);color:var(--n700);line-height:1.7;margin-bottom:var(--s4)}
+.wizard-dep-actions{display:flex;gap:var(--s3);flex-wrap:wrap}
+.wizard-dep-action{background:var(--n0);border:1px solid var(--warn);border-radius:var(--r-lg);padding:var(--s3) var(--s5);font-size:var(--sm);font-weight:500;color:var(--warn-dk)}
+
+/* ── COGNITIVE LOAD TABLE ── */
+.cog-table{width:100%;border-collapse:collapse;font-size:var(--sm);margin-bottom:var(--s8)}
+.cog-table th{background:var(--n100);padding:var(--s3) var(--s4);text-align:left;font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--n600);border-bottom:1px solid var(--n200)}
+.cog-table td{padding:var(--s3) var(--s4);border-bottom:1px solid var(--n100);vertical-align:top;line-height:1.5;font-size:var(--sm);color:var(--n600)}
+.cog-table tr:last-child td{border-bottom:none}
+.cog-table tr:hover td{background:var(--n50)}
+.mode-chip{display:inline-block;font-size:var(--xs);font-weight:600;padding:2px 7px;border-radius:var(--r-pill)}
+.mc-auto{background:var(--succ-lt);color:var(--succ-dk)} .mc-conf{background:var(--blue-lt);color:var(--blue-dk)} .mc-human{background:var(--warn-lt);color:var(--warn-dk)} .mc-gate{background:var(--err-lt);color:var(--err-dk)}
+
+/* ── FOOTER ── */
+.doc-footer{background:var(--n0);border-top:1px solid var(--n200);padding:var(--s8);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--s4)}
+.footer-logo{display:flex;align-items:center;gap:var(--s3)}
+.footer-mark{width:24px;height:24px;background:var(--blue);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center}
+.footer-mark svg{width:11px;height:11px}
+.footer-txt{font-size:var(--xs);color:var(--n400)}
+.footer-txt strong{color:var(--n600);font-weight:600}
+.footer-links{display:flex;gap:var(--s5)}
+.footer-link{font-size:var(--xs);color:var(--n400);font-weight:500;transition:color .18s}
+.footer-link:hover{color:var(--blue)}
+
+@media(max-width:768px){
+  .gnav,.hero,.page,.doc-footer{padding-left:var(--s4);padding-right:var(--s4)}
+  .phase-banner{flex-direction:column} .pb-stats{margin-left:0}
+  .ns-banner-scenario{grid-template-columns:1fr} .metric-strip{grid-template-columns:1fr} .pc-types{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="gnav">
+  <div class="gnav-mark"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="2" width="6" height="12" rx="1" fill="white"/><rect x="2" y="5" width="3" height="6" rx=".5" fill="white" fill-opacity=".6"/><rect x="11" y="5" width="3" height="6" rx=".5" fill="white" fill-opacity=".6"/></svg></div>
+  <span class="gnav-prod">Intuit Enterprise Suite</span>
+  <div class="gnav-div"></div>
+  <span class="gnav-sec">UX Strategies</span>
+  <div class="gnav-spacer"></div>
+  <span class="gnav-v2">v2 · PRD-grounded</span>
+  <span class="gnav-badge">Individual business owner flow</span>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bar"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><div class="hero-eyebrow-dot"></div><span class="hero-eyebrow-txt">Revised v2 · Grounded in PRD · 21 requirements addressed</span></div>
+    <h1 class="hero-title">QuickBooks Payroll Migration<br><em>UX Strategy — v2</em></h1>
+    <p class="hero-sub">A single business owner migrating QuickBooks Desktop payroll history to QBO or Intuit Enterprise Suite. Rebuilt from the PRD's 21 requirements, the mid-year audit north-star scenario, and the full gap analysis across all prior discussions.</p>
+    <div class="v2-diff">
+      <div class="v2-chip"><div class="v2-chip-dot" style="background:#86D4A0"></div>Individual business owner — no ProAdvisor role</div>
+      <div class="v2-chip"><div class="v2-chip-dot" style="background:var(--accent)"></div>All 21 PRD requirements addressed or explicitly flagged</div>
+      <div class="v2-chip"><div class="v2-chip-dot" style="background:#D4B8F5"></div>Pay History tab as primary success surface</div>
+      <div class="v2-chip"><div class="v2-chip-dot" style="background:#FAC880"></div>Setup wizard dependency explicitly tracked</div>
+      <div class="v2-chip"><div class="v2-chip-dot" style="background:#F5A49F"></div>Read-only override state designed</div>
+      <div class="v2-chip"><div class="v2-chip-dot" style="background:#86D4A0"></div>Voided/amended paychecks handled</div>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hs-num">3</div><div class="hs-lbl">Migration phases</div></div>
+      <div><div class="hs-num">18</div><div class="hs-lbl">Designed touchpoints</div></div>
+      <div><div class="hs-num">21</div><div class="hs-lbl">PRD requirements traced</div></div>
+      <div><div class="hs-num">4</div><div class="hs-lbl">Open cross-team dependencies</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- PHASE TABS -->
+  <nav class="phase-nav" role="tablist">
+    <button class="phase-btn on" data-tab="overview" onclick="sw('overview',this)"><span class="pdot" style="background:var(--blue)"></span>Overview &amp; context</button>
+    <button class="phase-btn" data-tab="pre" onclick="sw('pre',this)"><span class="pdot" style="background:var(--pre)"></span>Pre-migration (7 touchpoints)</button>
+    <button class="phase-btn" data-tab="during" onclick="sw('during',this)"><span class="pdot" style="background:var(--dur)"></span>During migration (6 touchpoints)</button>
+    <button class="phase-btn" data-tab="post" onclick="sw('post',this)"><span class="pdot" style="background:var(--post)"></span>Post-migration (5 touchpoints)</button>
+    <button class="phase-btn" data-tab="cogload" onclick="sw('cogload',this)"><span class="pdot" style="background:var(--n400)"></span>Cognitive load &amp; open dependencies</button>
+  </nav>
+
+  <div class="phase-container">
+
+    <!-- ══════════════ OVERVIEW ══════════════ -->
+    <div class="phase-panel on" id="panel-overview">
+
+      <!-- North-star scenario -->
+      <div class="ns-banner">
+        <div class="ns-banner-lbl">PRD Section 6 — North-star use case · Design every screen against this</div>
+        <div class="ns-banner-title">"A customer migrates in July and needs to pull an employee's pay stub from February for a housing verification request."</div>
+        <p style="font-size:var(--sm);color:rgba(255,255,255,.6);line-height:1.7;margin-top:var(--s3);max-width:680px">This is the single scenario every UX decision must be tested against. Success = customer navigates to Pay History, clicks February, downloads a stub a mortgage lender will accept — in under 3 minutes, without calling support. Failure = customer still goes to Chart of Accounts, finds nothing, and calls support (an escalation counted against the PRD's primary metric).</p>
+        <div class="ns-banner-scenario">
+          <div class="ns-col ns-col--before">
+            <div class="ns-col-lbl">Current broken experience</div>
+            <div class="ns-col-text">Customer goes to QBO Payroll → finds nothing → navigates to Chart of Accounts → finds a bank transaction → tries to decipher liability and expense rows → frustrated → calls support → escalation counted against primary metric (8/252 = 3.1% of migration issues)</div>
+          </div>
+          <div class="ns-col ns-col--after">
+            <div class="ns-col-lbl">Target experience after this migration</div>
+            <div class="ns-col-text">Customer goes to QBO Payroll → Pay History tab → finds employee → clicks February pay period → sees full paycheck detail (earnings, taxes, deductions, net pay) → downloads a cleanly formatted stub → done in under 3 minutes → zero support calls → escalation count = 0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRD decisions -->
+      <span class="sec-lbl">PRD solution decisions — what was considered and why (Section 5)</span>
+      <div class="decision-strip">
+        <div class="dec-card dec-card--discard">
+          <div class="dec-card-lbl">Discarded — Approach 1</div>
+          <div class="dec-card-title">Status quo</div>
+          <div class="dec-card-reason">Continue migrating as bank transactions and force customers to manually review YTD and gross vs tax. Actively causing escalations and churn. Proven friction point.</div>
+        </div>
+        <div class="dec-card dec-card--discard">
+          <div class="dec-card-lbl">Discarded — Approach 2</div>
+          <div class="dec-card-title">Pure YTD import only</div>
+          <div class="dec-card-reason">Import final YTD balances only, no historical paycheck detail. Doesn't solve the need to view individual pay stubs. Creates audit compliance anxiety. Fails the north-star scenario.</div>
+        </div>
+        <div class="dec-card dec-card--select">
+          <div class="dec-card-lbl">Selected — Approach 3</div>
+          <div class="dec-card-title">Native historical paycheck creation</div>
+          <div class="dec-card-reason">Map Desktop paycheck tables directly to QBO/IES HistoricalPaycheck API endpoints. Customer sees a 1:1 reflection of their Desktop payroll history in Pay History. Eliminates manual reconciliation tasks and resolves the lighthouse issue.</div>
+        </div>
+      </div>
+
+      <!-- PRD metrics -->
+      <span class="sec-lbl">PRD success metrics — how we measure whether this worked (Section 7)</span>
+      <div class="metric-strip">
+        <div class="metric-card metric-card--primary">
+          <div class="metric-lbl">Primary metric</div>
+          <div class="metric-val">8 → 0</div>
+          <div class="metric-desc">IES payroll migration escalations related to historical paychecks. Currently 8 out of 252 total migration issues (3.1%). Every screen in this strategy must be traced to which escalation type it prevents.</div>
+        </div>
+        <div class="metric-card metric-card--secondary">
+          <div class="metric-lbl">Secondary metric</div>
+          <div class="metric-val">1 → 0</div>
+          <div class="metric-desc">IES customer churn directly attributed to missing historical paycheck functionality. Post-migration, a usage signal monitors whether customers open Pay History within 14 days. Non-openers flagged for proactive outreach.</div>
+        </div>
+        <div class="metric-card metric-card--guard">
+          <div class="metric-lbl">Guardrail metric</div>
+          <div class="metric-val">No timeout</div>
+          <div class="metric-desc">Migration must not time out when processing thousands of historical paycheck objects. Period selector limits scope. Chunking strategy required for large files. <span class="prd-ref">R15 — open: API rate limit and chunk threshold not confirmed by Engineering.</span></div>
+        </div>
+      </div>
+
+      <!-- MECE taxonomy -->
+      <span class="sec-lbl">PRD MECE data taxonomy — what the migration engine must handle (Section 4)</span>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-bottom:var(--s8)">
+        <div style="background:var(--blue-lt);border:1px solid rgba(0,119,197,.25);border-radius:var(--r-xl);padding:var(--s5) var(--s6)">
+          <div style="font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue-dk);margin-bottom:var(--s2)">Entity mapping</div>
+          <div style="font-size:var(--sm);font-weight:600;color:var(--n800);margin-bottom:var(--s2)">Accounting entity → Payroll entity</div>
+          <div style="font-size:var(--sm);color:var(--n600);line-height:1.6">Bank transactions / Chart of Accounts (current) must be replaced by native QBO Paycheck Objects (target). Not supplemented — replaced.</div>
+        </div>
+        <div style="background:var(--pre-lt);border:1px solid rgba(123,94,167,.25);border-radius:var(--r-xl);padding:var(--s5) var(--s6)">
+          <div style="font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pre);margin-bottom:var(--s2)">Data granularity</div>
+          <div style="font-size:var(--sm);font-weight:600;color:var(--n800);margin-bottom:var(--s2)">YTD totals + payrun-level detail</div>
+          <div style="font-size:var(--sm);color:var(--n600);line-height:1.6">Both levels required. YTD for W-2 and tax filing accuracy. Payrun-level (gross pay, specific tax withheld per check) for individual stub review and audit.</div>
+        </div>
+        <div style="background:var(--succ-lt);border:1px solid rgba(44,160,28,.25);border-radius:var(--r-xl);padding:var(--s5) var(--s6)">
+          <div style="font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--succ-dk);margin-bottom:var(--s2)">Validation stages</div>
+          <div style="font-size:var(--sm);font-weight:600;color:var(--n800);margin-bottom:var(--s2)">System-side + user-facing</div>
+          <div style="font-size:var(--sm);color:var(--n600);line-height:1.6">System-side: migration engine validates all mappings before posting. User-facing: customer reviews Pay History and has a structured path to report discrepancies — not just a support call.</div>
+        </div>
+      </div>
+
+      <!-- Paycheck types in Pay History -->
+      <span class="sec-lbl">Three paycheck types in Pay History — all must be visually distinguished (PRD R20)</span>
+      <div class="pc-types">
+        <div class="pc-type pc-type--live">
+          <span class="pc-type-badge">Live</span>
+          <div class="pc-type-title">Live QBO paycheck</div>
+          <div class="pc-type-desc">Run in QBO after migration. Fully editable. No visual marker needed — this is the default state. These are the records the customer creates going forward.</div>
+        </div>
+        <div class="pc-type pc-type--hist">
+          <span class="pc-type-badge">Historical</span>
+          <div class="pc-type-title">Standard historical paycheck</div>
+          <div class="pc-type-desc">Migrated from Desktop via HistoricalPaycheck API. Read-only — cannot be edited. Badge: "Historical · Migrated from QuickBooks Desktop." Tooltip: "This paycheck was migrated and cannot be edited. Contact support to request a correction."</div>
+        </div>
+        <div class="pc-type pc-type--ro">
+          <span class="pc-type-badge">Override</span>
+          <div class="pc-type-title">Read-only historical override</div>
+          <div class="pc-type-desc">Desktop paycheck with a math error that QBO's tax engine cannot validate. Accepted as-is for historical accuracy. Badge: "Historical · Override." Tooltip: "This paycheck contains a mathematical variance from Desktop that QBO accepted as-is. The figures shown are exactly as they were in Desktop."</div>
+        </div>
+      </div>
+
+      <!-- Setup wizard dependency -->
+      <div class="wizard-dep">
+        <div class="wizard-dep-title">⚠ Critical cross-team dependency — Setup wizard (QBO-owned)</div>
+        <div class="wizard-dep-body">The PRD requires that after successful native paycheck migration, the two mandatory setup wizard tasks — (1) YTD review at employee level and (2) gross pay vs tax withheld at payrun level — are rendered unnecessary. However, the setup wizard is owned by the QBO product team, not this migration team. <strong>If QBO does not update the wizard, these tasks will still appear to successfully migrated customers, undermining the "zero manual reconciliation" goal.</strong> This is PRD Requirement R18 — listed as a UX requirement but immediately disclaimed as out of scope. It must be escalated to the PRD approver (Santosh Ghanti) before any design work on this flow is considered complete.</div>
+        <div class="wizard-dep-actions">
+          <div class="wizard-dep-action">Who: QBO product team (owner TBD)</div>
+          <div class="wizard-dep-action">What: Remove or auto-skip both wizard tasks after native paycheck migration</div>
+          <div class="wizard-dep-action">Fallback: Show "Already migrated" confirmation screen replacing both tasks</div>
+          <div class="wizard-dep-action">Escalation: Santosh Ghanti (PRD approver)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ PRE-MIGRATION ══════════════ -->
+    <div class="phase-panel" id="panel-pre">
+      <div class="phase-banner pb--pre">
+        <div class="pb-icon pb-icon--pre">◈</div>
+        <div>
+          <div class="pb-title">Phase 1 — Pre-Migration</div>
+          <div class="pb-desc">Everything that must be known and resolved before a single paycheck record moves. The business owner completes these steps — no ProAdvisor assumed. AI reduces every step to a confirm-or-override decision. The goal is zero surprises when migration begins.</div>
+        </div>
+        <div class="pb-stats">
+          <div class="pb-stat"><span>7</span>Touchpoints</div>
+          <div class="pb-stat"><span>5</span>AI-assisted</div>
+          <div class="pb-stat"><span>3</span>Hard gates</div>
+        </div>
+      </div>
+
+      <span class="sec-lbl">Pre-migration touchpoints — click to expand</span>
+      <div class="tp-grid" id="pre-grid">
+
+        <div class="tp-card" id="tp-pre-1" onclick="toggleTP('tp-pre-1','pre-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--pre-lt)">🔍</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">AI scan</span><span class="tag t-gate">Hard gate</span><span class="prd-ref">R01 R15</span></div>
+              <div class="tp-title">File health &amp; eligibility scan</div>
+              <div class="tp-summary">AI reads the QBDT file before the customer makes any commitment. File size, version, payroll service type, corruption detection. Go / Caution / Stop signal in plain English.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What happens</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">AI reads QBDT file: target count vs 750k ceiling, QBDT version, payroll service type (Basic/Enhanced/Assisted), last payroll run date, file corruption indicators. Takes 30–90 seconds. Single progress screen — no forms.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">If file exceeds limit: Condense Data option surfaced immediately, before customer invests time in setup. If corrupted: File Doctor repair step shown before anything else.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD guardrail metric (R15): migration must not time out. An over-limit file crashes mid-migration with no recovery. Detecting it here saves the customer hours of lost setup work.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">Payroll service type determines which QBDT tables are populated. Full Service files have tax payment records that Basic files do not — the migration engine needs this to know what to query.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-2" onclick="toggleTP('tp-pre-2','pre-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--blue-lt)">📅</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-req">Business owner</span><span class="tag t-gate">Hard gate</span><span class="prd-ref">R16</span></div>
+              <div class="tp-title">Migration period selector</div>
+              <div class="tp-summary">Business owner defines which paycheck history to migrate. Defaults to January 1 of the current tax year. Prior-year paychecks are explicitly out of the QBO API scope — directed to the Desktop PDF export fast-follow.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What the screen captures</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Period start: defaulted to January 1 current tax year (recommended for full W-2 accuracy). Adjustable — but mid-year start triggers a warning: "Starting mid-year means your YTD totals will only reflect [date] onwards. Your W-2 will show partial-year figures."</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Period end: defaulted to last payroll run date from the file scan. Adjustable.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Prior-year toggle: "Do you need paychecks from before January 1 [current year]?" → If yes: "We'll export those as PDFs from Desktop. They won't appear in QBO Pay History but you'll have them as downloadable files." Links to the Desktop PDF export fast-follow.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Live preview: "This will migrate [X] paychecks for [Y] employees. Estimated time: [Z] minutes." Updates as dates change.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD requirement R16: explicitly requires "check on the period for which past paychecks are required by user." Without a defined window, the migration engine queries all PAYCHECK_HEADER records, including prior-year — bloating the API payload and risking timeout (guardrail R15).</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">Scope clarity on prior-year resolves the R21 conflict — PRD's fast-follow (Desktop PDF export) handles prior-year; QBO native migration handles current-year only.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-3" onclick="toggleTP('tp-pre-3','pre-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--err-lt)">⚡</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-gate">Hard gate</span><span class="tag t-ai">AI detect</span><span class="prd-ref">R15</span></div>
+              <div class="tp-title">In-progress payroll gate</div>
+              <div class="tp-summary">Detects any payroll currently in progress in QBDT (unsent direct deposit batches, pending paychecks). Hard block — migration cannot begin until this is resolved. Re-scan available once the in-progress payroll is completed.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What the screen shows</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">If no in-progress payroll detected: green "All clear — no payroll in progress" and customer proceeds to next step.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">If detected: "A payroll for [pay period dates] is currently being processed in QuickBooks Desktop. You must complete and send this payroll before migrating. Return here when it's done." Re-scan button available.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">QBDT creates PAYCHECK_HEADER records with status=pending before direct deposit files are sent. HistoricalPaycheck API rejects pending-status records. An in-progress payroll mid-migration causes a partial failure with no designed recovery path.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">In-progress YTD figures are incomplete — the paycheck is counted but the money hasn't moved. Migrating mid-cycle produces an over-counted YTD that causes the first QBO payroll run to over-withhold taxes.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-4" onclick="toggleTP('tp-pre-4','pre-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--pre-lt)">🗂</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">AI matching</span><span class="tag t-req">Confirm / override</span><span class="prd-ref">R01 R05</span></div>
+              <div class="tp-title">Payroll item mapping</div>
+              <div class="tp-summary">Every unique pay item in QBDT mapped to a QBO pay type using AI semantic matching. Progressive disclosure — auto-confirmed items collapsed, ambiguous items reviewed, unmapped items resolved. Negative-value items flagged and re-expressed as deductions.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">Three confidence tiers shown</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Auto-confirmed (green, collapsed): "32 standard items matched — Federal Income Tax, Social Security, Medicare, Regular Pay, Overtime." One-line summary, no customer action needed.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Review (amber): Medium-confidence — e.g. "Your 'Hlth Ben ER' maps to Employer Health Insurance Contribution. This covers what your company pays toward employees' health insurance — does that look right?" One-click confirm.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Unmatched (red): Customer must select from a searchable dropdown. Plain-English description of each option.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Negative-value detection: "Your 'Expense Reimbursement' item has negative values in Desktop. In QBO, we'll record this as a Deduction item. This keeps your YTD totals accurate." — Explicit one-click confirm.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">HistoricalPaycheck API requires every line item to reference a valid QBO pay type ID. One unmapped item blocks the entire paycheck — not just that line. Without this screen, unmapped items silently keep paychecks as bank transactions (the exact problem the PRD is solving).</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD R05: "full payrun history matching DT records." Employer-side items (FUTA, SUTA, ER FICA match) must also be mapped — they affect Chart of Accounts sync. Open dependency: confirm whether QBO Pay History shows employer-side items or handles them only via CoA.</div></div>
+              </div>
+            </div>
+            <div class="dep-callout">
+              <svg class="dep-callout-icon" viewBox="0 0 18 18" fill="none"><path d="M9 7v4M9 12.5v.5M3 15h12a2 2 0 001.73-3L10.73 3a2 2 0 00-3.46 0L2.27 12A2 2 0 003 15z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <div class="dep-callout-text"><strong>Open — PRD R02, R05:</strong> Confirm whether QBO Pay History stub template includes DT's "company summary" section (employer-side items). If not, document where ER items surface and update the mapping screen to set correct customer expectations.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-5" onclick="toggleTP('tp-pre-5','pre-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--warn-lt)">📋</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-req">Customer confirms</span><span class="tag t-crit">Compliance</span><span class="prd-ref">R07 R19</span></div>
+              <div class="tp-title">Voided &amp; amended paycheck confirmation</div>
+              <div class="tp-summary">Lists all voided and amended paychecks in the migration window. Customer confirms void reversals are included (required for accurate YTD). Plain-English explanation of the W-2 impact if excluded.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What the screen shows</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Count and summary: "We found 3 voided paychecks and 1 amended paycheck within your migration window." Expandable list: employee name, paycheck date, original amount, void date.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Toggle: "Include voided records (recommended)" — ON by default. Plain-English impact if turned off: "Turning this off will overstate your employees' year-to-date wages by [dollar amount]. This will affect their W-2s."</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">YTD impact preview — shows the difference in YTD totals with vs without voided records included, per affected employee.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">A voided paycheck in QBDT has zero net YTD effect — the original paycheck and its void reversal both exist in the data. If only the original migrates (without the void), the employee's YTD is overstated by the full gross amount, producing a W-2 error that requires a W-2c to correct.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">This is not an edge case — any company that voided an accidental duplicate paycheck, a paycheck issued to a wrong bank account, or a check that bounced will have voided records.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-6" onclick="toggleTP('tp-pre-6','pre-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--pre-lt)">✦</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">Pre-flight</span><span class="tag t-crit">Blocking</span><span class="prd-ref">R01 R19 R20</span></div>
+              <div class="tp-title">Pre-flight validation — dry run before migration commits</div>
+              <div class="tp-summary">Silent API dry-run against every confirmed mapping. Surfaces validation failures, math-error candidates (read-only overrides), and deduplication conflicts. Customer resolves before migration starts — not mid-run.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">Four result categories</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Ready</strong> — passes all payload validations. Will migrate as a native HistoricalPaycheck object.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Read-only override</strong> (PRD R20) — math error detected. QBO will accept this paycheck as-is for historical accuracy, but it cannot be edited post-migration. Customer sees: "This paycheck has a small calculation difference from what QuickBooks expected. We'll migrate it exactly as it appears in Desktop, and it will be marked as read-only." Bulk-accept available.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Blocked</strong> — API will reject this payload entirely. Three choices: Skip (exclude from migration) / Archive as PDF (preserve as a downloadable file) / Fix mapping (return to mapping screen).</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Dedup conflict</strong> — paycheck has no matching bank transaction to suppress. Migrating will create a new CoA entry. Customer confirms whether this is expected.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD Risk 2: "Historical paychecks in DT might have mathematical inaccuracies that QBO's strict tax engine rejects." Without a dry run, math-error rejections surface mid-migration. At that point the customer has already committed — there is no designed recovery path in the PRD for mid-run failures.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD Risk 1: deduplication. Pre-flight checks that each paycheck, if migrated, will correctly suppress its corresponding bank transaction. Any that cannot be deduplicated are flagged before they create doubled CoA entries.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-pre-7" onclick="toggleTP('tp-pre-7','pre-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--succ-lt)">📥</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">Zero-click</span><span class="tag t-new">Auto-export</span><span class="prd-ref">R13</span></div>
+              <div class="tp-title">Pre-migration baseline snapshot</div>
+              <div class="tp-summary">System automatically exports Balance Sheet, P&amp;L, Payroll Summary by Employee, and Check Register before migration begins. Stored as reconciliation anchors — the ground truth for post-migration comparison.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What is exported</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Balance Sheet (as-of migration date), Profit &amp; Loss (current year YTD), Payroll Summary by Employee (YTD wages, taxes, deductions per employee), Check Register (all payroll bank transactions in the migration window).</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Zero customer input — happens automatically. Customer receives email with secure download links. Stored in QBO for 7 years (IRS record retention).</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">These become the ground truth for the post-migration automated diff (touching PRD R13 — escalation reduction). Without a baseline snapshot, post-migration discrepancies must be reconstructed from memory or paper records, which is what the PRD is trying to eliminate.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">If the customer is ever audited post-migration, the baseline snapshot is the evidence that their QBO records are consistent with their QBDT records as of the migration date.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+      </div><!-- /pre-grid -->
+    </div>
+
+    <!-- ══════════════ DURING MIGRATION ══════════════ -->
+    <div class="phase-panel" id="panel-during">
+      <div class="phase-banner pb--dur">
+        <div class="pb-icon pb-icon--dur">⚡</div>
+        <div>
+          <div class="pb-title">Phase 2 — During Migration</div>
+          <div class="pb-desc">The business owner monitors progress and resolves exceptions when they arise. AI handles tiered processing, check-to-paycheck interception, and exception clustering. No all-or-nothing commitment — migration can be paused and resumed. Every exception is explained in plain English with exactly three resolution options.</div>
+        </div>
+        <div class="pb-stats">
+          <div class="pb-stat"><span>6</span>Touchpoints</div>
+          <div class="pb-stat"><span>4</span>AI-automated</div>
+          <div class="pb-stat"><span>2</span>Customer gates</div>
+        </div>
+      </div>
+
+      <span class="sec-lbl">During migration touchpoints</span>
+      <div class="tp-grid" id="dur-grid">
+
+        <div class="tp-card" id="tp-dur-1" onclick="toggleTP('tp-dur-1','dur-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--blue-lt)">📊</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">Real-time</span><span class="tag t-req">Pause / resume</span><span class="prd-ref">R01 R15</span></div>
+              <div class="tp-title">Migration progress dashboard</div>
+              <div class="tp-summary">Live counters: paychecks migrated / in remediation / archived / exceptions flagged. Real-time ETA. Pause/resume without losing completed work. No black-box spinner — the customer knows exactly where they are.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What is shown</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Live counts: "X of Y paychecks migrated as paycheck records" / "Z paychecks archived for compliance" / "N exceptions need your attention." Completion percentage bar.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">ETA recalculates based on actual processing rate. If ETA extends beyond a payroll run date, a warning fires: "At this rate, migration will complete after [date] — which is your next scheduled payroll. Do you want to pause and resume after your payroll run?"</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Pause/resume: migration state is saved at the last successfully processed paycheck. Customer can close the browser and resume from where they left off.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD guardrail R15: migration must not time out. For large files, migration can take hours. Without visibility, customers interrupt or retry — triggering idempotency failures that duplicate paycheck records in QBO.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">Pause/resume is a compliance need — a customer must be able to pause before a payroll run date without losing completed work. Without this, they face a choice between interrupting migration (causing data issues) or missing payroll.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-dur-2" onclick="toggleTP('tp-dur-2','dur-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--pre-lt)">⚡</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">AI recovery</span><span class="tag t-new">Core mechanism</span><span class="prd-ref">R01 R07 R19</span></div>
+              <div class="tp-title">Check-to-paycheck intercept</div>
+              <div class="tp-summary">AI catches paychecks the native QBO tool converts to bank transactions, re-matches them to QBDT payroll data, and re-posts them as HistoricalPaycheck objects. Customer sees a recovery count — a success signal, not a warning.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">How it works</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Match key: paycheck_date + net_pay amount + employee SSN cross-reference + pay_period_end. Multi-field matching prevents false positives.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Matched paychecks: re-enriched with payroll item breakdowns from QBDT data and re-posted as HistoricalPaycheck objects. Customer sees: "14 paychecks recovered from bank transaction format."</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Unmatched conversions: surface in the exception queue with the specific check details and three options: Skip / Archive as PDF / Manually link to source paycheck.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">This is the core mechanism that resolves the PRD's root cause. The native QBO migration tool converts paychecks to checks by design. Without the intercept layer, every paycheck stays as a bank transaction — Pay History remains empty — and the north-star use case fails.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">Bank transaction suppression (PRD R19 deduplication) runs in parallel — the intercepted paycheck triggers suppression of the corresponding journal entry to prevent doubled CoA entries.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-dur-3" onclick="toggleTP('tp-dur-3','dur-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--warn-lt)">⚠</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">AI clustering</span><span class="tag t-req">Customer resolves</span><span class="prd-ref">R13</span></div>
+              <div class="tp-title">Exception queue — plain English, three choices</div>
+              <div class="tp-summary">All migration exceptions grouped by root cause. Every exception shows: employee name + paycheck date + specific reason + exactly three resolution options. No error codes. No dead ends. Grouped exceptions resolved in one action.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">Exception format</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Example: "Sarah Chen · March 15 paycheck · The federal withholding amount (–$42.00) is negative, which QBO does not accept for historical records." → [Skip this paycheck] [Archive as PDF] [Mark as read-only override].</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Grouping: if 8 employees all have the same unmapped custom pay item, they appear as one grouped exception with a bulk-resolve action. Never 8 separate alerts for the same root cause.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Categories: Blocking (must resolve before migration completes) / Advisory (can proceed, review recommended) / Informational (logged, no action needed).</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD primary metric R13: escalations from 8 to 0. Every exception that the customer cannot self-resolve is a potential support call. Plain-English grouping with specific actions keeps resolutions in-product.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-dur-4" onclick="toggleTP('tp-dur-4','dur-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--succ-lt)">✓✓</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-req">Customer sign-off</span><span class="tag t-crit">Compliance gate</span><span class="prd-ref">R08 R09</span></div>
+              <div class="tp-title">Per-batch YTD validation &amp; sign-off</div>
+              <div class="tp-summary">After each employee batch, side-by-side QBDT vs QBO YTD comparison. Green = match. Amber = explained difference (AI narrates why). Customer signs off per batch. AI explains every delta in plain English — no accountant required for routine rounding differences.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What is compared</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Per employee: Gross wages YTD / Federal income tax withheld YTD / Social Security wages and tax / Medicare wages and tax / State income tax per jurisdiction / Each deduction (401k, health insurance, garnishment).</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">AI explains each amber delta: "The $12.50 difference in John's federal tax is due to QBO using a daily rounding method vs Desktop's per-period method — this is within IRS tolerance and will not affect his W-2."</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Customer signs off per batch with a one-click confirmation — "These YTD totals look correct." Incremental review, not one overwhelming final screen.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD R08: both YTD aggregate and payrun-level data must migrate correctly. PRD R09: user-facing validation stage required. The first live QBO payroll run reads the migrated YTD accumulator to calculate withholding. An incorrect YTD produces incorrect withholding from the very first QBO paycheck.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-dur-5" onclick="toggleTP('tp-dur-5','dur-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--blue-lt)">⇌</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">Auto-dedup</span><span class="tag t-req">Customer notified</span><span class="prd-ref">R07 R19</span></div>
+              <div class="tp-title">Chart of Accounts deduplication &amp; notification</div>
+              <div class="tp-summary">When native paychecks are posted, corresponding bank transactions are suppressed. Customer is proactively shown what changed in their Chart of Accounts and why — preventing the confusion and support call that happens when they see an unexpected change.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What the notification shows</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">"142 payroll bank transactions have been replaced by detailed paycheck records in QBO Payroll. Your Chart of Accounts totals are unchanged — the same payroll expenses are there, now in a more useful format."</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Any deduplication conflicts (paychecks without a matching bank transaction to suppress) listed with explanation: "This paycheck has no matching bank transaction — it may have been a manual check. It has been added to Pay History. No additional CoA entry was created."</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD Risk 1 mitigation. Silent deduplication — without notification — causes customers to notice CoA looks different and assume something went wrong. This produces a support call that would be counted against the primary metric (R13). Proactive explanation prevents the call.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-dur-6" onclick="toggleTP('tp-dur-6','dur-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--err-lt)">↩</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-warn">Rollback window</span><span class="tag t-new">Defined recovery</span><span class="prd-ref">R19</span></div>
+              <div class="tp-title">Rollback definition &amp; window</div>
+              <div class="tp-summary">Before migration commits, customer is told exactly what rollback means, what it reverses, what the window is, and how to initiate it. "Can I undo this?" gets a designed answer — not a support call.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What the customer is told</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Rollback window:</strong> Available until your first live QBO payroll run is submitted. After that, migration changes are permanent.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>What rolls back:</strong> All historical paycheck records created in QBO, bank transaction restoration in Chart of Accounts, QBO employee records created during migration.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>What does not roll back:</strong> Your QuickBooks Desktop file is unaffected — it was read-only during migration. Your QBDT file remains as your backup.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>How to initiate:</strong> Contact support and request a migration rollback. Reference your migration ID: [ID]. The process takes 1–2 business days.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">Neither the original strategy document nor the PRD defined this state. "Can I undo this?" is a common post-migration question. Without a designed answer, it becomes a support escalation — the most expensive possible outcome for a decision that takes one screen to pre-empt.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+      </div><!-- /dur-grid -->
+    </div>
+
+    <!-- ══════════════ POST-MIGRATION ══════════════ -->
+    <div class="phase-panel" id="panel-post">
+      <div class="phase-banner pb--post">
+        <div class="pb-icon pb-icon--post">◉</div>
+        <div>
+          <div class="pb-title">Phase 3 — Post-Migration</div>
+          <div class="pb-desc">The primary success surface is Pay History — not a migration dashboard, not a reconciliation report. The customer must be able to find a specific employee's pay stub for a specific period and download it within 3 minutes. Everything in this phase either validates that this works or ensures customers know how to use it.</div>
+        </div>
+        <div class="pb-stats">
+          <div class="pb-stat"><span>5</span>Touchpoints</div>
+          <div class="pb-stat"><span>3</span>AI-assisted</div>
+          <div class="pb-stat"><span>2</span>Customer gates</div>
+        </div>
+      </div>
+
+      <!-- Pay History states -->
+      <span class="sec-lbl">Pay History tab — four states that must all be designed (PRD R17)</span>
+      <div class="ph-states">
+        <div class="ph-state ph-state--empty">
+          <div class="ph-state-lbl">State 1 — Before migration</div>
+          <div class="ph-state-title">Empty</div>
+          <div class="ph-state-desc">"Your payroll history will appear here after migration. To begin, go to [migration entry point]." Clear call to action. Never a blank page with no explanation.</div>
+        </div>
+        <div class="ph-state ph-state--progress">
+          <div class="ph-state-lbl">State 2 — Migration running</div>
+          <div class="ph-state-title">In progress</div>
+          <div class="ph-state-desc">"We're adding your payroll history — [X] of [Y] paychecks processed. Check back in [Z] minutes." Progress indicator. Customer can continue other QBO tasks — no need to wait on this screen.</div>
+        </div>
+        <div class="ph-state ph-state--full">
+          <div class="ph-state-lbl">State 3 — Complete</div>
+          <div class="ph-state-title">Fully populated</div>
+          <div class="ph-state-desc">All selected-period paychecks visible. Timeline anchor (divider at migration date) separates historical from live records. Historical badge + read-only indicator on migrated records. Download available on every paycheck.</div>
+        </div>
+        <div class="ph-state ph-state--partial">
+          <div class="ph-state-lbl">State 4 — Partial</div>
+          <div class="ph-state-title">Partial — some missing</div>
+          <div class="ph-state-desc">"[X] paychecks from [date range] could not be migrated. [Download them as PDFs] or [view the migration report] for details." Never silent — the customer always knows if records are missing and why.</div>
+        </div>
+      </div>
+
+      <span class="sec-lbl">Post-migration touchpoints</span>
+      <div class="tp-grid" id="post-grid">
+
+        <div class="tp-card" id="tp-post-1" onclick="toggleTP('tp-post-1','post-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--pre-lt)">🏛</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-new">Primary surface</span><span class="tag t-crit">North-star screen</span><span class="prd-ref">R02 R10 R11 R17 R20</span></div>
+              <div class="tp-title">Pay History tab — populated with permanent timeline anchor</div>
+              <div class="tp-summary">The screen the PRD's north-star scenario depends on. Historical paychecks visible with permanent timeline anchor. Three paycheck types visually distinguished. Download available. "Report an issue" path for when a stub looks wrong.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">Key design decisions</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Timeline anchor (permanent):</strong> A dated divider in the Pay History list at the migration date, labelled "Migrated from QuickBooks Desktop on [date] — records below this line are historical." This persists forever — not a one-time notification. Six months later, an auditor can identify provenance at a glance.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Three record types:</strong> Live QBO (no marker, editable), Historical standard ("Historical" badge, read-only), Read-only override ("Historical · Override" badge, read-only, tooltip explains the math variance).</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>"Report an issue" path (PRD R09):</strong> On each historical paycheck detail view, a "This doesn't match my Desktop records" link. Opens a structured form: "Which amount looks different? What does your Desktop record show?" Routed to the migration support team — not generic support. This is the user-facing validation stage the PRD requires.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text"><strong>Download:</strong> Every paycheck (historical and live) has a "Download pay stub" button. Downloaded stub must match DT format for third-party acceptance (open — see dependency note).</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why each element is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">R10: Pay History must be accessible even before the first live QBO payroll run — Engineering must confirm the tab appears when HistoricalPaycheck objects are posted, not only after the first live run.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">R11: downloaded stub must match DT format "exactly" for housing verification. The stub format spec (field labels, layout, currency format) must be confirmed as equivalent to DT's template — or a design task to align them is required.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">R20: the three-way visual distinction between live / historical / read-only override is essential. Without it, customers try to edit historical records, hit a confusing lock, and call support.</div></div>
+              </div>
+            </div>
+            <div class="dep-callout">
+              <svg class="dep-callout-icon" viewBox="0 0 18 18" fill="none"><path d="M9 7v4M9 12.5v.5M3 15h12a2 2 0 001.73-3L10.73 3a2 2 0 00-3.46 0L2.27 12A2 2 0 003 15z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <div class="dep-callout-text"><strong>Open — R10, R11:</strong> (1) Engineering to confirm Pay History tab appears for migrated-only employees before first live payroll run. (2) Compare DT stub PDF vs QBO stub PDF field-for-field. If layouts differ, design task required to align formats.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-post-2" onclick="toggleTP('tp-post-2','post-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--blue-lt)">⇌</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">Auto-diff</span><span class="tag t-new">Reconciliation</span><span class="prd-ref">R13 R09</span></div>
+              <div class="tp-title">Automated report comparison</div>
+              <div class="tp-summary">QBO reports diffed line-by-line against pre-migration baseline snapshots. AI categorises every difference as expected, known limitation, or genuine anomaly. Customer only investigates red rows — amber and green are explained automatically.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">What is diffed</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Balance Sheet vs baseline: payroll tax liability accounts must match. P&amp;L vs baseline: payroll expense accounts by period. Payroll Summary vs baseline: YTD per employee per line item. Check Register: bank transactions suppressed must equal HistoricalPaycheck objects created.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Pre-classified amber items: rounding method differences (QBO daily vs QBDT per-period), FIFO vs average cost inventory changes, audit trail exclusion. Customer sees these with a plain-English explanation, not an unexplained delta.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD R09 user-facing validation stage: customer must have a structured way to confirm migration is correct — not just "look at Pay History and hope." This is the structured validation that closes the loop. PRD R13: every unexplained discrepancy is a potential escalation. Automatic categorisation prevents most of them.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-post-3" onclick="toggleTP('tp-post-3','post-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--succ-lt)">◎</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">Nightly monitor</span><span class="tag t-req">5-day gate</span><span class="prd-ref">R13 R15</span></div>
+              <div class="tp-title">Parallel-run monitor &amp; decommission gate</div>
+              <div class="tp-summary">Nightly comparison of QBDT and QBO registers during the parallel period. Customer receives a daily digest. QBDT decommission is only recommended after 5 consecutive clean days — an objective signal, not a subjective judgment call.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">Daily digest format</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">"Everything matched today — Day 3 of 5 clean days." or "2 items need your attention today — [specific records, specific reasons, specific actions]."</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Anomaly detection on first 3 live QBO payroll runs: AI compares run totals against QBDT historical patterns. If a run is statistically anomalous (e.g. total net pay 15% lower than rolling average), alert fires before payroll is submitted — not after employees report issues.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Decommission gate: after 5 clean days, system surfaces: "Your migration looks complete and consistent. You can now safely retire QuickBooks Desktop. [How to archive your Desktop file]."</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">Without a parallel-run monitor, the customer decides subjectively when to retire QBDT. If they decommission too early and a discrepancy surfaces later, there is no reference system. The 5-day gate converts "I feel ready" into an evidence-based decision.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-post-4" onclick="toggleTP('tp-post-4','post-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--warn-lt)">📺</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-req">3-step orientation</span><span class="tag t-crit">Behaviour change</span><span class="prd-ref">R02 R12 R13</span></div>
+              <div class="tp-title">Pay History orientation — 3-step walkthrough</div>
+              <div class="tp-summary">A guided 3-step walkthrough of the new Pay History experience, triggered immediately after migration completes. Directly validates the north-star scenario — if a customer cannot find February's stub in 3 minutes without guidance, this screen has failed.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">Three steps shown</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Step 1: "Find an employee → click their name → Pay History tab." Annotated screenshot. Historical records section highlighted. Timeline anchor explained.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Step 2: "Click any pay period to see the full paycheck detail — earnings, taxes, deductions, net pay. Records labelled 'Historical' are from your Desktop file and cannot be edited."</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Step 3: "Click Download to get a formatted pay stub — the same information that was in Desktop, now in QBO." Direct confirmation that this works for housing verification / audit requests.</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Why this is required</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD R12: the broken path (Chart of Accounts search) must be replaced, not just supplemented. A customer who doesn't know Pay History exists will revert to CoA — exactly the behaviour that produces escalations. This orientation is the behaviour change intervention.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">PRD R14 churn prevention: a customer who completes the orientation and successfully finds their first historical stub is far less likely to churn than one who migrates and cannot figure out where their payroll history went.</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="tp-card" id="tp-post-5" onclick="toggleTP('tp-post-5','post-grid')">
+          <div class="tp-head">
+            <div class="tp-icon" style="background:var(--succ-lt)">✦</div>
+            <div class="tp-meta">
+              <div class="tp-tags"><span class="tag t-ai">Auto-generated</span><span class="tag t-new">Audit record</span><span class="prd-ref">R13 R14</span></div>
+              <div class="tp-title">Migration sign-off &amp; churn signal</div>
+              <div class="tp-summary">Auto-generated migration completion document: what migrated, what was archived, exceptions resolved, parallel-run outcomes. Stored for 7 years. Usage signal monitors whether customer opens Pay History within 14 days — non-openers flagged for proactive outreach.</div>
+            </div>
+            <svg class="tp-chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tp-detail"><div class="tp-detail-inner">
+            <div class="det-grid">
+              <div>
+                <div class="det-col-lbl dcl-what">Report contents</div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">Migration date / company name / QBDT version / QBO account. Employee breakdown: Tier 1 migrated / Tier 3 archived. Paycheck breakdown: migrated as HistoricalPaycheck / archived as structured objects / skipped / read-only overrides. Exception log. Parallel-run outcomes.</div></div>
+                <div class="det-pt"><div class="det-dot dd-what"></div><div class="det-text">AI plain-English summary: "Your payroll history from [date] to [date] is now available in Pay History. [X] paychecks for [Y] employees were successfully migrated. [Z] paychecks are archived as PDFs. You can find any employee's pay stub by going to QBO Payroll → Employees → [employee name] → Pay History."</div></div>
+              </div>
+              <div>
+                <div class="det-col-lbl dcl-why">Churn signal (PRD R14)</div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">14-day Pay History access monitor: if a customer does not open Pay History within 14 days of migration completion, a usage signal is triggered. Recommended action: an in-app notification "You haven't checked your pay history yet — [find an employee's pay stub]." If the customer still hasn't opened Pay History by day 21, flagged for proactive outreach by the IES success team.</div></div>
+                <div class="det-pt"><div class="det-dot dd-why"></div><div class="det-text">This is the proactive churn detection mechanism the PRD requires (R14) but does not design. Customers who migrate but never discover Pay History are the churn risk — this signal detects them before they cancel.</div></div>
+              </div>
+            </div>
+            <div class="dep-callout">
+              <svg class="dep-callout-icon" viewBox="0 0 18 18" fill="none"><path d="M9 7v4M9 12.5v.5M3 15h12a2 2 0 001.73-3L10.73 3a2 2 0 00-3.46 0L2.27 12A2 2 0 003 15z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <div class="dep-callout-text"><strong>Open — R14:</strong> Who owns the 14-day churn signal response — migration product team, IES customer success, or a retention function? The signal must be defined and the outreach flow assigned to a team before launch.</div>
+            </div>
+          </div></div>
+        </div>
+
+      </div><!-- /post-grid -->
+    </div>
+
+    <!-- ══════════════ COGNITIVE LOAD & OPEN DEPS ══════════════ -->
+    <div class="phase-panel" id="panel-cogload">
+
+      <div class="phase-banner pb--ov">
+        <div class="pb-icon pb-icon--ov">⬡</div>
+        <div>
+          <div class="pb-title">Cognitive load map &amp; open dependencies</div>
+          <div class="pb-desc">The design principle for every touchpoint: the system does the knowing — the customer makes decisions. Every screen presents a pre-computed answer for confirmation, not a blank form for data retrieval. The table below shows what mode each touchpoint uses and what replaces the current manual burden.</div>
+        </div>
+      </div>
+
+      <span class="sec-lbl">Cognitive load reduction — all 18 touchpoints</span>
+      <table class="cog-table">
+        <thead>
+          <tr>
+            <th style="width:22%">Touchpoint</th>
+            <th style="width:10%">Phase</th>
+            <th style="width:14%">Interaction mode</th>
+            <th style="width:27%">Current manual burden</th>
+            <th style="width:27%">Replaced by</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>File health scan</strong></td><td style="color:var(--pre);font-weight:600">Pre</td><td><span class="mode-chip mc-auto">Automated</span></td><td>Customer manually checks file size and version — often discovers problems mid-migration</td><td>Zero-click — Go/Caution/Stop signal before any commitment</td></tr>
+          <tr><td><strong>Period selector</strong></td><td style="color:var(--pre);font-weight:600">Pre</td><td><span class="mode-chip mc-conf">Confirm</span></td><td>No scope definition — migration engine queries everything, risking timeout</td><td>Pre-filled with Jan 1 default, live preview of paycheck count and ETA</td></tr>
+          <tr><td><strong>In-progress payroll gate</strong></td><td style="color:var(--pre);font-weight:600">Pre</td><td><span class="mode-chip mc-gate">Hard gate</span></td><td>No detection — in-progress paychecks cause mid-migration failure</td><td>Auto-detected, hard block with re-scan when resolved</td></tr>
+          <tr><td><strong>Payroll item mapping</strong></td><td style="color:var(--pre);font-weight:600">Pre</td><td><span class="mode-chip mc-conf">Confirm / override</span></td><td>Manual field-by-field mapping of every pay item with no guidance</td><td>AI pre-matches 90%+ of items; customer reviews only amber and red rows</td></tr>
+          <tr><td><strong>Voided paycheck confirmation</strong></td><td style="color:var(--pre);font-weight:600">Pre</td><td><span class="mode-chip mc-conf">Confirm</span></td><td>No handling — void reversals silently excluded, overstating YTD</td><td>Pre-detected list with YTD impact preview; one-click confirm to include</td></tr>
+          <tr><td><strong>Pre-flight validation</strong></td><td style="color:var(--pre);font-weight:600">Pre</td><td><span class="mode-chip mc-auto">AI dry-run</span></td><td>Validation failures surface mid-migration with no recovery path</td><td>Silent API dry-run before migration commits; customer resolves pre-flight, not mid-run</td></tr>
+          <tr><td><strong>Baseline snapshot</strong></td><td style="color:var(--pre);font-weight:600">Pre</td><td><span class="mode-chip mc-auto">Zero-click</span></td><td>Customer must remember to run and save 4+ reports — frequently forgotten</td><td>Automatic export before migration window opens; email confirmation sent</td></tr>
+          <tr><td><strong>Progress dashboard</strong></td><td style="color:var(--dur);font-weight:600">During</td><td><span class="mode-chip mc-auto">Real-time</span></td><td>Black-box spinner; customers interrupt when nothing visible is happening</td><td>Live counters, ETA, pause/resume — customer has full visibility throughout</td></tr>
+          <tr><td><strong>Check-to-paycheck intercept</strong></td><td style="color:var(--dur);font-weight:600">During</td><td><span class="mode-chip mc-auto">AI recovery</span></td><td>No recovery path — converted checks stay as checks</td><td>AI intercept re-posts as HistoricalPaycheck objects; customer sees "X recovered"</td></tr>
+          <tr><td><strong>Exception queue</strong></td><td style="color:var(--dur);font-weight:600">During</td><td><span class="mode-chip mc-auto">AI clustered</span></td><td>Individual error per employee — 40 same-issue employees = 40 separate alerts</td><td>Root-cause clustering — 40 identical errors become 1 grouped action</td></tr>
+          <tr><td><strong>YTD validation sign-off</strong></td><td style="color:var(--dur);font-weight:600">During</td><td><span class="mode-chip mc-conf">Confirm per batch</span></td><td>Single overwhelming final review of all YTD discrepancies at once</td><td>Per-batch side-by-side diff with AI explanations; incremental sign-off</td></tr>
+          <tr><td><strong>CoA dedup notification</strong></td><td style="color:var(--dur);font-weight:600">During</td><td><span class="mode-chip mc-auto">Proactive</span></td><td>Silent CoA change causes confusion and support calls</td><td>Proactive plain-English explanation of exactly what changed and why</td></tr>
+          <tr><td><strong>Rollback definition</strong></td><td style="color:var(--dur);font-weight:600">During</td><td><span class="mode-chip mc-conf">Inform</span></td><td>"Can I undo this?" has no designed answer → support call</td><td>Pre-defined rollback window, what it reverses, how to initiate — documented before commitment</td></tr>
+          <tr><td><strong>Pay History tab</strong></td><td style="color:var(--post);font-weight:600">Post</td><td><span class="mode-chip mc-auto">Primary surface</span></td><td>No payroll history in QBO — customer hunts through Chart of Accounts</td><td>Pay History populated with timeline anchor, three paycheck types distinguished, download available</td></tr>
+          <tr><td><strong>Report comparison</strong></td><td style="color:var(--post);font-weight:600">Post</td><td><span class="mode-chip mc-auto">Auto-diff</span></td><td>Customer must manually run and compare 4+ reports looking for discrepancies by eye</td><td>System runs and diffs automatically; AI pre-classifies expected vs genuine differences</td></tr>
+          <tr><td><strong>Parallel-run monitor</strong></td><td style="color:var(--post);font-weight:600">Post</td><td><span class="mode-chip mc-auto">Nightly</span></td><td>Customer decides subjectively when to retire Desktop — no signal or evidence</td><td>Nightly automated comparison; 5-day clean gate provides an objective decommission signal</td></tr>
+          <tr><td><strong>Pay History orientation</strong></td><td style="color:var(--post);font-weight:600">Post</td><td><span class="mode-chip mc-conf">3-step guide</span></td><td>Customer doesn't know Pay History exists → reverts to CoA → escalation</td><td>3-step guided walkthrough triggered immediately after migration; validates north-star scenario</td></tr>
+          <tr><td><strong>Sign-off &amp; churn signal</strong></td><td style="color:var(--post);font-weight:600">Post</td><td><span class="mode-chip mc-auto">AI generated</span></td><td>No formal close; no churn detection mechanism; churn is discovered after cancellation</td><td>AI sign-off document + 14-day Pay History access signal for proactive outreach</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Open dependencies -->
+      <span class="sec-lbl">Open cross-team dependencies — must be resolved before design is complete</span>
+      <table class="oq-table">
+        <thead>
+          <tr>
+            <th style="width:8%">PRD req</th>
+            <th style="width:28%">Open question</th>
+            <th style="width:10%">Priority</th>
+            <th style="width:18%">Who answers</th>
+            <th style="width:36%">Impact if unresolved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="prd-ref">R04</span></td>
+            <td>What is the XX figure — how many DT companies actively review backdated paychecks?</td>
+            <td><span class="oq-prio oq-p1">P1 · Scope</span></td>
+            <td><div class="oq-owner">PD team (Anil)</div></td>
+            <td>Determines whether historical paycheck migration is a primary MVP flow or a niche enhancement. Changes scope investment.</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R10</span></td>
+            <td>Does QBO Pay History tab appear for an employee with migrated paychecks but no live QBO payroll run?</td>
+            <td><span class="oq-prio oq-p1">P1 · Blocking</span></td>
+            <td><div class="oq-owner">Engineering (QBO Payroll platform team)</div></td>
+            <td>If tab only appears after first live run, the north-star use case fails for the first weeks post-migration. Must be confirmed before Pay History design begins.</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R11</span></td>
+            <td>Does QBO's generated pay stub PDF match DT's stub format field-for-field?</td>
+            <td><span class="oq-prio oq-p1">P1 · Blocking</span></td>
+            <td><div class="oq-owner">QBO Payroll product + Design</div></td>
+            <td>"Matches exactly" (PRD Section 6) is a hard requirement for housing verification. If formats differ, a stub format alignment design task must be scoped. Unresolved = north-star scenario may fail with real third parties.</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R18</span></td>
+            <td>Will QBO remove / auto-skip the two mandatory setup wizard tasks after native paycheck migration?</td>
+            <td><span class="oq-prio oq-p1">P1 · Critical</span></td>
+            <td><div class="oq-owner">Santosh Ghanti (approver) → QBO product owner</div></td>
+            <td>"Zero manual reconciliation" is impossible without this. Must be a formal cross-team commitment with a delivery date before this strategy is considered complete. If QBO cannot deliver, design a fallback "Already migrated" wizard screen.</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R15</span></td>
+            <td>What is the HistoricalPaycheck API rate limit and the migration tool's timeout threshold?</td>
+            <td><span class="oq-prio oq-p2">P2 · Engineering</span></td>
+            <td><div class="oq-owner">Engineering (Migration team + QBO API team)</div></td>
+            <td>Required before progress dashboard and period selector can be accurately designed. Chunking strategy and timeout recovery UX cannot be designed without knowing the actual thresholds.</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R21</span></td>
+            <td>Is the fast-follow (Desktop PDF export for prior-year) scoped and assigned? Does it conflict with Tier 3 QBO archive?</td>
+            <td><span class="oq-prio oq-p2">P2 · Scope</span></td>
+            <td><div class="oq-owner">Raj Fatnani (driver)</div></td>
+            <td>Scope conflict between PRD fast-follow and Tier 3 QBO archive for prior-year paychecks. One direction must be chosen. If Desktop PDF fast-follow, who builds it and when? What do customers do for prior-year requests in the gap?</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R14</span></td>
+            <td>Who owns the 14-day Pay History access signal response — migration team or IES customer success?</td>
+            <td><span class="oq-prio oq-p2">P2 · Ownership</span></td>
+            <td><div class="oq-owner">IES Customer Success lead</div></td>
+            <td>Churn detection signal is designed (this strategy). But without an owner for the response — in-app nudge or proactive outreach — the signal fires into a void.</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R05</span></td>
+            <td>Does QBO Pay History show employer-side payroll items (FUTA, SUTA, ER FICA match, workers comp)?</td>
+            <td><span class="oq-prio oq-p3">P3 · Design</span></td>
+            <td><div class="oq-owner">QBO Payroll platform team</div></td>
+            <td>If QBO Pay History doesn't show ER-side items, the payroll item mapping screen must set explicit expectations that these items are handled via CoA only — not in Pay History. Affects R02 "familiar format" requirement.</td>
+          </tr>
+          <tr>
+            <td><span class="prd-ref">R13</span></td>
+            <td>What were the specific reasons for the 8 escalations? (R13 touchpoint-to-metric trace)</td>
+            <td><span class="oq-prio oq-p3">P3 · Analytics</span></td>
+            <td><div class="oq-owner">Tushar / ArunKumar (escalation contacts)</div></td>
+            <td>Without knowing which of the 8 escalations map to which screen failures, we cannot confirm our 18 touchpoints address all escalation root causes. May require adding or reprioritising screens.</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </div><!-- /phase-container -->
+
+</main>
+
+<!-- FOOTER -->
+<footer class="doc-footer">
+  <div class="footer-logo">
+    <div class="footer-mark"><svg viewBox="0 0 12 12" fill="none"><rect x="3.5" y="1" width="5" height="10" rx=".75" fill="white"/><rect x="1" y="3.5" width="2.5" height="5" rx=".5" fill="white" fill-opacity=".6"/><rect x="8.5" y="3.5" width="2.5" height="5" rx=".5" fill="white" fill-opacity=".6"/></svg></div>
+    <div class="footer-txt"><strong>Intuit Enterprise Suite</strong> · QB Payroll Migration UX Strategy v2 · IDS v3 · PRD-grounded · Individual business owner flow</div>
+  </div>
+  <nav class="footer-links">
+    <a class="footer-link" href="index.html">← Strategy index</a>
+    <a class="footer-link" href="prd-requirements-gap-analysis.html">PRD gap analysis</a>
+    <a class="footer-link" href="ux-requirements-migration-screens.html">Screen requirements</a>
+    <a class="footer-link" href="https://github.com/asoman2/uxStrategies" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</footer>
+
+<script>
+function sw(id,el){
+  document.querySelectorAll('.phase-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.phase-panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('panel-'+id).classList.add('on');
+  document.querySelectorAll('.tp-card').forEach(c=>c.classList.remove('open'));
+}
+function toggleTP(id,gridId){
+  const card=document.getElementById(id);
+  const isOpen=card.classList.contains('open');
+  const grid=document.getElementById(gridId);
+  if(grid) grid.querySelectorAll('.tp-card').forEach(c=>c.classList.remove('open'));
+  if(!isOpen){
+    card.classList.add('open');
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+  }
+}
+</script>
+</body>
+</html>
