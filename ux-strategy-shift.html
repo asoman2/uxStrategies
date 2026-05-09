@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The UX Strategy Shift — From Handoff to Ownership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal-900: #04342C;
+  --teal-800: #085041;
+  --teal-600: #0F6E56;
+  --teal-400: #1D9E75;
+  --teal-100: #9FE1CB;
+  --teal-50:  #E1F5EE;
+  --amber-600: #854F0B;
+  --amber-400: #BA7517;
+  --amber-50:  #FAEEDA;
+  --coral-600: #993C1D;
+  --coral-50:  #FAECE7;
+  --purple-600: #534AB7;
+  --purple-50:  #EEEDFE;
+  --gray-900: #1A1A16;
+  --gray-700: #3D3D39;
+  --gray-500: #6B6A64;
+  --gray-300: #C8C6BC;
+  --gray-100: #F0EEE7;
+  --gray-50:  #F8F7F2;
+  --white:    #FFFFFF;
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Figtree', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--gray-900);
+  background: var(--white);
+  line-height: 1.65;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(4,52,44,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  transition: background 0.3s;
+}
+.nav-inner {
+  max-width: 1120px; margin: 0 auto;
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700;
+  color: var(--teal-100); letter-spacing: 0.02em;
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
+  text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--teal-100); }
+
+/* ── SECTIONS ── */
+section { padding: 100px 2rem; }
+.container { max-width: 1120px; margin: 0 auto; }
+.container--narrow { max-width: 800px; margin: 0 auto; }
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--teal-400);
+  margin-bottom: 1rem;
+}
+h2.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800; line-height: 1.1;
+  color: var(--gray-900); margin-bottom: 1.25rem;
+}
+h2.section-title--light { color: var(--white); }
+.section-intro {
+  font-size: 18px; line-height: 1.7;
+  color: var(--gray-500); max-width: 620px;
+}
+.section-intro--light { color: rgba(255,255,255,0.7); }
+
+/* ── HERO ── */
+#hero {
+  background: var(--teal-900);
+  padding: 160px 2rem 120px;
+  position: relative; overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute; top: -120px; right: -80px;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,158,117,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(29,158,117,0.2); border: 1px solid rgba(29,158,117,0.3);
+  border-radius: 40px; padding: 6px 16px;
+  font-size: 12px; font-weight: 600; color: var(--teal-100);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 800; line-height: 1.0;
+  color: var(--white); margin-bottom: 1.5rem;
+}
+.hero-title span { color: var(--teal-400); }
+.hero-subtitle {
+  font-size: 19px; line-height: 1.7;
+  color: rgba(255,255,255,0.65); max-width: 580px;
+  margin-bottom: 3.5rem;
+}
+.hero-reassurance {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 14px 20px;
+  font-size: 14px; color: rgba(255,255,255,0.75);
+}
+.hero-reassurance i { color: var(--teal-400); font-size: 18px; }
+.hero-phases {
+  display: flex; gap: 1rem; margin-top: 4rem; flex-wrap: wrap;
+}
+.hero-phase-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+}
+.hero-phase-pill.active {
+  background: rgba(29,158,117,0.2);
+  border-color: rgba(29,158,117,0.4);
+  color: var(--teal-100);
+}
+.hero-phase-pill .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: currentColor;
+}
+
+/* ── CALLOUT CARD ── */
+.callout {
+  border-left: 3px solid var(--teal-400);
+  background: var(--teal-50);
+  border-radius: 0 12px 12px 0;
+  padding: 20px 24px;
+  margin: 2rem 0;
+}
+.callout.callout--amber {
+  border-color: var(--amber-400);
+  background: var(--amber-50);
+}
+.callout-title {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--teal-600); margin-bottom: 6px;
+}
+.callout--amber .callout-title { color: var(--amber-600); }
+.callout p { font-size: 14px; color: var(--gray-700); line-height: 1.6; }
+
+/* ── PROBLEM SECTION ── */
+#problem { background: var(--white); }
+.metrics-contrast {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gray-300);
+  margin: 3rem 0;
+}
+.metrics-col { padding: 2px; }
+.metrics-header {
+  padding: 14px 20px;
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.metrics-header--old {
+  background: var(--gray-100); color: var(--gray-500);
+}
+.metrics-header--new {
+  background: var(--teal-600); color: var(--teal-50);
+}
+.metric-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--gray-100);
+  font-size: 13px;
+}
+.metric-row:nth-child(even) { background: var(--gray-50); }
+.metric-row--new:nth-child(even) { background: rgba(225,245,238,0.5); }
+.metric-row--old { color: var(--gray-500); }
+.metric-row--old .metric-name { text-decoration: line-through; opacity: 0.6; }
+.metric-row--new { color: var(--teal-800); }
+.metric-row--new .metric-name { font-weight: 600; }
+.metric-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.metric-name { font-weight: 500; margin-bottom: 2px; }
+.metric-sub { font-size: 11px; opacity: 0.7; line-height: 1.4; }
+
+.report-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  margin-top: 3rem;
+}
+.report-card {
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gray-300);
+}
+.report-card-header {
+  padding: 14px 20px;
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.report-card-header--old {
+  background: var(--gray-100); color: var(--gray-500);
+}
+.report-card-header--new {
+  background: var(--teal-600); color: var(--white);
+}
+.report-card-body { padding: 0; }
+.report-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 20px; border-bottom: 1px solid var(--gray-100);
+  font-size: 13px;
+}
+.report-row:last-child { border-bottom: none; }
+.report-row-label { color: var(--gray-500); }
+.report-row-value--old { font-weight: 600; color: var(--gray-700); }
+.report-row-value--new { font-weight: 700; color: var(--teal-600); }
+.report-row-delta {
+  font-size: 11px; color: var(--teal-400); font-weight: 500; margin-left: 4px;
+}
+.report-footer {
+  padding: 12px 20px;
+  font-size: 12px; font-style: italic;
+  border-top: 1px solid var(--gray-100);
+}
+.report-footer--old { color: var(--gray-500); background: var(--gray-50); }
+.report-footer--new { color: var(--teal-600); background: var(--teal-50); }
+
+/* ── JOURNEY / PHASES ── */
+#journey { background: var(--gray-50); }
+.phases-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+  margin-top: 3rem;
+}
+.phase-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 28px 24px 24px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gray-300), 0 2px 8px rgba(0,0,0,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.phase-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px var(--gray-300), 0 8px 24px rgba(0,0,0,0.08);
+}
+.phase-card--current {
+  border: 2px solid var(--teal-400);
+  box-shadow: 0 0 0 0px transparent, 0 8px 24px rgba(29,158,117,0.15);
+}
+.phase-card--destination {
+  background: var(--teal-900);
+  border: none;
+  box-shadow: 0 0 0 0px transparent, 0 8px 24px rgba(4,52,44,0.2);
+}
+.phase-bg-num {
+  position: absolute; top: -10px; right: 10px;
+  font-family: var(--font-display);
+  font-size: 100px; font-weight: 800;
+  color: var(--gray-100); line-height: 1;
+  pointer-events: none; user-select: none;
+}
+.phase-card--destination .phase-bg-num { color: rgba(255,255,255,0.06); }
+.phase-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 4px 10px;
+  border-radius: 20px; margin-bottom: 1rem;
+}
+.phase-badge--past { background: var(--gray-100); color: var(--gray-500); }
+.phase-badge--current { background: var(--teal-50); color: var(--teal-600); }
+.phase-badge--destination { background: rgba(29,158,117,0.2); color: var(--teal-100); }
+.phase-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700; margin-bottom: 8px;
+  position: relative;
+}
+.phase-card--destination .phase-title { color: var(--white); }
+.phase-desc { font-size: 13px; color: var(--gray-500); line-height: 1.55; position: relative; }
+.phase-card--destination .phase-desc { color: rgba(255,255,255,0.6); }
+.phase-items { margin-top: 14px; list-style: none; position: relative; }
+.phase-items li {
+  font-size: 12px; color: var(--gray-700);
+  padding: 3px 0;
+  display: flex; align-items: flex-start; gap: 6px;
+}
+.phase-card--destination .phase-items li { color: rgba(255,255,255,0.65); }
+.phase-items li::before { content: '—'; color: var(--gray-300); flex-shrink: 0; }
+.phase-card--destination .phase-items li::before { color: var(--teal-400); }
+
+/* ── TOOLKIT ── */
+#toolkit { background: var(--teal-900); padding: 100px 2rem; }
+.pipeline-flow {
+  display: flex; align-items: center; gap: 0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 16px 24px;
+  margin-bottom: 3.5rem; flex-wrap: wrap; gap: 8px;
+}
+.pipeline-step {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.pipeline-step-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); font-weight: 600; }
+.pipeline-step-name { font-size: 12px; font-weight: 600; color: var(--teal-100); }
+.pipeline-arrow { color: rgba(255,255,255,0.2); font-size: 18px; padding: 0 4px; margin-bottom: -12px; }
+.tools-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+}
+.tool-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 24px;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: default;
+}
+.tool-card:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(29,158,117,0.3);
+}
+.tool-icon-wrap {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px; font-size: 20px;
+}
+.tool-name {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--white);
+  margin-bottom: 6px;
+}
+.tool-badge {
+  display: inline-flex;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 3px 8px;
+  border-radius: 4px; margin-bottom: 10px;
+}
+.tool-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.55; margin-bottom: 12px; }
+.tool-entry {
+  font-size: 11px; color: var(--teal-100);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 10px; line-height: 1.5;
+}
+.tool-entry strong { color: rgba(255,255,255,0.6); }
+
+/* ── ROI SECTION ── */
+#roi { background: #0A201A; padding: 100px 2rem; }
+.roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+.credibility-arc {
+  display: flex; flex-direction: column; gap: 0;
+}
+.arc-stage {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+.arc-stage:hover { background: rgba(255,255,255,0.03); }
+.arc-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; flex-shrink: 0;
+  font-family: var(--font-display);
+}
+.arc-stage-content { flex: 1; }
+.arc-stage-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.arc-stage-desc { font-size: 12px; line-height: 1.5; }
+.arc-stage-credibility { font-size: 10px; font-weight: 700; margin-top: 4px; letter-spacing: 0.04em; }
+
+.roi-worked {
+  background: rgba(29,158,117,0.08);
+  border: 1px solid rgba(29,158,117,0.2);
+  border-radius: 16px; padding: 28px;
+}
+.roi-worked-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--teal-400); margin-bottom: 20px;
+}
+.roi-calc-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 8px 0;
+  font-size: 13px; color: rgba(255,255,255,0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.roi-calc-row:last-of-type { border-bottom: none; }
+.roi-calc-val { font-weight: 600; color: rgba(255,255,255,0.85); font-family: var(--font-mono); font-size: 12px; }
+.roi-divider {
+  border: none; border-top: 1px solid rgba(29,158,117,0.3);
+  margin: 16px 0;
+}
+.roi-result {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.roi-result-label { font-size: 14px; font-weight: 600; color: var(--white); }
+.roi-result-val {
+  font-family: var(--font-display);
+  font-size: 42px; font-weight: 800; color: var(--teal-400);
+  line-height: 1;
+}
+.roi-caveat {
+  margin-top: 16px; padding: 12px 14px;
+  background: rgba(0,0,0,0.2); border-radius: 8px;
+  font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.5;
+}
+
+.six-questions { margin-top: 2rem; }
+.six-q-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal-400);
+  margin-bottom: 14px;
+}
+.q-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 13px;
+}
+.q-row:last-child { border-bottom: none; }
+.q-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.q-text { color: rgba(255,255,255,0.7); line-height: 1.45; }
+.q-text strong { color: rgba(255,255,255,0.9); }
+.q-tag {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 9px; font-weight: 700;
+  padding: 2px 7px; border-radius: 3px;
+}
+
+/* ── ROLES SECTION ── */
+#roles { background: var(--white); }
+.roles-intro-callout {
+  background: var(--teal-50);
+  border: 1px solid rgba(15,110,86,0.2);
+  border-radius: 16px; padding: 28px 32px;
+  margin-bottom: 3rem;
+  display: flex; align-items: flex-start; gap: 20px;
+}
+.roles-intro-icon { font-size: 36px; color: var(--teal-600); flex-shrink: 0; }
+.roles-intro-text h3 {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700; color: var(--teal-800);
+  margin-bottom: 8px;
+}
+.roles-intro-text p { font-size: 15px; color: var(--teal-600); line-height: 1.6; }
+.roles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.role-card {
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px var(--gray-300), 0 2px 8px rgba(0,0,0,0.04);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.role-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 0 1px var(--gray-300), 0 12px 28px rgba(0,0,0,0.08);
+}
+.role-card-header { padding: 20px 22px 16px; }
+.role-icon { font-size: 26px; margin-bottom: 10px; }
+.role-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700; color: var(--gray-900);
+  margin-bottom: 4px;
+}
+.role-subtitle { font-size: 12px; color: var(--gray-500); }
+.role-card-body { padding: 0 22px 20px; }
+.role-section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 8px; margin-top: 16px;
+}
+.role-section-label--was { color: var(--gray-400); }
+.role-section-label--now { color: var(--teal-600); }
+.role-list { list-style: none; }
+.role-list li {
+  font-size: 12px; line-height: 1.5;
+  padding: 3px 0;
+  display: flex; gap: 7px; align-items: flex-start;
+}
+.role-list--was li { color: var(--gray-500); }
+.role-list--now li { color: var(--gray-700); }
+.role-list li::before {
+  content: '·'; flex-shrink: 0;
+  font-weight: 700;
+}
+.role-list--was li::before { color: var(--gray-300); }
+.role-list--now li::before { color: var(--teal-400); }
+
+/* ── TRIAD ── */
+#triad { background: var(--gray-50); }
+.triad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.triad-card {
+  background: var(--white);
+  border-radius: 14px; padding: 24px 22px;
+  box-shadow: 0 0 0 1px var(--gray-300);
+}
+.triad-role-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 5px 12px;
+  border-radius: 20px; margin-bottom: 14px;
+}
+.triad-card-title {
+  font-family: var(--font-display);
+  font-size: 17px; font-weight: 700; margin-bottom: 16px; color: var(--gray-900);
+}
+.triad-list { list-style: none; }
+.triad-list li {
+  font-size: 13px; color: var(--gray-700); line-height: 1.5;
+  padding: 5px 0; border-bottom: 1px solid var(--gray-100);
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.triad-list li:last-child { border-bottom: none; }
+.triad-list li i { font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+.priorities-list { margin-top: 3rem; }
+.priority-row {
+  display: grid; grid-template-columns: 44px 1fr auto;
+  gap: 16px; align-items: flex-start;
+  padding: 18px 0; border-bottom: 1px solid var(--gray-100);
+}
+.priority-row:last-child { border-bottom: none; }
+.priority-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 800; flex-shrink: 0;
+}
+.priority-title { font-size: 15px; font-weight: 600; color: var(--gray-900); margin-bottom: 4px; }
+.priority-desc { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+.priority-owners { display: flex; gap: 4px; flex-shrink: 0; align-items: flex-start; padding-top: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.owner-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 3px 7px; border-radius: 4px; white-space: nowrap;
+}
+
+/* ── ACTION ── */
+#action { background: var(--teal-900); padding: 100px 2rem 120px; }
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3.5rem; }
+.timeline-block { }
+.timeline-heading {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700; color: var(--teal-100);
+  letter-spacing: 0.04em; margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.timeline-heading .tl-badge {
+  background: rgba(29,158,117,0.2); border: 1px solid rgba(29,158,117,0.3);
+  border-radius: 6px; padding: 2px 10px;
+  font-size: 10px; letter-spacing: 0.08em;
+}
+.action-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  margin-bottom: 20px;
+}
+.action-num {
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 800; color: var(--teal-400);
+  flex-shrink: 0; line-height: 1.1; min-width: 28px;
+}
+.action-content h4 {
+  font-size: 14px; font-weight: 600; color: var(--white);
+  margin-bottom: 4px;
+}
+.action-content p { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.action-content code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: rgba(0,0,0,0.3); border-radius: 4px;
+  padding: 1px 6px; color: var(--teal-100);
+}
+.closing-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 36px;
+  text-align: center;
+}
+.closing-icon { font-size: 48px; color: var(--teal-400); margin-bottom: 20px; }
+.closing-title {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800; color: var(--white);
+  margin-bottom: 14px; line-height: 1.2;
+}
+.closing-desc { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 28px; }
+.closing-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal-400); color: var(--teal-900);
+  font-weight: 700; font-size: 14px; padding: 14px 28px;
+  border-radius: 10px; text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.closing-cta:hover { background: var(--teal-100); transform: scale(1.02); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--gray-900); padding: 40px 2rem;
+  text-align: center;
+  font-size: 13px; color: var(--gray-500);
+}
+footer strong { color: var(--gray-300); }
+
+/* ── FADE IN ANIMATION ── */
+.fade-in {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.fade-in-delay-1 { transition-delay: 0.1s; }
+.fade-in-delay-2 { transition-delay: 0.2s; }
+.fade-in-delay-3 { transition-delay: 0.3s; }
+.fade-in-delay-4 { transition-delay: 0.4s; }
+
+@media (max-width: 900px) {
+  .phases-grid, .tools-grid, .roles-grid, .triad-grid { grid-template-columns: 1fr 1fr; }
+  .metrics-contrast, .report-cards, .roi-grid, .action-grid { grid-template-columns: 1fr; }
+  .hero-phases { display: none; }
+  .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  .phases-grid, .tools-grid, .roles-grid, .triad-grid { grid-template-columns: 1fr; }
+  section { padding: 60px 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">UX Strategy Shift</a>
+    <ul class="nav-links">
+      <li><a href="#problem">The Problem</a></li>
+      <li><a href="#journey">The Journey</a></li>
+      <li><a href="#toolkit">Toolkit</a></li>
+      <li><a href="#roi">ROI</a></li>
+      <li><a href="#roles">Your Role</a></li>
+      <li><a href="#action">Start Now</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── SECTION 1: HERO ── -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <i class="ti ti-arrow-right"></i>
+      A guide for UX teams navigating the shift
+    </div>
+    <h1 class="hero-title">
+      The UX<br><span>Strategy</span><br>Shift
+    </h1>
+    <p class="hero-subtitle">
+      From measuring screens to measuring outcomes. From handoff culture to production ownership. Your role doesn't disappear — it becomes the most valuable thing in the room.
+    </p>
+    <div class="hero-reassurance">
+      <i class="ti ti-heart"></i>
+      Your craft, systems thinking, and empathy are the foundation. Phase 4 extends them — it doesn't erase them.
+    </div>
+    <div class="hero-phases">
+      <div class="hero-phase-pill"><span class="dot"></span>Phase 1 — Handoff era</div>
+      <div class="hero-phase-pill"><span class="dot"></span>Phase 2 — Token era</div>
+      <div class="hero-phase-pill active"><span class="dot"></span>Phase 3 — Prototype era · you are here</div>
+      <div class="hero-phase-pill active"><span class="dot"></span>Phase 4 — Design engineering · destination</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2: THE PROBLEM ── -->
+<section id="problem">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-label">The credibility problem</p>
+      <h2 class="section-title">We've been measuring the wrong things</h2>
+      <p class="section-intro">
+        Activity metrics — screens shipped, interviews conducted, design reviews completed — measure what we <em>did</em>, not what changed as a result. Finance leadership noticed years ago. Now it's time we fix it.
+      </p>
+    </div>
+
+    <div class="callout callout--amber fade-in" style="margin-top:2.5rem">
+      <div class="callout-title">The finance team's actual response</div>
+      <p><strong>"184 screens shipped. 63 user interviews. 31 design reviews."</strong> — "Interesting. And what did that produce for the business?" The silence that followed is why we're here.</p>
+    </div>
+
+    <div class="metrics-contrast fade-in">
+      <div class="metrics-col">
+        <div class="metrics-header metrics-header--old"><i class="ti ti-x" style="margin-right:6px"></i>Activity metrics — retire these</div>
+        <div class="metric-row metric-row--old">
+          <span class="metric-icon"><i class="ti ti-layout"></i></span>
+          <div><div class="metric-name">Screens shipped</div><div class="metric-sub">Volume of output ≠ value of outcome</div></div>
+        </div>
+        <div class="metric-row metric-row--old">
+          <span class="metric-icon"><i class="ti ti-users"></i></span>
+          <div><div class="metric-name">User interviews conducted</div><div class="metric-sub">Input quantity ≠ decision quality</div></div>
+        </div>
+        <div class="metric-row metric-row--old">
+          <span class="metric-icon"><i class="ti ti-eye"></i></span>
+          <div><div class="metric-name">Design reviews completed</div><div class="metric-sub">Process completion ≠ output quality</div></div>
+        </div>
+        <div class="metric-row metric-row--old">
+          <span class="metric-icon"><i class="ti ti-pencil"></i></span>
+          <div><div class="metric-name">Prototypes created</div><div class="metric-sub">Unshipped artefacts = sunk cost</div></div>
+        </div>
+        <div class="metric-row metric-row--old">
+          <span class="metric-icon"><i class="ti ti-box"></i></span>
+          <div><div class="metric-name">DS components added</div><div class="metric-sub">Component count ≠ adoption</div></div>
+        </div>
+        <div class="metric-row metric-row--old" style="border-bottom:none">
+          <span class="metric-icon"><i class="ti ti-clipboard"></i></span>
+          <div><div class="metric-name">Usability sessions run</div><div class="metric-sub">Lab behaviour ≠ production behaviour</div></div>
+        </div>
+      </div>
+      <div class="metrics-col">
+        <div class="metrics-header metrics-header--new"><i class="ti ti-check" style="margin-right:6px"></i>Outcome metrics — adopt these</div>
+        <div class="metric-row metric-row--new">
+          <span class="metric-icon" style="color:var(--teal-400)"><i class="ti ti-flask"></i></span>
+          <div><div class="metric-name">Component changes with measured lift</div><div class="metric-sub">A/B tested, pre-registered, production evidence</div></div>
+        </div>
+        <div class="metric-row metric-row--new">
+          <span class="metric-icon" style="color:var(--teal-400)"><i class="ti ti-arrows-shuffle"></i></span>
+          <div><div class="metric-name">Research-to-action rate</div><div class="metric-sub">Insights that triggered a product change ÷ total</div></div>
+        </div>
+        <div class="metric-row metric-row--new">
+          <span class="metric-icon" style="color:var(--teal-400)"><i class="ti ti-camera"></i></span>
+          <div><div class="metric-name">Visual regression catch rate (Chromatic)</div><div class="metric-sub">Changes caught pre-production — automated QA</div></div>
+        </div>
+        <div class="metric-row metric-row--new">
+          <span class="metric-icon" style="color:var(--teal-400)"><i class="ti ti-git-branch"></i></span>
+          <div><div class="metric-name">Hypotheses shipped to production</div><div class="metric-sub">Pre-registered metrics + feature-flagged components</div></div>
+        </div>
+        <div class="metric-row metric-row--new">
+          <span class="metric-icon" style="color:var(--teal-400)"><i class="ti ti-chart-bar"></i></span>
+          <div><div class="metric-name">DS coverage rate across products</div><div class="metric-sub">% of shipped UI using IDS vs custom code</div></div>
+        </div>
+        <div class="metric-row metric-row--new" style="border-bottom:none">
+          <span class="metric-icon" style="color:var(--teal-400)"><i class="ti ti-trending-up"></i></span>
+          <div><div class="metric-name">Production task completion rate</div><div class="metric-sub">Amplitude funnels — real users, real conditions</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-cards fade-in">
+      <div class="report-card">
+        <div class="report-card-header report-card-header--old">
+          <i class="ti ti-file-description"></i> Old quarterly design report
+        </div>
+        <div class="report-card-body">
+          <div class="report-row"><span class="report-row-label">Screens shipped</span><span class="report-row-value--old">184</span></div>
+          <div class="report-row"><span class="report-row-label">User interviews</span><span class="report-row-value--old">63</span></div>
+          <div class="report-row"><span class="report-row-label">Design reviews</span><span class="report-row-value--old">31</span></div>
+          <div class="report-row"><span class="report-row-label">Prototypes created</span><span class="report-row-value--old">22</span></div>
+          <div class="report-row" style="border-bottom:none"><span class="report-row-label">DS components added</span><span class="report-row-value--old">17</span></div>
+        </div>
+        <div class="report-footer report-footer--old">CFO: "And what did that produce for the business?"</div>
+      </div>
+      <div class="report-card">
+        <div class="report-card-header report-card-header--new">
+          <i class="ti ti-chart-line"></i> New quarterly design report
+        </div>
+        <div class="report-card-body">
+          <div class="report-row"><span class="report-row-label">Experiments shipped</span><span class="report-row-value--new">12 <span class="report-row-delta">↑ from 3 in Q3</span></span></div>
+          <div class="report-row"><span class="report-row-label">Avg conversion lift</span><span class="report-row-value--new">+7.4% <span class="report-row-delta">at 95% confidence</span></span></div>
+          <div class="report-row"><span class="report-row-label">DS coverage</span><span class="report-row-value--new">74% <span class="report-row-delta">↑ 13pp from Q3</span></span></div>
+          <div class="report-row"><span class="report-row-label">Lighthouse a11y</span><span class="report-row-value--new">93 avg <span class="report-row-delta">↑ from 79</span></span></div>
+          <div class="report-row" style="border-bottom:none"><span class="report-row-label">Regressions caught</span><span class="report-row-value--new">28 <span class="report-row-delta">pre-production</span></span></div>
+        </div>
+        <div class="report-footer report-footer--new">CFO: "How do we invest more in this team?"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 3: THE JOURNEY ── -->
+<section id="journey">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-label">The four phases</p>
+      <h2 class="section-title">Where are you on this journey?</h2>
+      <p class="section-intro">
+        The shift from handoff era to design engineering isn't a cliff — it's a progressive arc. Most designers using Cursor and Claude to prototype are already at Phase 3. Phase 4 is the next step, not a leap.
+      </p>
+    </div>
+    <div class="phases-grid">
+      <div class="phase-card fade-in fade-in-delay-1">
+        <div class="phase-bg-num">1</div>
+        <div class="phase-badge phase-badge--past">Phase 1</div>
+        <div class="phase-title">Handoff era</div>
+        <div class="phase-desc">Design → gap → code. Figma files, redlines, and the hope that engineering implements it right.</div>
+        <ul class="phase-items">
+          <li>Figma, Sketch, Zeplin</li>
+          <li>Spec docs &amp; annotations</li>
+          <li>No codebase access</li>
+          <li>Implementation drift</li>
+        </ul>
+      </div>
+      <div class="phase-card fade-in fade-in-delay-2">
+        <div class="phase-bg-num">2</div>
+        <div class="phase-badge phase-badge--past">Phase 2</div>
+        <div class="phase-title">Token era</div>
+        <div class="phase-desc">Design owns the primitive layer. Figma variables map to tokens.json. First token PRs raised.</div>
+        <ul class="phase-items">
+          <li>Figma variables → tokens.json</li>
+          <li>Versioned npm package</li>
+          <li>Storybook as bridge</li>
+          <li>First token PRs</li>
+        </ul>
+      </div>
+      <div class="phase-card phase-card--current fade-in fade-in-delay-3">
+        <div class="phase-bg-num">3</div>
+        <div class="phase-badge phase-badge--current"><i class="ti ti-map-pin" style="font-size:10px"></i> You are here</div>
+        <div class="phase-title">Prototype era</div>
+        <div class="phase-desc">Designer inside the stack. Cursor + Claude + git clone. Branch → prototype → PR.</div>
+        <ul class="phase-items">
+          <li>Cursor + Claude + IDS</li>
+          <li>Branch → prototype → PR</li>
+          <li>Design review = code review</li>
+          <li>IDS components in real code</li>
+        </ul>
+      </div>
+      <div class="phase-card phase-card--destination fade-in fade-in-delay-4">
+        <div class="phase-bg-num">4</div>
+        <div class="phase-badge phase-badge--destination"><i class="ti ti-star" style="font-size:10px"></i> Destination</div>
+        <div class="phase-title">Design engineering</div>
+        <div class="phase-desc">Designer = front-end platform team. Owns components, tokens, experiments, and outcomes.</div>
+        <ul class="phase-items">
+          <li>Owns component library</li>
+          <li>Design system as infra</li>
+          <li>Visual regression + a11y CI</li>
+          <li>No handoff — ships code</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 4: TOOLKIT ── -->
+<section id="toolkit">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-label" style="color:var(--teal-100)">The new workbench</p>
+      <h2 class="section-title section-title--light">Your tools are changing —<br>not replacing, extending</h2>
+      <p class="section-intro section-intro--light">
+        Figma stays in the workflow — it shifts from delivery tool to exploration and stakeholder communication. Everything below builds on your existing design instincts.
+      </p>
+    </div>
+
+    <div class="pipeline-flow fade-in">
+      <div class="pipeline-step"><span class="pipeline-step-label">author</span><span class="pipeline-step-name">VS Code / Cursor</span></div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step"><span class="pipeline-step-label">transform</span><span class="pipeline-step-name">Style Dictionary</span></div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step"><span class="pipeline-step-label">document</span><span class="pipeline-step-name">Storybook</span></div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step"><span class="pipeline-step-label">verify</span><span class="pipeline-step-name">Chromatic</span></div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step"><span class="pipeline-step-label">ship</span><span class="pipeline-step-name">LaunchDarkly</span></div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step"><span class="pipeline-step-label">measure</span><span class="pipeline-step-name">Amplitude</span></div>
+    </div>
+
+    <div class="tools-grid fade-in">
+      <div class="tool-card">
+        <div class="tool-icon-wrap" style="background:rgba(180,178,169,0.15)">
+          <i class="ti ti-code" style="color:#B4B2A9"></i>
+        </div>
+        <div class="tool-badge" style="background:rgba(180,178,169,0.1);color:#B4B2A9">Primary environment</div>
+        <div class="tool-name">VS Code / Cursor</div>
+        <div class="tool-desc">Your code editor and primary design environment in Phase 4. Cursor's AI (Cmd+I) generates component code from plain English — essential for designers building without full engineering fluency.</div>
+        <div class="tool-entry"><strong>Start:</strong> Install Cursor. Open IDS repo. Press <code>Cmd+I</code>, describe a component change, review what it drafts.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon-wrap" style="background:rgba(186,117,23,0.15)">
+          <i class="ti ti-book" style="color:#EF9F27"></i>
+        </div>
+        <div class="tool-badge" style="background:rgba(186,117,23,0.1);color:#EF9F27">Component catalog</div>
+        <div class="tool-name">Storybook</div>
+        <div class="tool-desc">Every IDS component in every state — loading, error, disabled, all variants — documented as code. The Controls panel is a live prop playground that's closer to a design tool than any spec doc.</div>
+        <div class="tool-entry"><strong>Start:</strong> Run <code>npm run storybook</code>. Find a component. Open Controls. Change a prop. You're operating the real component.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon-wrap" style="background:rgba(83,74,183,0.15)">
+          <i class="ti ti-camera" style="color:#AFA9EC"></i>
+        </div>
+        <div class="tool-badge" style="background:rgba(83,74,183,0.1);color:#AFA9EC">Visual regression</div>
+        <div class="tool-name">Chromatic</div>
+        <div class="tool-desc">Auto-screenshots every Storybook story on every PR. Flags visual changes for your review. Accepting a diff is your formal design sign-off in the engineering process — automated design QA.</div>
+        <div class="tool-entry"><strong>Start:</strong> Connect repo at chromatic.com. Raise a PR. Review snapshot diffs — "intentional change" or "regression"?</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon-wrap" style="background:rgba(153,60,29,0.15)">
+          <i class="ti ti-variable" style="color:#F0997B"></i>
+        </div>
+        <div class="tool-badge" style="background:rgba(153,60,29,0.1);color:#F0997B">Token pipeline</div>
+        <div class="tool-name">Style Dictionary</div>
+        <div class="tool-desc">Transforms tokens.json into CSS custom properties, iOS Swift, Android XML. One source of truth → every platform output. This is the mechanism that makes "designer owns the tokens" structurally real.</div>
+        <div class="tool-entry"><strong>Start:</strong> Find tokens.json in IDS repo. Run <code>npm run build:tokens</code>. Trace one token from JSON to CSS output.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon-wrap" style="background:rgba(24,95,165,0.15)">
+          <i class="ti ti-toggle-left" style="color:#85B7EB"></i>
+        </div>
+        <div class="tool-badge" style="background:rgba(24,95,165,0.1);color:#85B7EB">Feature flags</div>
+        <div class="tool-name">LaunchDarkly</div>
+        <div class="tool-desc">Ships component changes to a defined % of users without full deployment. Enables A/B tests, gradual rollouts, and one-click rollback. You control exposure from the dashboard — no code deploy needed.</div>
+        <div class="tool-entry"><strong>Start:</strong> Get dashboard access. Find an existing flag. Read its targeting rules. Toggle it in staging — watch the component switch.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon-wrap" style="background:rgba(15,110,86,0.2)">
+          <i class="ti ti-chart-bar" style="color:#5DCAA5"></i>
+        </div>
+        <div class="tool-badge" style="background:rgba(15,110,86,0.1);color:#5DCAA5">Analytics</div>
+        <div class="tool-name">Amplitude</div>
+        <div class="tool-desc">Measures what users actually do — funnels, event sequences, A/B results. Define your success metric here before the experiment runs. Never after you see the data.</div>
+        <div class="tool-entry"><strong>Start:</strong> Find your product's workspace. Locate the funnel for your flow. Identify the event that is your success metric.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 5: ROI ── -->
+<section id="roi">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-label" style="color:var(--teal-400)">Making the case</p>
+      <h2 class="section-title section-title--light">Realistic ROI is possible —<br>but it requires the right infrastructure</h2>
+      <p class="section-intro section-intro--light">
+        The "$1 in UX returns $100" era damaged our credibility. Here's how to replace it with evidence that actually holds up in a CFO conversation.
+      </p>
+    </div>
+
+    <div class="roi-grid fade-in">
+      <div>
+        <div class="credibility-arc">
+          <div class="arc-stage">
+            <div class="arc-num" style="background:rgba(180,178,169,0.15);color:#888780">1</div>
+            <div class="arc-stage-content">
+              <div class="arc-stage-title" style="color:rgba(255,255,255,0.5)">Industry statistics</div>
+              <div class="arc-stage-desc" style="color:rgba(255,255,255,0.3)">"$1 in UX returns $100." Not your data. Not auditable. Finance has heard it 20 times and stopped believing it 18 times ago.</div>
+              <div class="arc-stage-credibility" style="color:#888780">Credibility: zero</div>
+            </div>
+          </div>
+          <div class="arc-stage">
+            <div class="arc-num" style="background:rgba(180,178,169,0.1);color:#666">2</div>
+            <div class="arc-stage-content">
+              <div class="arc-stage-title" style="color:rgba(255,255,255,0.5)">Activity output</div>
+              <div class="arc-stage-desc" style="color:rgba(255,255,255,0.3)">"We shipped 184 screens, ran 63 interviews." Confuses work with value — accepted only by design teams.</div>
+              <div class="arc-stage-credibility" style="color:#666">Credibility: internal only</div>
+            </div>
+          </div>
+          <div class="arc-stage">
+            <div class="arc-num" style="background:rgba(186,117,23,0.15);color:#EF9F27">3</div>
+            <div class="arc-stage-content">
+              <div class="arc-stage-title" style="color:rgba(255,255,255,0.7)">Correlation claim</div>
+              <div class="arc-stage-desc" style="color:rgba(255,255,255,0.4)">"Revenue rose after the redesign." No control group. Marketing launched a campaign the same week. Correlation without causation.</div>
+              <div class="arc-stage-credibility" style="color:#EF9F27">Credibility: directional only</div>
+            </div>
+          </div>
+          <div class="arc-stage" style="background:rgba(29,158,117,0.08);border-radius:12px">
+            <div class="arc-num" style="background:rgba(29,158,117,0.2);color:var(--teal-100)">4</div>
+            <div class="arc-stage-content">
+              <div class="arc-stage-title" style="color:var(--white)">A/B tested impact ← target</div>
+              <div class="arc-stage-desc" style="color:rgba(255,255,255,0.6)">"+8.3% completion at 95% confidence." Pre-registered. Your data. Finance can trace the chain from design decision to revenue delta.</div>
+              <div class="arc-stage-credibility" style="color:var(--teal-400)">Credibility: CFO-level defensible</div>
+            </div>
+          </div>
+          <div class="arc-stage">
+            <div class="arc-num" style="background:rgba(29,158,117,0.15);color:var(--teal-100)">5</div>
+            <div class="arc-stage-content">
+              <div class="arc-stage-title" style="color:var(--teal-100)">Shared attribution model</div>
+              <div class="arc-stage-desc" style="color:rgba(255,255,255,0.5)">Design owns activation/conversion. CS owns retention. Product owns revenue. Each function proves its slice. No zero-sum fight over the same line item.</div>
+              <div class="arc-stage-credibility" style="color:var(--teal-400)">Credibility: strategically unbeatable</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="six-questions" style="margin-top:2rem">
+          <div class="six-q-title">The 6-question credibility test</div>
+          <div class="q-row">
+            <span class="q-icon" style="color:var(--teal-400)"><i class="ti ti-check"></i></span>
+            <span class="q-text"><strong>Is there a before state?</strong> Can you compare to a measured baseline?</span>
+            <span class="q-tag" style="background:rgba(29,158,117,0.2);color:var(--teal-100)">required</span>
+          </div>
+          <div class="q-row">
+            <span class="q-icon" style="color:var(--teal-400)"><i class="ti ti-check"></i></span>
+            <span class="q-text"><strong>Is there a control group?</strong> A/B test vs time-series vs anecdote?</span>
+            <span class="q-tag" style="background:rgba(29,158,117,0.2);color:var(--teal-100)">required</span>
+          </div>
+          <div class="q-row">
+            <span class="q-icon" style="color:var(--teal-400)"><i class="ti ti-check"></i></span>
+            <span class="q-text"><strong>Was the metric pre-registered?</strong> Defined before the data was seen?</span>
+            <span class="q-tag" style="background:rgba(29,158,117,0.2);color:var(--teal-100)">required</span>
+          </div>
+          <div class="q-row">
+            <span class="q-icon" style="color:var(--teal-400)"><i class="ti ti-check"></i></span>
+            <span class="q-text"><strong>Is it your data?</strong> Your product's production, not an industry study?</span>
+            <span class="q-tag" style="background:rgba(29,158,117,0.2);color:var(--teal-100)">required</span>
+          </div>
+          <div class="q-row">
+            <span class="q-icon" style="color:rgba(186,117,23,0.8)"><i class="ti ti-check"></i></span>
+            <span class="q-text"><strong>Is the attribution chain auditable?</strong> Can finance trace it?</span>
+            <span class="q-tag" style="background:rgba(186,117,23,0.15);color:#EF9F27">strong signal</span>
+          </div>
+          <div class="q-row">
+            <span class="q-icon" style="color:rgba(186,117,23,0.8)"><i class="ti ti-check"></i></span>
+            <span class="q-text"><strong>Can the claim be falsified?</strong> Could the experiment have said "it didn't work"?</span>
+            <span class="q-tag" style="background:rgba(186,117,23,0.15);color:#EF9F27">strong signal</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="roi-worked">
+          <div class="roi-worked-title">Worked example — one component change</div>
+          <div class="roi-calc-row"><span>Component changed</span><span class="roi-calc-val">State dropdown → autocomplete</span></div>
+          <div class="roi-calc-row"><span>Monthly users on this form</span><span class="roi-calc-val">200,000</span></div>
+          <div class="roi-calc-row"><span>A/B test duration</span><span class="roi-calc-val">14 days · 50/50 split</span></div>
+          <div class="roi-calc-row"><span>Result</span><span class="roi-calc-val">+8.3% completion · 95% CI</span></div>
+          <hr class="roi-divider">
+          <div class="roi-calc-row"><span>Δ completions / month</span><span class="roi-calc-val">200k × 8.3% = 16,600</span></div>
+          <div class="roi-calc-row"><span>Revenue per completion</span><span class="roi-calc-val">$40</span></div>
+          <div class="roi-calc-row"><span>Monthly Δ revenue</span><span class="roi-calc-val">$664,000</span></div>
+          <div class="roi-calc-row"><span>Annual Δ revenue</span><span class="roi-calc-val" style="color:var(--teal-400)">$7.97M</span></div>
+          <div class="roi-calc-row"><span>Design investment</span><span class="roi-calc-val">4 days × $700 = $2,800</span></div>
+          <hr class="roi-divider">
+          <div class="roi-result">
+            <span class="roi-result-label">ROI</span>
+            <span class="roi-result-val">2,842×</span>
+          </div>
+          <div class="roi-caveat">
+            Honest caveats: assumes improvement persists, no confounding changes during the window, revenue-per-completion stays constant. Needs quarterly monitoring to validate. These caveats make the claim stronger, not weaker — they signal rigour.
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:1.5rem">
+          <div class="callout-title">The highest-credibility move you can make</div>
+          <p>Explicitly separate what you <strong>can prove</strong> from what you <strong>believe but can't yet prove</strong>. A design leader who draws this line clearly is far more credible to a CFO than one who claims everything is measurable. Intellectual honesty about measurement limits <em>is itself</em> a trust signal.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 6: ROLES ── -->
+<section id="roles">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-label">Your role evolution</p>
+      <h2 class="section-title">Your role gets more<br>powerful — not less</h2>
+      <p class="section-intro">
+        Every role in the design org still exists in Phase 4. What changes is what you manage to, how you're evaluated, and the leverage you have. This is an expansion, not a replacement.
+      </p>
+    </div>
+
+    <div class="roles-intro-callout fade-in">
+      <div class="roles-intro-icon"><i class="ti ti-heart"></i></div>
+      <div class="roles-intro-text">
+        <h3>The design profession is worth fighting for</h3>
+        <p>The anxiety you're feeling about this shift is real and valid. Learning TypeScript is genuinely hard. A/B tests feel clinical. Code reviews feel exposing. But every Phase 4 competency is learnable — and the AI in your editor carries the syntax while you build the concepts. You are not being asked to become an engineer. You are being asked to work closer to where your decisions actually land.</p>
+      </div>
+    </div>
+
+    <div class="roles-grid fade-in">
+      <div class="role-card">
+        <div class="role-card-header" style="border-top:3px solid var(--teal-600)">
+          <div class="role-icon" style="color:var(--teal-600)"><i class="ti ti-users"></i></div>
+          <div class="role-title">UX Manager</div>
+          <div class="role-subtitle">Team execution · Phase 4 enablement</div>
+        </div>
+        <div class="role-card-body">
+          <div class="role-section-label role-section-label--was">Used to manage to</div>
+          <ul class="role-list role-list--was">
+            <li>Figma file quality and polish</li>
+            <li>Stakeholder approval of designs</li>
+            <li>Design review completions</li>
+            <li>Headcount vs. screen output</li>
+          </ul>
+          <div class="role-section-label role-section-label--now">Now manages to</div>
+          <ul class="role-list role-list--now">
+            <li>PR quality: a11y, token compliance, visual regression</li>
+            <li>Experiment cadence and hypothesis rigour</li>
+            <li>DS coverage rate for team's surfaces</li>
+            <li>Phase 4 skill progression per designer</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-card-header" style="border-top:3px solid var(--purple-600)">
+          <div class="role-icon" style="color:var(--purple-600)"><i class="ti ti-hierarchy"></i></div>
+          <div class="role-title">Design Lead / Principal</div>
+          <div class="role-subtitle">Design system strategy · triad facilitation</div>
+        </div>
+        <div class="role-card-body">
+          <div class="role-section-label role-section-label--was">Used to focus on</div>
+          <ul class="role-list role-list--was">
+            <li>Design language and visual standards</li>
+            <li>Design system component library size</li>
+            <li>Figma component organisation</li>
+            <li>Design review facilitation</li>
+          </ul>
+          <div class="role-section-label role-section-label--now">Now owns</div>
+          <ul class="role-list role-list--now">
+            <li>Token architecture and DS strategy</li>
+            <li>Triad alignment and experiment backlog</li>
+            <li>Contribution governance model</li>
+            <li>Aggregate ROI reporting to VP Design</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-card-header" style="border-top:3px solid var(--amber-600)">
+          <div class="role-icon" style="color:var(--amber-600)"><i class="ti ti-pencil"></i></div>
+          <div class="role-title">Senior Designer / Design Engineer</div>
+          <div class="role-subtitle">Practitioner · experiment owner</div>
+        </div>
+        <div class="role-card-body">
+          <div class="role-section-label role-section-label--was">Used to deliver</div>
+          <ul class="role-list role-list--was">
+            <li>Figma frames and spec documents</li>
+            <li>Design review presentations</li>
+            <li>Usability test reports</li>
+            <li>Design system component designs</li>
+          </ul>
+          <div class="role-section-label role-section-label--now">Now ships</div>
+          <ul class="role-list role-list--now">
+            <li>Component PRs with Storybook stories + a11y</li>
+            <li>Hypothesis cards with pre-registered metrics</li>
+            <li>A/B experiments from flag to result</li>
+            <li>Production insights from session replay triage</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 7: TRIAD ── -->
+<section id="triad">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-label">The alignment discussion</p>
+      <h2 class="section-title">The triad that changes<br>how decisions get made</h2>
+      <p class="section-intro">
+        In Phase 4, evidence — not role seniority — drives decisions. The experiment result is the authority. Design brings the production signal; PM brings business context; Engineering brings feasibility.
+      </p>
+    </div>
+
+    <div class="triad-grid fade-in">
+      <div class="triad-card">
+        <div class="triad-role-badge" style="background:var(--amber-50);color:var(--amber-600)"><i class="ti ti-chart-line" style="font-size:10px"></i> Product Manager</div>
+        <div class="triad-card-title">Brings business context</div>
+        <ul class="triad-list">
+          <li><i class="ti ti-arrow-right" style="color:var(--amber-400)"></i>Previous experiment results — did it hit the threshold?</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--amber-400)"></i>Business metric that this hypothesis is connected to</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--amber-400)"></i>Rollout risk appetite and timeline</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--amber-400)"></i>Sign-off on success criteria before code starts</li>
+        </ul>
+      </div>
+      <div class="triad-card" style="border:1.5px solid var(--teal-400)">
+        <div class="triad-role-badge" style="background:var(--teal-50);color:var(--teal-600)"><i class="ti ti-pencil" style="font-size:10px"></i> Design Lead</div>
+        <div class="triad-card-title">Brings production evidence</div>
+        <ul class="triad-list">
+          <li><i class="ti ti-arrow-right" style="color:var(--teal-400)"></i>Session replay and funnel data — what's actually failing</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--teal-400)"></i>Hypothesis card (component + change + metric + threshold)</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--teal-400)"></i>DS coverage assessment for this experiment</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--teal-400)"></i>Qualitative signal from flag cohort research</li>
+        </ul>
+      </div>
+      <div class="triad-card">
+        <div class="triad-role-badge" style="background:var(--purple-50);color:var(--purple-600)"><i class="ti ti-code" style="font-size:10px"></i> Engineering Lead</div>
+        <div class="triad-card-title">Brings feasibility signal</div>
+        <ul class="triad-list">
+          <li><i class="ti ti-arrow-right" style="color:var(--purple-600)"></i>DS gap assessment — does IDS have what we need?</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--purple-600)"></i>Flag infrastructure and rollout plan</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--purple-600)"></i>Rollback trigger definition</li>
+          <li><i class="ti ti-arrow-right" style="color:var(--purple-600)"></i>Analytics monitoring ownership during window</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="priorities-list fade-in" style="margin-top:3rem">
+      <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:0.5rem">The six alignment priorities — in this order</h3>
+      <p style="font-size:14px;color:var(--gray-500);margin-bottom:2rem">Every triad sync should cover these before anyone opens a Figma file or writes a line of code.</p>
+
+      <div class="priority-row">
+        <div class="priority-num" style="background:var(--amber-50);color:var(--amber-600)">1</div>
+        <div><div class="priority-title">Process the previous experiment</div><div class="priority-desc">Close what's open before opening anything new. Merge, iterate, or discard — document the decision.</div></div>
+        <div class="priority-owners">
+          <span class="owner-badge" style="background:var(--amber-50);color:var(--amber-600)">PM</span>
+          <span class="owner-badge" style="background:var(--teal-50);color:var(--teal-600)">D</span>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num" style="background:var(--teal-50);color:var(--teal-600)">2</div>
+        <div><div class="priority-title">Review production signal together</div><div class="priority-desc">Session replay and funnel data — all three look at the same evidence before discussing solutions.</div></div>
+        <div class="priority-owners">
+          <span class="owner-badge" style="background:var(--teal-50);color:var(--teal-600)">D</span>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num" style="background:var(--amber-50);color:var(--amber-600)">3</div>
+        <div><div class="priority-title">Define and agree the hypothesis</div><div class="priority-desc">Specific component · specific change · specific metric · specific threshold. Written before any code starts.</div></div>
+        <div class="priority-owners">
+          <span class="owner-badge" style="background:var(--amber-50);color:var(--amber-600)">PM</span>
+          <span class="owner-badge" style="background:var(--teal-50);color:var(--teal-600)">D</span>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num" style="background:var(--teal-50);color:var(--teal-600)">4</div>
+        <div><div class="priority-title">Check design system coverage</div><div class="priority-desc">Does IDS have what we need? If not — who contributes it, what's the API, what's the timeline?</div></div>
+        <div class="priority-owners">
+          <span class="owner-badge" style="background:var(--teal-50);color:var(--teal-600)">D</span>
+          <span class="owner-badge" style="background:var(--purple-50);color:var(--purple-600)">E</span>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num" style="background:var(--purple-50);color:var(--purple-600)">5</div>
+        <div><div class="priority-title">Set the rollout and risk plan</div><div class="priority-desc">Flag ramp (5%→20%→50%), rollback trigger, who monitors analytics, when the decision meeting happens.</div></div>
+        <div class="priority-owners">
+          <span class="owner-badge" style="background:var(--purple-50);color:var(--purple-600)">E</span>
+          <span class="owner-badge" style="background:var(--amber-50);color:var(--amber-600)">PM</span>
+        </div>
+      </div>
+      <div class="priority-row" style="border-bottom:none">
+        <div class="priority-num" style="background:var(--gray-100);color:var(--gray-600)">6</div>
+        <div><div class="priority-title">Success criteria sign-off — all three</div><div class="priority-desc">Everyone states out loud: "we agree this succeeds if metric X moves by Y% at 95% confidence." The threshold prevents post-hoc metric selection.</div></div>
+        <div class="priority-owners">
+          <span class="owner-badge" style="background:var(--amber-50);color:var(--amber-600)">PM</span>
+          <span class="owner-badge" style="background:var(--teal-50);color:var(--teal-600)">D</span>
+          <span class="owner-badge" style="background:var(--purple-50);color:var(--purple-600)">E</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 8: ACTION ── -->
+<section id="action">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-label" style="color:var(--teal-100)">Starting tomorrow</p>
+      <h2 class="section-title section-title--light">You can start any of<br>this tomorrow</h2>
+      <p class="section-intro section-intro--light">
+        None of this requires permission, a title change, or a budget. These are things you can do alone, in your next PR, or in your next team meeting.
+      </p>
+    </div>
+
+    <div class="action-grid fade-in">
+      <div>
+        <div class="timeline-heading">
+          <i class="ti ti-calendar"></i>
+          <span class="tl-badge">Day 1</span>
+          Five things you can do today
+        </div>
+        <div class="action-item">
+          <div class="action-num">1</div>
+          <div class="action-content">
+            <h4>Run Lighthouse on a production page</h4>
+            <p>Open Chrome DevTools → Lighthouse → Analyze. Note the a11y score. This is your baseline. You now own a number you can improve.</p>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">2</div>
+          <div class="action-content">
+            <h4>Use VoiceOver for 30 minutes</h4>
+            <p>Mac: Cmd+F5. Navigate your product with only keyboard and screen reader. What you experience is what you're shipping to screen reader users today.</p>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">3</div>
+          <div class="action-content">
+            <h4>Open a component source file in VS Code</h4>
+            <p>Clone the IDS repo. Navigate to any component. Read the TypeScript interface. Ask Claude: "explain this prop to me." Start building the mental model.</p>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">4</div>
+          <div class="action-content">
+            <h4>Find one A/B test result in Amplitude</h4>
+            <p>Locate an experiment your team or a neighbouring team ran. Read the result end-to-end. Identify the hypothesis, the metric, the confidence level. This is the language you're learning.</p>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">5</div>
+          <div class="action-content">
+            <h4>Write your first hypothesis card</h4>
+            <p>Pick one component you think is underperforming. Write: "If we change <code>[component]</code> by <code>[change]</code>, <code>[metric]</code> will improve by <code>[threshold]</code>." Share it in your next triad sync.</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="timeline-heading">
+          <i class="ti ti-calendar"></i>
+          <span class="tl-badge">Day 30</span>
+          Your month-one milestone
+        </div>
+        <div class="action-item">
+          <div class="action-num" style="color:var(--teal-100);font-size:18px">→</div>
+          <div class="action-content">
+            <h4>You've raised a PR that includes Storybook stories</h4>
+            <p>Not just a component change — a component change with a story for each state. Chromatic runs. You review the diff.</p>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num" style="color:var(--teal-100);font-size:18px">→</div>
+          <div class="action-content">
+            <h4>You've written your first TypeScript interface</h4>
+            <p>Doesn't need to be perfect. <code>string</code>, <code>boolean</code>, a union type. Cursor helped you get there. You understand why it's there.</p>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num" style="color:var(--teal-100);font-size:18px">→</div>
+          <div class="action-content">
+            <h4>You've read a session replay with a specific question in mind</h4>
+            <p>Not general browsing — you watched 5 sessions looking for a specific friction point in a specific flow. You have an insight ready for the next triad sync.</p>
+          </div>
+        </div>
+        <div style="margin-top:2rem">
+          <div class="timeline-heading">
+            <i class="ti ti-calendar"></i>
+            <span class="tl-badge">Day 90</span>
+            Your quarter-one marker
+          </div>
+          <div class="action-item">
+            <div class="action-num" style="color:var(--teal-100);font-size:18px">★</div>
+            <div class="action-content">
+              <h4>You have an experiment result with a number</h4>
+              <p>One hypothesis shipped to production behind a flag, measured in Amplitude, with a real confidence interval. That number — whatever it is — is your first defensible ROI claim. It's worth more than 200 screens.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="closing-card" style="margin-top:2rem">
+          <div class="closing-icon"><i class="ti ti-rocket"></i></div>
+          <div class="closing-title">The profession is worth fighting for</div>
+          <div class="closing-desc">Design's influence over what ships has always been limited by the distance between where we work and where our decisions land. Phase 4 collapses that distance. The discomfort of learning new tools is the cost of becoming undeniable.</div>
+          <a href="#problem" class="closing-cta">
+            <i class="ti ti-arrow-up"></i>
+            Back to the beginning
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <strong>The UX Strategy Shift</strong> · A guide for design teams navigating Phase 4 design engineering ·
+  Prepared in the context of Intuit Design System (IDS v3) and the Phase 4 design engineering transition
+</footer>
+
+<script>
+// Scroll-triggered fade-ins
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Active nav link
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    if (window.scrollY >= section.offsetTop - 100) {
+      current = section.getAttribute('id');
+    }
+  });
+  navLinks.forEach(link => {
+    link.style.color = link.getAttribute('href') === '#' + current
+      ? 'var(--teal-100)'
+      : 'rgba(255,255,255,0.55)';
+  });
+});
+</script>
+
+</body>
+</html>
