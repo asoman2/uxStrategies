@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ground Level — Knowledge Workers, AI, and the Emerging Landscape</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #111318;
+    --paper: #f2f4f7;
+    --cream: #e8eaee;
+    --mid: #b8bcc8;
+    --accent-blue: #3a5a8c;
+    --accent-amber: #c07c28;
+    --accent-green: #2d6a4f;
+    --accent-red: #7c2d2d;
+    --muted: #606470;
+    --rule: rgba(17,19,24,0.1);
+    --worker-bg: #1a1e2a;
+    --worker-accent: #4a7ab5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.78;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── COVER ─────────────────────────────────────────── */
+  .cover {
+    min-height: 100vh;
+    background: var(--worker-bg);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 5vw 8vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,122,181,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,122,181,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .cover-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 60%, rgba(74,122,181,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 80% 20%, rgba(192,124,40,0.07) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .series-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(74,122,181,0.7);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .series-tag::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: rgba(74,122,181,0.5);
+  }
+
+  .cover-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-amber);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 8.5vw, 106px);
+    font-weight: 300;
+    line-height: 0.93;
+    color: var(--paper);
+    letter-spacing: -0.025em;
+    max-width: 14ch;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: var(--worker-accent);
+  }
+
+  .cover-title .strike {
+    position: relative;
+    color: rgba(245,240,232,0.3);
+  }
+
+  .cover-title .strike::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: 2px;
+    background: var(--accent-red);
+    opacity: 0.7;
+  }
+
+  .cover-subtitle {
+    font-family: 'Lora', serif;
+    font-size: clamp(15px, 1.8vw, 19px);
+    font-style: italic;
+    color: rgba(184,188,200,0.8);
+    margin-top: 2.5rem;
+    max-width: 52ch;
+    line-height: 1.65;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.85s forwards;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-meta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .cover-meta-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: rgba(184,188,200,0.4);
+    text-transform: uppercase;
+    line-height: 2.2;
+  }
+
+  .companion-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: rgba(74,122,181,0.5);
+    border: 1px solid rgba(74,122,181,0.2);
+    padding: 0.5rem 1rem;
+    text-transform: uppercase;
+  }
+
+  /* ─── NAV ────────────────────────────────────────────── */
+  .toc-bar {
+    background: var(--worker-bg);
+    padding: 1.2rem 8vw;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    overflow-x: auto;
+  }
+
+  .toc-bar a {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(184,188,200,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+
+  .toc-bar a:hover { color: var(--worker-accent); }
+
+  .toc-home {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 14px !important;
+    font-style: italic;
+    color: rgba(242,244,247,0.7) !important;
+    letter-spacing: 0.03em !important;
+    margin-right: auto;
+  }
+
+  /* ─── DOCUMENT ───────────────────────────────────────── */
+  .doc { max-width: 980px; margin: 0 auto; padding: 0 6vw; }
+
+  /* ─── OPENING STATEMENT ──────────────────────────────── */
+  .opening {
+    background: var(--worker-bg);
+    padding: 7rem 8vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .opening::after {
+    content: 'GROUND\ALEVEL';
+    white-space: pre;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22vw;
+    font-weight: 300;
+    line-height: 0.85;
+    color: rgba(255,255,255,0.018);
+    position: absolute;
+    right: -4vw;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+
+  .opening-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--worker-accent);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .opening-label::after {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--worker-accent);
+    opacity: 0.3;
+  }
+
+  .opening-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(21px, 2.8vw, 32px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: rgba(242,244,247,0.88);
+    max-width: 38em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .opening-body strong { color: var(--paper); font-weight: 500; }
+  .opening-body em { color: var(--accent-amber); font-style: italic; }
+
+  /* ─── SECTIONS ───────────────────────────────────────── */
+  .section {
+    padding: 5.5rem 0 3rem;
+    border-top: 1px solid var(--rule);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  .section-header {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 3rem;
+  }
+
+  .section-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    line-height: 1;
+    color: rgba(17,19,24,0.07);
+    letter-spacing: -0.04em;
+    user-select: none;
+  }
+
+  .section-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 3.5vw, 42px);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .section-title em { font-style: italic; color: var(--accent-red); }
+  .section-title .em-blue { font-style: italic; color: var(--accent-blue); }
+
+  /* ─── PROSE ──────────────────────────────────────────── */
+  .prose { max-width: 68ch; font-size: 17px; line-height: 1.82; }
+  .prose p { margin-bottom: 1.4em; }
+  .prose strong { font-weight: 600; }
+  .prose em { font-style: italic; }
+
+  /* ─── REALITY CARDS ──────────────────────────────────── */
+  .reality-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 3rem 0;
+  }
+
+  .reality-card {
+    background: var(--paper);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .reality-card:hover { background: var(--cream); }
+
+  .rc-icon {
+    font-size: 28px;
+    margin-bottom: 1rem;
+    display: block;
+    line-height: 1;
+  }
+
+  .rc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+  }
+
+  .rc-body {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* ─── POWER DIAGRAM ──────────────────────────────────── */
+  .power-diagram {
+    margin: 3rem 0;
+    background: var(--worker-bg);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .power-diagram::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(74,122,181,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .pd-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(74,122,181,0.6);
+    margin-bottom: 2.5rem;
+  }
+
+  .pd-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 120px;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .pd-row:last-child { border-bottom: none; }
+
+  .pd-actor {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: rgba(184,188,200,0.6);
+    text-transform: uppercase;
+  }
+
+  .pd-bar-wrap {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pd-bar {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .pd-bar-l { background: var(--accent-blue); }
+  .pd-bar-m { background: var(--accent-amber); }
+  .pd-bar-s { background: var(--accent-red); width: 0; }
+
+  .pd-bar-s.animated { width: 18%; }
+  .pd-bar-m.animated { width: 52%; }
+  .pd-bar-l.animated { width: 87%; }
+
+  .pd-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(184,188,200,0.4);
+    text-align: right;
+  }
+
+  /* ─── COMPLIANCE THEATER ─────────────────────────────── */
+  .theater-block {
+    border: 1px solid var(--accent-red);
+    border-left: 4px solid var(--accent-red);
+    padding: 2.5rem;
+    margin: 3rem 0;
+    background: rgba(124,45,45,0.03);
+  }
+
+  .theater-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    margin-bottom: 1.2rem;
+  }
+
+  .theater-body {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  /* ─── CAPABILITY PATTERNS ────────────────────────────── */
+  .pattern-list {
+    margin: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .pattern-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-bottom: 1px solid var(--rule);
+    padding: 2.5rem 0;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .pattern-item.visible { opacity: 1; transform: translateX(0); }
+
+  .pattern-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .pattern-icon-wrap {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--rule);
+    background: var(--cream);
+    font-size: 22px;
+  }
+
+  .pattern-title-group {}
+
+  .pattern-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+
+  .pattern-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .pattern-body {
+    font-size: 16px;
+    line-height: 1.78;
+    color: var(--ink);
+    max-width: 72ch;
+    padding-left: 0;
+  }
+
+  .pattern-signal {
+    margin-top: 1rem;
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--accent-green);
+    background: rgba(45,106,79,0.07);
+    border: 1px solid rgba(45,106,79,0.2);
+    padding: 0.4rem 0.8rem;
+  }
+
+  .pattern-signal::before { content: '↑ Emerging signal — '; }
+
+  /* ─── PULL QUOTE ─────────────────────────────────────── */
+  .pull-quote {
+    margin: 4rem 0;
+    padding: 3rem 0 3rem 3rem;
+    border-left: 3px solid var(--accent-blue);
+  }
+
+  .pull-quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 2.8vw, 28px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .pull-quote-attr {
+    margin-top: 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ─── FORECAST TABLE ─────────────────────────────────── */
+  .forecast-block {
+    margin: 3rem 0;
+  }
+
+  .forecast-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .forecast-period {
+    padding: 1.8rem 2rem 1.8rem 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-right: 1px solid var(--rule);
+    line-height: 1.5;
+  }
+
+  .forecast-period strong {
+    display: block;
+    color: var(--ink);
+    font-size: 13px;
+    margin-bottom: 0.3rem;
+  }
+
+  .forecast-content {
+    padding: 1.8rem 0 1.8rem 2rem;
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
+  .forecast-content ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .forecast-content li {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .forecast-content li::before {
+    content: '—';
+    color: var(--accent-blue);
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    margin-top: 0.1em;
+  }
+
+  .forecast-honest {
+    color: var(--accent-red) !important;
+  }
+
+  /* ─── NAVIGATION FRAMEWORK ───────────────────────────── */
+  .nav-framework {
+    background: var(--worker-bg);
+    padding: 5rem 8vw;
+    margin: 5rem calc(-6vw);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-framework::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 30% 70%, rgba(74,122,181,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .nf-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-amber);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nf-label::after {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--accent-amber);
+    opacity: 0.3;
+  }
+
+  .nf-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    align-items: start;
+  }
+
+  .nf-item.visible { opacity: 1; transform: translateY(0); }
+
+  .nf-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--accent-amber);
+    line-height: 1.2;
+    padding-top: 0.1em;
+  }
+
+  .nf-content {}
+
+  .nf-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--paper);
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+
+  .nf-body {
+    font-family: 'Lora', serif;
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: rgba(184,188,200,0.75);
+  }
+
+  .nf-body strong { color: rgba(242,244,247,0.9); font-weight: 600; }
+
+  /* ─── HONEST ASSESSMENT BOX ──────────────────────────── */
+  .honest-box {
+    background: rgba(124,45,45,0.06);
+    border: 1px solid rgba(124,45,45,0.2);
+    padding: 2.8rem;
+    margin: 3.5rem 0;
+    position: relative;
+  }
+
+  .honest-box::before {
+    content: 'Unvarnished';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1;
+    color: rgba(124,45,45,0.05);
+    position: absolute;
+    right: 1.5rem;
+    bottom: 0.5rem;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .honest-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    margin-bottom: 1.2rem;
+  }
+
+  .honest-body {
+    font-size: 16.5px;
+    line-height: 1.8;
+    color: var(--ink);
+    position: relative;
+    z-index: 1;
+    max-width: 65ch;
+  }
+
+  /* ─── CLOSING DECLARATION ────────────────────────────── */
+  .closing {
+    background: var(--worker-bg);
+    padding: 7rem 8vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .closing::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(74,122,181,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .closing-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: rgba(242,244,247,0.85);
+    max-width: 38em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .closing-body strong { color: var(--paper); font-weight: 500; }
+  .closing-body em { color: var(--worker-accent); font-style: italic; }
+
+  /* ─── REFERENCES ─────────────────────────────────────── */
+  .references {
+    padding: 4rem 0 2rem;
+    border-top: 2px solid var(--ink);
+    margin-top: 4rem;
+  }
+
+  .ref-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .ref-list { list-style: none; display: grid; gap: 1.2rem; }
+
+  .ref-item {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 1rem;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1.2rem;
+  }
+
+  .ref-n {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-blue);
+    padding-top: 0.1em;
+  }
+
+  .ref-item em { font-style: italic; }
+  .ref-item strong { font-weight: 600; color: var(--ink); }
+
+  /* ─── FOOTER ─────────────────────────────────────────── */
+  .footer {
+    background: var(--ink);
+    padding: 4rem 8vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(242,244,247,0.3);
+  }
+
+  .footer-series {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(184,188,200,0.25);
+    text-transform: uppercase;
+    text-align: right;
+    line-height: 2.2;
+  }
+
+  /* ─── DIVIDER ────────────────────────────────────────── */
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: var(--accent-blue);
+    margin: 3rem 0;
+  }
+
+  /* ─── CALLOUT ────────────────────────────────────────── */
+  .callout {
+    background: var(--cream);
+    border: 1px solid rgba(17,19,24,0.08);
+    padding: 2.5rem;
+    margin: 3rem 0;
+  }
+
+  .callout-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+
+  .callout-body {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    line-height: 1.78;
+    color: var(--ink);
+  }
+
+  /* ─── ANIMATIONS ─────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .section-header { grid-template-columns: 44px 1fr; gap: 1rem; }
+    .section-number { font-size: 44px; }
+    .pd-row { grid-template-columns: 100px 1fr 80px; }
+    .forecast-row { grid-template-columns: 1fr; }
+    .forecast-period { border-right: none; border-bottom: 1px solid var(--rule); padding: 1rem 0; }
+    .forecast-content { padding: 1rem 0; }
+    .nav-framework { padding: 3rem 6vw; margin: 3rem calc(-6vw); }
+    .nf-item { grid-template-columns: 40px 1fr; gap: 1rem; }
+  }
+
+  @media print {
+    .toc-bar { display: none; }
+    .section, .pattern-item, .nf-item { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     COVER
+══════════════════════════════════════ -->
+<section class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div>
+    <div class="series-tag">Companion Volume · Part II of II</div>
+    <div class="cover-eyebrow">The Human Dimension</div>
+    <h1 class="cover-title">The <em>Ground</em><br>Level</h1>
+    <p class="cover-subtitle">
+      How knowledge workers actually experience AI in the workplace — the fear, the power asymmetry, the compliance trap — and where clear capability patterns are beginning to emerge for those willing to see them honestly.
+    </p>
+  </div>
+  <div class="cover-meta">
+    <div class="cover-meta-left">
+      Labour Dynamics · Cognitive Futures<br>
+      Human–Machine Capability Patterns
+    </div>
+    <div class="companion-badge">Companion to: The Judgment Gap</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
+<nav class="toc-bar">
+  <a href="#opening" class="toc-home">The Ground Level</a>
+  <a href="#reality">The Reality</a>
+  <a href="#power">Power Structure</a>
+  <a href="#patterns">Emerging Patterns</a>
+  <a href="#forecast">Honest Forecast</a>
+  <a href="#navigation">Navigation</a>
+  <a href="#refs">References</a>
+</nav>
+
+<!-- ══════════════════════════════════════
+     OPENING
+══════════════════════════════════════ -->
+<section class="opening" id="opening">
+  <div class="opening-label">The Lived Reality</div>
+  <p class="opening-body">
+    From the boardroom, AI adoption looks like <strong>strategic opportunity.</strong> From the desk where the actual work happens, it looks like a countdown timer — with no clear indication of what comes after zero. Both perceptions are real. <em>Only one of them is being addressed.</em>
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════
+     MAIN DOCUMENT
+══════════════════════════════════════ -->
+<main class="doc">
+
+  <!-- SECTION 1 — THE ACTUAL REALITY -->
+  <section class="section" id="reality">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div class="section-title-group">
+        <span class="section-kicker">The Worker's Perspective</span>
+        <h2 class="section-title">What the Knowledge Worker<br>Actually <em>Experiences</em></h2>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        The dominant experience of AI in the knowledge workplace today is not excitement or curiosity. It is a specific, low-grade, persistent anxiety — the feeling of being a variable whose coefficient is being quietly recalculated. Not announced. Not negotiated. Just recalculated.
+      </p>
+      <p>
+        This anxiety has a precise shape. It is not the fear of a sudden firing. It is the fear of <strong>gradual irrelevance</strong> — of watching the scope of one's indispensable contribution narrow each quarter, while leadership reframes each narrowing as efficiency. The job title stays the same. The actual cognitive territory it requires shrinks.
+      </p>
+    </div>
+
+    <div class="reality-grid">
+      <div class="reality-card">
+        <span class="rc-icon">⏱</span>
+        <div class="rc-title">The Productivity Trap</div>
+        <div class="rc-body">AI makes the worker faster, so the baseline expectation rises. The efficiency gain is captured by the organization, not the worker. The worker now does more for the same compensation — and feels less ownership of the output.</div>
+      </div>
+      <div class="reality-card">
+        <span class="rc-icon">👁</span>
+        <div class="rc-title">The Visibility Paradox</div>
+        <div class="rc-body">AI-assisted work is harder to attribute. The more AI does, the less visible the individual worker's contribution becomes. Performance evaluation systems aren't equipped for this. Attribution diffuses, and with it, career progression.</div>
+      </div>
+      <div class="reality-card">
+        <span class="rc-icon">🪞</span>
+        <div class="rc-title">Identity Under Erosion</div>
+        <div class="rc-body">Professional identity for knowledge workers is built around craft — the ability to produce something only they could produce. When AI replicates that craft at volume, the identity anchor loosens before a new one is offered. This is not trivial. It is psychologically disorienting.</div>
+      </div>
+      <div class="reality-card">
+        <span class="rc-icon">📋</span>
+        <div class="rc-title">The Training Paradox</div>
+        <div class="rc-body">"Learn AI tools to stay relevant" — but learning AI tools means demonstrating exactly which parts of your job can be automated, faster. The worker is being asked to audit their own replaceability in real time.</div>
+      </div>
+      <div class="reality-card">
+        <span class="rc-icon">🔇</span>
+        <div class="rc-title">The Voicelessness</div>
+        <div class="rc-body">Adoption decisions are made at levels that never consult the workers whose roles are most affected. The "feedback loop" is a post-hoc change management exercise, not genuine co-design. The foot soldiers get the policy, not the conversation.</div>
+      </div>
+      <div class="reality-card">
+        <span class="rc-icon">⚖️</span>
+        <div class="rc-title">Labor Surplus as Leverage</div>
+        <div class="rc-body">In a surplus labor market, resistance to AI adoption is framed as resistance to progress — and resistance to progress is career risk. The structural power to push back simply doesn't exist at the individual level. The choice is compliance or exposure.</div>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      <p class="pull-quote-text">The knowledge worker is not afraid of AI replacing them tomorrow. They are afraid of being useful in progressively fewer ways — until the day arrives that the distance between what they do and what AI does has closed entirely. That is a slower, less dramatic, and far more psychologically corrosive process.</p>
+      <p class="pull-quote-attr">— Synthesized from organizational psychology research on technological displacement</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2 — POWER STRUCTURE -->
+  <section class="section" id="power">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div class="section-title-group">
+        <span class="section-kicker">Structural Analysis</span>
+        <h2 class="section-title">The Power Asymmetry<br>and the <em>Compliance Theater</em></h2>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        The current AI transition in knowledge work is not a negotiation. It is an imposition with managed optics. The language of "partnership," "augmentation," and "co-pilot" obscures a straightforward structural reality: the decisions have already been made, the benefits primarily accrue upward, and the costs primarily fall downward.
+      </p>
+      <p>
+        This is not a moral argument — it is a power analysis. Understanding it clearly is more useful than being surprised by it.
+      </p>
+    </div>
+
+    <div class="power-diagram">
+      <div class="pd-label">Information and Decision-Making Leverage by Organizational Layer</div>
+
+      <div class="pd-row">
+        <div class="pd-actor">C-Suite / Board</div>
+        <div class="pd-bar-wrap"><div class="pd-bar pd-bar-l"></div></div>
+        <div class="pd-val">Full roadmap visibility</div>
+      </div>
+      <div class="pd-row">
+        <div class="pd-actor">Mid-Management</div>
+        <div class="pd-bar-wrap"><div class="pd-bar pd-bar-m"></div></div>
+        <div class="pd-val">Selective visibility</div>
+      </div>
+      <div class="pd-row">
+        <div class="pd-actor">Knowledge Workers</div>
+        <div class="pd-bar-wrap"><div class="pd-bar pd-bar-s"></div></div>
+        <div class="pd-val">Policy recipients</div>
+      </div>
+    </div>
+
+    <div class="theater-block">
+      <div class="theater-label">The Compliance Theater</div>
+      <div class="theater-body">
+        The most ethically troubling dynamic is this: knowledge workers are increasingly being asked to <strong>document their own processes, demonstrate their workflows, and train AI systems</strong> on the very tasks that define their professional value — often framed as "knowledge management," "process improvement," or "AI onboarding." The worker is actively constructing the instrument of their own displacement. They know it. They cannot say it. And because labor surplus makes the alternative visible, they comply. This is not a conspiracy — it is the organic logic of power and market structure. But naming it honestly is the first step toward any ethical organizational response.
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        The surplus labor dynamic is crucial and under-discussed. When the talent pool for any given knowledge role is large, the individual worker's negotiating position is structurally weak. The worker who refuses AI adoption can be replaced by one who doesn't. This is not a flaw in anyone's character — it is how surplus labor markets function. <strong>The lever is collective, not individual</strong>, and collective action in knowledge work remains politically and socially difficult to organize in most economies.<sup>[1]</sup>
+      </p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">What Honest Leadership Acknowledgment Would Look Like</div>
+      <div class="callout-body">
+        "We are adopting AI because it reduces headcount cost and accelerates output. Some roles will be restructured. We are committed to retraining where viable and to honest timelines. We will not pretend this is primarily for the benefit of existing workers." — This statement has never been made publicly by any major organization. Its absence is itself a data point about the honesty of the current discourse.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — EMERGING PATTERNS -->
+  <section class="section" id="patterns">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div class="section-title-group">
+        <span class="section-kicker">What Is Actually Emerging</span>
+        <h2 class="section-title">Five Capability Patterns in<br><span class="em-blue">Human–Machine</span> Relationships</h2>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        Despite the murk, certain patterns are becoming structurally visible. These are not wishful framings of AI-as-friend. They are genuine capability configurations where human and machine create combinations that neither produces alone — and where the human contribution is <strong>not replaceable by the machine</strong> within the current architectural constraints we established in Part I.
+      </p>
+    </div>
+
+    <div class="pattern-list">
+
+      <div class="pattern-item">
+        <div class="pattern-header">
+          <div class="pattern-icon-wrap">♟</div>
+          <div class="pattern-title-group">
+            <span class="pattern-tag">Pattern 01 · The Centaur Model</span>
+            <div class="pattern-name">Human Direction, Machine Execution</div>
+          </div>
+        </div>
+        <div class="pattern-body">
+          The term comes from chess: after Deep Blue, the best players didn't retire — they learned to work with computers. The resulting human-computer teams beat both pure humans and pure computers. The same pattern is emerging in radiology (AI flags anomalies, human diagnoses), law (AI drafts, human argues), and design (AI generates, human curates). The key insight is that the human role shifts from <strong>production to direction and judgment</strong>. The worker who understands both the domain deeply and the AI's failure modes becomes genuinely rare and genuinely valuable — because that combination cannot itself be automated. The centaur is not a transitional state. It may be a durable configuration.<sup>[2]</sup>
+        </div>
+        <span class="pattern-signal">Already operating in radiology, legal research, software engineering, design</span>
+      </div>
+
+      <div class="pattern-item">
+        <div class="pattern-header">
+          <div class="pattern-icon-wrap">🎯</div>
+          <div class="pattern-title-group">
+            <span class="pattern-tag">Pattern 02 · The Taste Premium</span>
+            <div class="pattern-name">When Generation Is Cheap, Curation Becomes Expensive</div>
+          </div>
+        </div>
+        <div class="pattern-body">
+          When the marginal cost of generating content, code, or analysis approaches zero, the scarce resource shifts to the ability to distinguish <em>good</em> from <em>great</em> — and to know which questions are worth asking. This is not "prompt engineering" — that is a transitional skill with a short shelf life. This is deep domain taste: the ability to evaluate AI output against a standard of genuine excellence that only comes from years of immersion in a field. AI raises the floor of output quality dramatically. It does not raise the ceiling. The humans who define the ceiling become more, not less, valuable as AI floods the middle band.<sup>[3]</sup>
+        </div>
+        <span class="pattern-signal">Manifesting in creative direction, editorial judgment, product strategy, research design</span>
+      </div>
+
+      <div class="pattern-item">
+        <div class="pattern-header">
+          <div class="pattern-icon-wrap">🕸</div>
+          <div class="pattern-title-group">
+            <span class="pattern-tag">Pattern 03 · The Orchestration Layer</span>
+            <div class="pattern-name">Systems Thinkers Who Speak Both Languages</div>
+          </div>
+        </div>
+        <div class="pattern-body">
+          Multi-agent AI systems — where multiple specialized AI models collaborate on complex tasks — require human architects who understand both the domain problem and the system architecture simultaneously. This is a genuinely new capability class. Not a traditional domain expert. Not a pure AI engineer. Someone who can decompose complex, ambiguous organizational problems into well-scoped tasks, design the workflow across agents, and evaluate whether the output addressed the actual problem or just the stated one. This role does not yet have a name in most organizations. It is currently being performed informally by whoever is curious and technically inclined. It will formalize into a recognized discipline within five years.
+        </div>
+        <span class="pattern-signal">Emerging in AI-forward engineering, strategy consulting, research operations</span>
+      </div>
+
+      <div class="pattern-item">
+        <div class="pattern-header">
+          <div class="pattern-icon-wrap">🤝</div>
+          <div class="pattern-title-group">
+            <span class="pattern-tag">Pattern 04 · The Trust Broker</span>
+            <div class="pattern-name">Relationship as the Irreducible Layer</div>
+          </div>
+        </div>
+        <div class="pattern-body">
+          In high-stakes domains — medicine, law, therapy, financial advice, organizational consulting — clients and patients don't ultimately seek information. They seek a person who will stand behind their judgment with their own reputation, who can be held accountable, and whose understanding includes the specific human situation in front of them. AI can produce the analysis. A human must stand behind it. <strong>Trust requires vulnerability and reciprocity</strong> — two things AI structurally cannot offer. The knowledge worker who holds the relationship and uses AI to enhance the quality of their counsel occupies a position that remains structurally human in character for the foreseeable future.<sup>[4]</sup>
+        </div>
+        <span class="pattern-signal">Durable in healthcare, legal advisory, financial planning, organizational consulting</span>
+      </div>
+
+      <div class="pattern-item">
+        <div class="pattern-header">
+          <div class="pattern-icon-wrap">🌀</div>
+          <div class="pattern-title-group">
+            <span class="pattern-tag">Pattern 05 · The Complexity Ceiling</span>
+            <div class="pattern-name">AI Solves Problems; Humans Define Whether They Were the Right Ones</div>
+          </div>
+        </div>
+        <div class="pattern-body">
+          AI systems are powerful at well-defined, bounded problems. Genuinely novel, ill-defined problems — where the success criteria are unclear, the stakeholders are conflicted, and the solution space is unmapped — remain fundamentally human territory. The critical capability pattern here is: <strong>humans define the problem, AI solves the defined version, humans evaluate whether the solved version was actually the right problem.</strong> This problem-definition and problem-evaluation function is the most undervalued skill in organizations today, and it becomes more valuable as AI becomes better at the solving layer. Organizations that recognize this will deliberately invest in developing it. Most won't — until they have lost it.<sup>[5]</sup>
+        </div>
+        <span class="pattern-signal">Critical in strategy, innovation, policy design, cross-functional problem-solving</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4 — HONEST FORECAST -->
+  <section class="section" id="forecast">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div class="section-title-group">
+        <span class="section-kicker">Without Window Dressing</span>
+        <h2 class="section-title">An Honest <em>Forecast</em><br>of the Transition</h2>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        The narrative that "AI creates more jobs than it destroys" is historically defensible as a long-run claim about technological transitions. It is deeply dishonest as a response to the short-run reality facing knowledge workers today. The transition pain and the long-run benefit do not accrue to the same people. That gap deserves naming.
+      </p>
+    </div>
+
+    <div class="forecast-block">
+      <div class="forecast-row">
+        <div class="forecast-period">
+          <strong>Near Term</strong>
+          1 – 3 Years
+        </div>
+        <div class="forecast-content">
+          <ul>
+            <li>Significant displacement in information processing, document generation, data analysis, first-draft creation, and routine client communication</li>
+            <li>Headcount reduction framed as "efficiency improvements" — often without explicit redundancy announcements</li>
+            <li>Remaining workers absorb displaced work volume with AI assistance — net workload increases, not decreases</li>
+            <li>New role categories ("AI specialist," "prompt engineer") emerge but are vastly outnumbered by roles quietly eliminated</li>
+            <li class="forecast-honest">The "everyone will upskill" narrative is not matched by organizational investment in actual retraining at scale</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="forecast-row">
+        <div class="forecast-period">
+          <strong>Medium Term</strong>
+          3 – 7 Years
+        </div>
+        <div class="forecast-content">
+          <ul>
+            <li>The five capability patterns above formalize into recognized role structures — Centaur roles, Orchestration roles, Trust Broker roles emerge as distinct career paths</li>
+            <li>Organizations that failed to protect tacit knowledge and expert judgment in the near term discover they cannot reconstruct it — capability atrophy becomes visible</li>
+            <li>Competitive differentiation begins to separate organizations that used AI as a replacement layer from those that used it as an amplification layer</li>
+            <li>Regulatory frameworks for AI in high-stakes professional domains (medicine, law, finance) begin to stabilize, creating structural human-in-the-loop requirements</li>
+            <li class="forecast-honest">Retraining programs produce uneven results — workers with existing high adaptability benefit; those without face structural exclusion from the new role categories</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="forecast-row">
+        <div class="forecast-period">
+          <strong>Long Term</strong>
+          7+ Years
+        </div>
+        <div class="forecast-content">
+          <ul>
+            <li>Genuinely unclear — depends critically on whether systems approaching AGI-level capability emerge and on what governance frameworks have been established</li>
+            <li>If current architectural limits hold: human judgment, relational trust, genuine novelty navigation, and ethical oversight remain structurally human</li>
+            <li>The workers who invested in depth of domain expertise and breadth of systems thinking over this transition period are the ones positioned for the long-run configurations</li>
+            <li class="forecast-honest">There is no historical precedent for a transition this fast that didn't create significant dislocation before new equilibria stabilized — and the dislocation fell mostly downward</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="honest-box">
+      <div class="honest-label">What No One Is Saying Plainly</div>
+      <div class="honest-body">
+        The "everyone becomes an AI whisperer" narrative is largely wishful framing designed to manage anxiety rather than address the structural reality. Most knowledge work will be fundamentally restructured, not simply augmented. The workers positioned to navigate this well are those with genuine depth in a domain <em>plus</em> genuine comfort with ambiguity and systems thinking. That is a specific, cultivatable profile — but it is not most workers, and the organizations that need to develop it are investing far less in its development than they are in the AI infrastructure itself. The gap between that investment asymmetry and the "human-centric AI adoption" language in leadership communications is significant.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 — PERSONAL NAVIGATION -->
+  <div class="section visible" id="navigation">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div class="section-title-group">
+        <span class="section-kicker">For the Individual Knowledge Worker</span>
+        <h2 class="section-title">A Navigation Framework<br>for <em>Uncertain Ground</em></h2>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Not reassurance. Not a career advice listicle. A clear-eyed set of reorientations grounded in everything we've established about what AI actually can and cannot do.</p>
+    </div>
+  </div>
+
+  <div class="nav-framework">
+    <div class="nf-label">Six Reorientations for the Transition</div>
+
+    <div class="nf-item">
+      <div class="nf-num">I</div>
+      <div class="nf-content">
+        <div class="nf-title">Move from Production to Judgment, Deliberately</div>
+        <div class="nf-body">If your current role is primarily defined by <strong>what you produce</strong>, begin migrating it toward <strong>what you evaluate, decide, and design.</strong> The production layer is where AI replaces. The judgment layer is where AI assists but cannot substitute. This is not a passive shift — it requires actively repositioning yourself within your current role before the structural pressure forces a more disruptive repositioning.</div>
+      </div>
+    </div>
+
+    <div class="nf-item">
+      <div class="nf-num">II</div>
+      <div class="nf-content">
+        <div class="nf-title">Cultivate Taste, Not Just Skill</div>
+        <div class="nf-body">Technical skill in your domain is increasingly table stakes. <strong>The ability to distinguish excellent from merely competent</strong> — in a way that you can articulate and defend to others — is the scarce resource. This means deepening domain expertise, not just widening it. The generalist who uses AI widely is common. The deep expert who uses AI and can reliably evaluate its output against a high standard is rare and becoming rarer as shallow users multiply.</div>
+      </div>
+    </div>
+
+    <div class="nf-item">
+      <div class="nf-num">III</div>
+      <div class="nf-content">
+        <div class="nf-title">Build Irreplaceable Relationship Capital</div>
+        <div class="nf-body">Relationships are not soft. They are <strong>structurally immune to AI displacement</strong> in the trust-broker configuration. The clients, stakeholders, and colleagues who have genuine reason to trust you specifically — not a role, not a function, you — are an asset that no AI adoption can redeploy. This is not networking. It is the patient accumulation of specific, earned trust with specific people over time. It is slow to build and slow to lose. Start earlier than you think necessary.</div>
+      </div>
+    </div>
+
+    <div class="nf-item">
+      <div class="nf-num">IV</div>
+      <div class="nf-content">
+        <div class="nf-title">Specialize in Complexity and Novelty</div>
+        <div class="nf-body">AI is extraordinarily good at well-defined, precedented problems. <strong>Deliberately position yourself in the ill-defined, novel, multi-stakeholder problem space.</strong> This means developing comfort with ambiguity — learning to hold an uncertain problem steady while clarifying it, rather than reflexively reaching for a framework. The workers who find complexity uncomfortable and reach for AI to resolve it quickly will find themselves with progressively less experience at the complexity layer. That experience gap will compound.</div>
+      </div>
+    </div>
+
+    <div class="nf-item">
+      <div class="nf-num">V</div>
+      <div class="nf-content">
+        <div class="nf-title">Learn the Machine's Failure Modes, Not Just Its Capabilities</div>
+        <div class="nf-body">The workers who will be most valued in centaur configurations are those who understand <strong>precisely where and how AI output goes wrong</strong> — and can catch it before it does damage. This is domain expertise plus systems literacy. It requires developing a calibrated skepticism toward AI output: not reflexive rejection, not uncritical acceptance, but the specific, domain-informed eye that knows which outputs to trust and which to interrogate. This is learnable, but only through deliberate practice of questioning AI outputs rather than simply using them.</div>
+      </div>
+    </div>
+
+    <div class="nf-item">
+      <div class="nf-num">VI</div>
+      <div class="nf-content">
+        <div class="nf-title">Name What Is Happening, Even If Quietly</div>
+        <div class="nf-body">The psychological cost of compliance theater is real and can be reduced by simply naming the dynamic honestly — to yourself, and where safe, to trusted colleagues. <strong>You are not failing to adapt.</strong> You are navigating a structural power asymmetry in a labor surplus market during a genuine technological discontinuity. Those are different things. The workers who carry this transition without understanding what they are carrying develop bitterness or numbness. Those who name it clearly can navigate it with something closer to dignity and strategic clarity.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <section class="section" style="border-top:none; padding-top: 4rem;">
+    <div class="divider"></div>
+  </section>
+</main>
+
+<!-- CLOSING DECLARATION -->
+<section class="closing">
+  <div class="opening-label" style="color: var(--worker-accent);">Final Position</div>
+  <p class="closing-body">
+    The knowledge worker's fear is not irrational — it is an accurate read of structural forces that are real and largely indifferent to individual merit. What is negotiable is <em>how the transition is navigated</em> — the capability bets made now, the relationships built now, the depth of expertise protected now. <strong>The workers who come through this well will not be those who were least threatened. They will be those who saw clearly, named the reality without panic, and invested deliberately in the capabilities that remain structurally irreplaceable.</strong>
+  </p>
+</section>
+
+<main class="doc">
+  <!-- REFERENCES -->
+  <section class="references" id="refs">
+    <div class="ref-title">References & Foundations</div>
+    <ul class="ref-list">
+      <li class="ref-item">
+        <span class="ref-n">[1]</span>
+        <span><strong>Autor, D.H.</strong> (2015). "Why Are There Still So Many Jobs? The History and Future of Workplace Automation." <em>Journal of Economic Perspectives, 29</em>(3), 3–30. — The foundational economic analysis of task displacement vs. job displacement; why automation restructures work rather than simply eliminating it.</span>
+      </li>
+      <li class="ref-item">
+        <span class="ref-n">[2]</span>
+        <span><strong>Kasparov, G.</strong> (2017). <em>Deep Thinking: Where Machine Intelligence Ends and Human Creativity Begins.</em> PublicAffairs. — The chess grandmaster's account of human-machine collaboration after Deep Blue. The centaur model emerges here as a demonstrated, not theoretical, capability pattern.</span>
+      </li>
+      <li class="ref-item">
+        <span class="ref-n">[3]</span>
+        <span><strong>Cowen, T.</strong> (2013). <em>Average Is Over: Powering America Beyond the Age of the Great Stagnation.</em> Dutton. — The macroeconomic argument that technological automation bifurcates labor markets: those who can work effectively with intelligent machines, and those who cannot. The taste premium emerges from this analysis.</span>
+      </li>
+      <li class="ref-item">
+        <span class="ref-n">[4]</span>
+        <span><strong>Maister, D.H., Green, C.H. & Galford, R.M.</strong> (2000). <em>The Trusted Advisor.</em> Free Press. — The structural analysis of trust in professional relationships: credibility, reliability, intimacy, and self-orientation. The trust broker capability pattern is built on these foundations.</span>
+      </li>
+      <li class="ref-item">
+        <span class="ref-n">[5]</span>
+        <span><strong>Rittel, H.W.J. & Webber, M.M.</strong> (1973). "Dilemmas in a General Theory of Planning." <em>Policy Sciences, 4</em>(2), 155–169. — The canonical framing of "wicked problems" — complex, ill-defined challenges where the problem and solution co-evolve. The complexity ceiling pattern is grounded in this distinction.</span>
+      </li>
+      <li class="ref-item">
+        <span class="ref-n">[6]</span>
+        <span><strong>Brynjolfsson, E. & McAfee, A.</strong> (2014). <em>The Second Machine Age: Work, Progress, and Prosperity in a Time of Brilliant Technologies.</em> W.W. Norton. — The economic framework for understanding cognitive automation as distinct from previous industrial automation — and the distributional consequences of that distinction.</span>
+      </li>
+      <li class="ref-item">
+        <span class="ref-n">[7]</span>
+        <span><strong>Weil, D.</strong> (2014). <em>The Fissured Workplace: Why Work Became So Bad for So Many and What Can Be Done to Improve It.</em> Harvard University Press. — The structural analysis of labor market fragmentation and why individual workers face declining leverage even in nominally high-skill roles.</span>
+      </li>
+      <li class="ref-item">
+        <span class="ref-n">[8]</span>
+        <span><strong>Davenport, T.H. & Kirby, J.</strong> (2016). <em>Only Humans Need Apply: Winners and Losers in the Age of Smart Machines.</em> Harper Business. — The practical taxonomy of human-AI capability configurations. Step up, step aside, step in, step narrowly, step forward — the five augmentation strategies most predictive of durable human roles.</span>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-brand">The Ground Level</div>
+  <div class="footer-series">
+    Part II of II · Human Dimension Analysis<br>
+    Companion to: The Judgment Gap
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.section').forEach(el => observer.observe(el));
+
+  // Staggered pattern items
+  const patternObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const items = e.target.querySelectorAll('.pattern-item');
+        items.forEach((item, i) => setTimeout(() => item.classList.add('visible'), i * 120));
+        patternObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.pattern-list').forEach(el => patternObserver.observe(el));
+
+  // Nav framework items
+  const nfObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const items = e.target.querySelectorAll('.nf-item');
+        items.forEach((item, i) => setTimeout(() => item.classList.add('visible'), i * 90));
+        nfObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.nav-framework').forEach(el => nfObserver.observe(el));
+
+  // Animate power bars
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.pd-bar').forEach(b => b.classList.add('animated'));
+        barObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.power-diagram').forEach(el => barObserver.observe(el));
+
+  // Nav active state
+  const navLinks = document.querySelectorAll('.toc-bar a[href^="#"]');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => {
+          l.style.color = '';
+          if (l.getAttribute('href') === '#' + e.target.id) l.style.color = 'rgba(74,122,181,0.9)';
+        });
+      }
+    });
+  }, { threshold: 0.25 });
+
+  document.querySelectorAll('[id]').forEach(s => sectionObserver.observe(s));
+</script>
+</body>
+</html>
