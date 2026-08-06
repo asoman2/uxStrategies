@@ -176,6 +176,78 @@ Not every non-conversion is the same failure, and treating them identically eith
 
 ---
 
-## 8. One structural note for framing this upward
+## 9. Multi-persona expansion — accountant and sales channels
+
+Expanding provisioning beyond self-serve BIZ customers to ProAdvisors/accountants and the internal sales team isn't a UI tweak — it changes where personalization signal comes from and how outcomes get recorded, for each channel:
+
+| | Customer (current) | Accountant | Sales |
+|---|---|---|---|
+| **Provisioning entry** | In-product nudge (C1–C2) | "Provision for client" action in accountant console, likely batched | From CRM, during/after discovery call |
+| **Personalization signal** | D1 telemetry | Accountant's own client knowledge — needs a manual override input | Discovery-call notes — structured, not behavioral |
+| **Management surface** | Single-window chrome (E1/E8) | Multi-sandbox dashboard (status per client) — **not specified anywhere in the PRD** | Multi-sandbox dashboard, CRM-integrated |
+| **Exit CTA** | *Get Advanced* / *Talk to sales* (J1/J2) | *Recommend to client* / *Schedule migration* | *Mark opportunity stage* / *Escalate* |
+| **Reasoning capture** | In-app choice cards (§7) | Structured outcome field in accountant dashboard | CRM closed-lost reason code |
+
+**Requirements this surfaces that don't exist in the PRD:**
+- Manual pain-point selection input, feeding the same D3/E2 pipeline telemetry currently feeds — needed for both accountant and sales channels.
+- Multi-sandbox dashboard/list view — a new surface, not a variant of E1/E8.
+- **Role-aware framing (E7)** — flagged as unresolved/deferred in the original PRD — becomes non-optional once three personas share the same underlying flow.
+- RBAC scoping for accountant visibility into client telemetry (least-privilege question — should the accountant see real DT data, or only vertical defaults).
+- L4's "don't enter real data" deterrence copy needs an update for the case where someone other than the account owner is driving the session — consent for accountant-initiated sandboxes isn't covered as written.
+
+**Measurement requirements:**
+- **A single lifecycle ID that survives channel handoffs** — a lead may originate in Salesforce, the sandbox lives in QBOA infrastructure, and the outcome conversation may happen on a call that touches neither system. Without one ID, the three channels produce three funnels that don't reconcile.
+- **Initiator as a first-class field on every event** — "serious evaluator" engagement means something different from a self-serve customer vs. a sales rep clicking through their own demo; conflating the two overstates customer intent.
+- **One shared outcome taxonomy across three input surfaces** — self-serve choice-cards, accountant dashboard field, and CRM loss-reason code all need to map to the same categories (reusing §6/§7's pain taxonomy), or channel comparison becomes manual spreadsheet reconciliation.
+- **Report channels separately, don't blend into one adoption rate** — CRM-sourced outcomes are self-reported and softer than behavioral telemetry (a rep under pipeline pressure has some incentive to round favorably); keep lanes distinct until volume validates consistency.
+- **Decide churn attribution for the accountant channel up front** — if an accountant recommends the sandbox and the client later churns, is that a product failure or an advisor-recommendation failure? Worth coding this before volume makes it a retroactive dispute.
+
+---
+
+## 10. Roadmap reality check — Aug'26 rollout data (source: DT R4 profile pivot, filtered R4ADV/Single Entity/No Payroll/No Accountant)
+
+The roadmap data (Test Drive Go-Live dates by vertical) reframes prioritization from count-based to readiness-based. Four roadmap columns matter: *Smart Parity*, *Feature Parity*, *Data Seeding Available*, *Test Drive Go-Live*. **Construction is the only vertical with all four dated.** Every other vertical has Feature Parity and Data Seeding blank — including the five with a Test Drive Go-Live date **this month**.
+
+| Tier | Verticals | Companies | % of base |
+|---|---|---|---|
+| **0 — Live** | Construction | 5,370 | 7.5% |
+| **1 — Test Drive committed for Aug'26** | Professional Services, Manufacturing, Field Services, Healthcare, Non-Profit | 22,220 | 31.1% |
+| **2 — Smart Parity ready, no Test Drive date** | Admin & Support, Personal & Maintenance, Real Estate, Financial Services, Transportation, Media & Telecom, Restaurants, Arts & Entertainment, Education, Accommodation, Mgmt of Companies, Utilities | 18,455 | 25.8% |
+| **3 — Smart Parity itself delayed to Nov'26** | Retail & E-Commerce, Wholesale, Agriculture, Government, Mining/Oil/Gas, Unspecified | 25,442 | 35.6% |
+
+**Anomalies worth surfacing to whoever owns sequencing:**
+- **Admin & Support Services** (#2 by volume, 8%) has no Test Drive date, while **Non-Profit** (4%, a quarter its size) already does — either a deliberate heterogeneity call (§6's sub-segmentation risk playing out) or an unexplained gap.
+- **Retail & E-Commerce** (#5 by volume, 6%) has Smart Parity itself delayed to Nov'26 — no UX work pulls this forward; it's gated upstream.
+- **Unspecified** (23% of the entire base, larger than any single named vertical) has only a Nov'26 Smart Parity date and no Test Drive row at all — confirms §6's fallback-hub proposal is necessary, not optional, since there's no industry to template against.
+
+**The near-term risk:** the blank Feature Parity/Data Seeding columns for all five Tier 1 verticals mean the Go-Live date has content risk underneath it. If those five ship using Construction's current fallback state (§5 — generic vertical-default cards, no personalization badge, no conviction checkpoint), the gaps documented there get reproduced five times simultaneously instead of fixed once.
+
+---
+
+## 11. UX priority list, mapped against PRD sections
+
+For communicating trade-offs and negotiating scope, ordered from launch-blocking to next-phase, each tied to its PRD reference:
+
+| # | Priority tier | Item | PRD section(s) | Current status | Why it matters now |
+|---|---|---|---|---|---|
+| 1 | **Blocking** | Reusable hub shell across verticals (not five bespoke builds) | D3, F1, F2, F3 | Built once for Construction (§5); not yet confirmed as a shared shell | Makes five simultaneous Aug'26 launches feasible at all |
+| 2 | **Blocking** | Per-vertical feature mapping + panel content | D2, D3 | Blank in roadmap (Feature Parity column) for all Tier 1 verticals | This is the actual content gap behind the Go-Live dates |
+| 3 | **Blocking** | Per-vertical tour content | F1 | Blank in roadmap; Construction's own tours are static text, not interactive (§5) | Tour fidelity is the "explain it without an agent" mechanism |
+| 4 | **Blocking** | Data seeding closure per vertical | A1 (implied), Data Seeding column | Blank for all Tier 1 verticals | No seeded data, no sandbox to try — most concrete risk on the roadmap |
+| 5 | **Critical, cheap once built** | Progress/checklist state | E3 | Absent from pilot panel (§5) | Prevents silent loss across all five verticals at once, not just Construction |
+| 6 | **Critical, cheap once built** | Conviction checkpoint before exit CTAs | Not named in PRD (§3.3, §4.3) | Gap | One build, inherited by all five templates simultaneously |
+| 7 | **Critical, cheap once built** | Disconfirmation feedback capture, tied to pain taxonomy | Extends J4, H4 (§7, §4.4) | Gap | Only way to know if any of the five new templates is failing, without waiting a full cycle to find out |
+| 8 | **Important, weeks-out** | Friction-severity scoring | Extends D1 (§3.1) | Gap | Matters once D3 personalization actually turns on (hasn't yet, per §5) |
+| 9 | **Important, weeks-out** | DT-familiar wayfinding content | E4 | P1 in PRD | Raises tour quality; not launch-blocking |
+| 10 | **Important, weeks-out** | Lightweight aha validation per new template | Extends A2, E2 (§4.2) | Gap; full version too slow for this timeline | Retroactive spot-check beats no validation at all |
+| 11 | **Important, weeks-out** | D5 personalization A/B test | D5 | P1, fast-follow in PRD | Sequence after personalization is live, not before |
+| 12 | **Good to have** | In-sandbox AI guide | F5 | P1, scope TBD in PRD | No reason to pull forward |
+| 13 | **Good to have** | Friction-to-feature deep-link as default entry | C5 (§4.5) | P1 in PRD | Correct long-term shape; current nudge mechanism works well enough not to block on it |
+| 14 | **Good to have** | Role-aware framing / multi-persona expansion | E7; new requirements in §9 | Deferred in PRD | Real, but a separate initiative with its own lifecycle-ID and RBAC questions |
+| 15 | **Good to have** | Unspecified vertical-agnostic fallback hub | New requirement (§10) | Gap | Real at 23% of base, but can't be rushed into an Aug'26 vertical-template cycle |
+
+---
+
+## 12. One structural note for framing this upward
 
 If you're taking this to whoever owns the BRD next revision: the strongest version of your critique isn't "the PRD is wrong" — it's "the PRD's own Principle 3 already states your model as the goal, but the P0/P1 phasing and the certification process (A2) don't yet operationalize it that way." That's a much easier gap to close than a disagreement about direction, since the phasing is explicitly marked TBD/open in several places (Q1, Q4, dependency 2) rather than settled.
